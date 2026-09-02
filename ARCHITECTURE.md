@@ -1,372 +1,228 @@
 # ARCHITECTURE.md — Portfolio-Developer
 
-> **Este archivo es la referencia viva del proyecto.** Al retomar el trabajo en cualquier sesión,
-> léelo primero: acá está qué se construyó, por qué se tomó cada decisión, y cuáles son los
-> siguientes pasos. Se actualiza en cada hito (idealmente en el mismo commit que introduce el cambio).
+> **Referencia viva del proyecto.** Al retomar el trabajo en cualquier sesión, léelo primero:
+> acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
+> se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-Última actualización: **2026-09-02** — Paso 6 en curso (chunks A–C: diseño + tema + layout).
+**Última actualización:** 2026-09-02 — Paso 6 en curso (falta chunk D: i18n).
 
 ---
 
-## 1. Propósito
+## 1. Qué es esto y por qué
 
-Marco necesita un portafolio que funcione como carta de presentación para conseguir trabajo:
+Portafolio de **Marco Andrés Silva**, carta de presentación para conseguir trabajo. Debe verse
+moderno, profesional y sobrio, mostrar sus proyectos con impacto visual, y ser encontrable por
+**reclutadores humanos Y por buscadores / crawlers de IA**.
 
-- Se ve moderno, profesional y sobrio.
-- Muestra sus proyectos más relevantes con impacto visual (animaciones, transiciones).
-- Está optimizado para que lo encuentren **reclutadores humanos** y **sistemas de IA / buscadores**.
-
-### Hallazgo que originó el enfoque
-
-El sitio de referencia analizado (`mauricioacv.github.io/portfolio`, repo `mauricioACV/portfolio`)
-es una SPA en React 17, 100% renderizada en el cliente. Al leerlo con una herramienta automática
-(como lo haría un crawler de buscador o de IA) **no se pudo leer contenido real** — solo el mensaje
-"necesitas JavaScript para ejecutar esta app".
-
-Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja dentro del HTML.
+**El hallazgo que define el enfoque:** el sitio de referencia (`mauricioACV/portfolio`) es una SPA
+React 100% client-side. Al leerlo con una herramienta automática (como un crawler) no se obtiene
+contenido, solo "necesitas JavaScript". Este proyecto lo corrige de raíz con **Angular SSG**: el
+contenido real viaja dentro del HTML.
 
 ---
 
 ## 2. Estado actual
 
 | Fase | Descripción | Estado |
-|------|-------------|--------|
-| 1 | Esqueleto del monorepo (git, workspaces, archivos raíz, docs) | ✅ Hecho |
-| 2 | `apps/web` — Angular con SSG | ✅ Hecho |
-| 3 | `apps/api` — NestJS | ✅ Hecho |
-| 4 | `libs/shared` + wiring entre apps | ✅ Hecho |
-| 5 | CI (GitHub Actions) | ✅ Hecho |
-| 6 | Sistema de diseño + layout + i18n base | ⏳ En curso |
-| 7 | Hero + Sobre mí + Skills con animaciones | ⬜ Pendiente |
-| 8 | Proyectos destacados (bloqueado: necesita contenido real de Marco) | ⬜ Pendiente |
-| 9 | Experiencia + Contacto (form conectado a API + anti-spam) | ⬜ Pendiente |
-| 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ Pendiente |
-| 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ Pendiente |
-| 12 | Despliegue (web + api) + Google Search Console | ⬜ Pendiente |
+|---|---|---|
+| 1 | Esqueleto del monorepo (npm workspaces, docs) | ✅ |
+| 2 | `apps/web` — Angular 22 con SSG | ✅ |
+| 3 | `apps/api` — NestJS 12 | ✅ |
+| 4 | `libs/shared` — interfaces TS + wiring | ✅ |
+| 5 | CI (GitHub Actions) | ✅ |
+| 6 | Sistema de diseño + layout + i18n base | ⏳ en curso |
+| 7 | Hero real + Sobre mí + Skills, con animaciones | ⬜ |
+| 8 | Proyectos destacados — **bloqueada: necesita contenido de Marco** | ⬜ |
+| 9 | Experiencia (timeline) + Contacto (form → API + anti-spam) | ⬜ |
+| 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ |
+| 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
+| 12 | Despliegue web + api + Google Search Console | ⬜ |
 
-**Próximo paso concreto:** Paso 6, chunk D — base i18n ES/EN con `@angular/localize`:
-marcar los textos de UI, configurar los locales y builds localizados, y agregar el toggle de idioma
-en el header. Después: Paso 7 (Hero real + Sobre mí + Skills con animaciones).
+**Paso 6 — sub-progreso:**
 
-### Paso 6 — sub-progreso
+| Chunk | Qué | Estado |
+|---|---|---|
+| A | Base del sistema de diseño (tokens, tema, reset, fuentes) | ✅ `d1d1424` |
+| B+C | `ThemeService` + toggle · layout shell (header/footer/home) | ✅ `a204ce6` |
+| D | i18n ES/EN con `@angular/localize` + toggle de idioma | ⬜ **← próximo** |
 
-| Chunk | Contenido | Estado |
-|-------|-----------|--------|
-| A | Base del sistema de diseño (tokens, tema, reset, base, fuentes) | ✅ Hecho (`d1d1424`) |
-| B | ThemeService + toggle de tema | ✅ Hecho (con chunk C) |
-| C | Layout shell: header + footer, home mínima, reemplaza `app.html` | ✅ Hecho |
-| D | Base i18n ES/EN (`@angular/localize`) + toggle de idioma | ⬜ |
-
-### Notas de entorno
-
-- **Node 22.23.1** (ver `.nvmrc`). El proyecto usa Angular 22, cuyo CLI exige Node ≥ 22.22.3.
-  La máquina tiene v20 y v22 vía nvm — hay que `nvm use` (o `nvm use` lee el `.nvmrc`).
-- **Angular 22** (paquetes `@angular/*@^22`), TypeScript ~6.0, builder `@angular/build:application`,
-  tests con Vitest (nuevo default del CLI, ya no Karma).
-
-### Estado de `apps/web` (scaffold)
-
-- `ng new` con `--ssr --routing --style=scss`. Genera SSR + prerender.
-- `apps/web/src/app/app.routes.server.ts`: `{ path: '**', renderMode: RenderMode.Prerender }` →
-  **todas las rutas se prerenderean a HTML estático en build**.
-- `angular.json` → `outputMode: "server"`: además del HTML estático genera un server bundle Express
-  como fallback. En la fase de despliegue evaluar cambiar a `outputMode: "static"` (prerender puro,
-  sin server Node) si el hosting es estático — es lo más simple para Vercel/Netlify.
-- **Verificación SSG hecha:** `npm run build -w apps/web` → `dist/web/browser/index.html` (21 KB)
-  contiene el contenido real renderizado, no un shell vacío. Esto es exactamente la corrección del
-  hallazgo de la sección 1.
-- El `app.html` por defecto es la landing de bienvenida de Angular (~20 KB); se reemplaza en la
-  fase de layout (Fase 6).
-
-### Estado de `apps/api` (scaffold)
-
-- `nest new` (NestJS 12). Genera `AppModule` / `AppController` / `AppService` con un `GET /` que
-  devuelve "Hello World!" — placeholder, se reemplaza por el endpoint de contacto real en Fase 9.
-- **ESM:** el scaffold usa `"type": "module"` y los imports llevan extensión `.js` (ej.
-  `./app.module.js`). Es lo normal en NestJS moderno, no confundir con un error.
-- **Lint:** `oxlint` (rápido, en Rust) en vez de ESLint. **Tests:** Vitest (unit + e2e con
-  `vitest.config.e2e.ts`), no Jest.
-- **Limpieza hecha:** se quitó `@nestjs/mau` (herramienta de `nest deploy` que no usamos) y el
-  script `deploy`. Eso eliminó las 5 vulnerabilidades de npm audit que arrastraba (inquirer / tmp
-  / undici). `npm audit` → **0 vulnerabilidades**. También se corrigió `license` a MIT y `author`.
-- **Verificado:** `npm run build -w apps/api` compila; `npm run test -w apps/api` pasa (1 test).
-
-### Estado de `libs/shared`
-
-- Paquete `@portfolio/shared`, **solo tipos** (interfaces y type aliases, sin código en runtime).
-- `exports` apunta directo a `src/index.ts` — **sin paso de build**. Funciona porque los `import type`
-  se borran al compilar: Angular (esbuild) igual podría empaquetar `.ts`, y NestJS (tsc/nodenext)
-  nunca intenta resolverlo en runtime. Si en el futuro se necesita un valor compartido (const/enum),
-  hay que agregar `tsc → dist/` y apuntar `exports` al `.js`. Está documentado en `libs/shared/README.md`.
-- **Modelos:** `Locale` / `Localized<T>` (contenido bilingüe ES-EN como `Record<Locale, T>`),
-  `Skill` / `SkillCategory`, `Project` / `ProjectLinks` / `ProjectImage` (con `problem`/`solution`/`impact`),
-  `Experience`, `SocialLink` / `SocialPlatform`.
-- **Wiring:** `apps/web` y `apps/api` declaran `"@portfolio/shared": "*"`; `npm install` crea el
-  symlink `node_modules/@portfolio/shared → libs/shared`.
-- Script `typecheck` en `libs/shared` y en la raíz (`npm run typecheck`, corre en todos los workspaces).
-- **Verificado:** `typecheck` de la lib pasa; con imports de prueba, `apps/web` y `apps/api` resuelven
-  `@portfolio/shared` y buildean OK.
-
-### Estado de CI (`.github/workflows/ci.yml`)
-
-- **Trigger:** push a `main` y cualquier pull request.
-- **Un job (`verify`)** en `ubuntu-latest`: checkout → `setup-node` (lee `.nvmrc` → Node 22.23.1,
-  cache de npm) → `npm ci` → `npm run typecheck` → `npm run lint` → `npm run test` → `npm run build`.
-- `concurrency` cancela runs viejos si llegan pushes seguidos a la misma rama.
-- `permissions: contents: read` (mínimo privilegio).
-- **Scripts de la raíz** (explícitos, no `--workspaces --if-present` porque ese combo es poco
-  fiable al anidar `npm run`):
-  - `typecheck` → `libs/shared` (`tsc`) + `apps/api` (`tsc -p tsconfig.build.json --noEmit`)
-  - `lint` → `apps/api` (`oxlint`)
-  - `test` → `apps/web` (`ng test`, Vitest, corre y sale) + `apps/api` (`vitest run`)
-  - `build` → `apps/web` (`ng build`, incluye chequeo de templates con ngc) + `apps/api` (`nest build`)
-- **Pendiente:** `apps/web` no tiene linter aún. Agregar `angular-eslint` en la Fase 6 o 7 y
-  sumar `apps/web` al script `lint` de la raíz.
-- Badge de estado en el `README.md`.
-- **Verificado en local:** los 4 pasos pasan en verde.
-
-### Sistema de diseño (`apps/web/src/styles/`)
-
-- **`_tokens.scss`** — tokens de escala (lo que no cambia entre temas): tipografía (familia,
-  escala ~1.25, pesos), espaciado (escala de 4px), radios, sombras, layout (`--container-max`,
-  `--header-height`), movimiento (`--ease-out`, duraciones), z-index. Todo como CSS custom
-  properties en `:root`. Los **breakpoints** (`$bp-sm`..`$bp-xl`) van como variables SCSS porque
-  las media queries no leen custom properties.
-- **`_theme.scss`** — tokens de color **semánticos** (nombrados por función: `--bg`, `--surface`,
-  `--text`, `--text-muted`, `--border`, `--accent`, `--focus-ring`, `--gradient-brand`…).
-  `:root` = tema **oscuro** (default siempre). `:root[data-theme='light']` = tema claro.
-  El `ThemeService` (chunk B) pone/quita `data-theme` en `<html>`.
-  **Paleta provisional** (acento periwinkle `#7c8cff`) hasta que Marco defina el vibe visual (§8).
-- **`_reset.scss`** — reset moderno (box-sizing, sin márgenes, media block-level, `font: inherit`
-  en form controls) + bloque `prefers-reduced-motion` que anula animaciones/transiciones.
-- **`_base.scss`** — estilos de elementos sin clase con los tokens (body, h1-h4, p, a, code,
-  `:focus-visible`, `::selection`) + utilidades: `.container`, `.visually-hidden`, `.skip-link`.
-- **`styles.scss`** — `@use` de los 4 en orden de cascada: tokens → theme → reset → base.
-- **`index.html`** — `lang="es"`, `<title>` y `<meta description>` reales, `theme-color`,
-  fuentes Inter + JetBrains Mono desde Google Fonts (con `preconnect`).
-- **Verificado:** `build` de web OK, tokens presentes en el CSS prerendereado, tests pasan.
-  La página de bienvenida de Angular se ve distinta/rara con el reset aplicado — es esperable,
-  se reemplaza en el chunk C.
-
-### Tema claro/oscuro (`apps/web/src/app/core/theme.service.ts`)
-
-- `ThemeService` (`providedIn: 'root'`): `signal<Theme>` con la elección actual, `toggle()` y `set()`.
-- **SSR-safe:** usa `isPlatformBrowser(PLATFORM_ID)`; en el server no toca `document` ni
-  `localStorage` y devuelve `'dark'` por defecto.
-- Un `effect()` sincroniza el valor a `<html data-theme="...">` y a `localStorage` cada vez que cambia.
-- **Anti-flash:** un `<script>` inline en `index.html` (antes de las fuentes) lee `localStorage` y
-  pone `data-theme` antes del primer pintado, así no hay parpadeo al recargar en modo claro.
-- Los tokens de `_theme.scss` ahora responden a `:root`, `:root[data-theme='dark']` y
-  `:root[data-theme='light']`.
-- **Pendiente:** respetar `prefers-color-scheme` en la primera visita (hoy siempre arranca oscuro).
-
-### Layout (`apps/web/src/app/`)
-
-- **`layout/header/`** — sticky, con blur. Marca "MS / Marco Silva" (`routerLink="/"`), nav con
-  anclas a las secciones futuras (`#sobre-mi`, `#stack`, …; se ocultan bajo `$bp-md`), y botón de
-  tema con icono sol/luna. Inyecta `ThemeService`.
-- **`layout/footer/`** — borde superior, `© <año> Marco Andrés Silva` + "Hecho con Angular y NestJS".
-  Los links de redes entran cuando Marco los entregue (§8).
-- **`pages/home/`** — hero mínimo provisional: eyebrow, título con nombre en gradiente, lead, y dos
-  botones (`.btn--primary` / `.btn--ghost`). Se reemplaza por el Hero real en el Paso 7.
-- **`app.ts` / `app.html`** — shell: `.skip-link` → `<app-header>` → `<main id="main-content">` con
-  `<router-outlet>` → `<app-footer>`. `app.scss`: grid `auto 1fr auto` para footer pegado abajo.
-- **`app.routes.ts`** — ruta `''` → `Home` con `title`. Componentes `OnPush`.
-- **`app.spec.ts`** — actualizado (el test viejo buscaba "Hello, web"); ahora verifica que rendericen
-  la marca del header y el skip-link. 3 tests pasan.
-- **Convención de nombres** (la del scaffold de Angular 22): archivos `nombre.ts` sin sufijo
-  `.component`, clases sin sufijo (`Header`, `Footer`, `Home`), selector con prefijo `app-`.
-
-### Decisión: contenido bilingüe en el modelo de datos
-
-El contenido de texto de cara al usuario (summary, problem, role, etc.) se tipa como `Localized<T>` =
-`{ es: T; en: T }`. Los datos (proyectos, experiencia) traen los dos idiomas en el mismo objeto.
-`@angular/localize` se encargará de las cadenas de UI (botones, labels), pero el contenido de datos
-no pasa por ese pipeline, así que se modela explícito. Alternativa descartada: dos archivos de datos
-separados por idioma (más difícil de mantener sincronizados).
+**Próximo paso concreto:** Paso 6 chunk D — instalar y configurar `@angular/localize`, marcar los
+textos de UI (header, footer, home), definir los locales `es` (default) / `en` y builds localizados,
+y agregar el toggle de idioma en el header. Con eso se cierra el Paso 6.
 
 ---
 
-## 3. Decisiones y su porqué
+## 3. Pendiente de Marco (bloquea Fase 8 en adelante)
 
-### 3.1 Monorepo con **npm workspaces** (no Nx, no repos separados)
-
-**Qué es:** un solo repositorio con 3 piezas — `apps/web`, `apps/api`, `libs/shared` — unidas por
-la feature nativa `workspaces` de npm. Un `npm install` en la raíz instala todo y enlaza `libs/shared`
-localmente (symlink) para que las apps la importen como un paquete pero apuntando al código fuente.
-
-**Por qué npm workspaces y no Nx:**
-- Nx aporta caching de builds, `affected` (testear solo lo que cambió) y generadores. Ese valor se
-  nota en monorepos de 10+ proyectos o equipos grandes con builds lentos. Acá hay 2 apps y 1 lib;
-  un build tarda segundos y el beneficio nunca se percibe — solo el costo.
-- Nx agrega dependencias (Nx + plugins) que hay que migrar en cada release mayor de Angular, y a
-  veces bloquean el upgrade hasta que sale el plugin compatible.
-- npm workspaces da **la misma estructura** (`apps/`, `libs/`) con cero dependencias extra.
-
-**Por qué monorepo y no repos separados:** `libs/shared` (interfaces como `Project`) tiene que estar
-sincronizada entre web y api. En repos separados habría que duplicarla o publicar un paquete npm
-privado. En monorepo, es una carpeta que ambas apps miran directo.
-
-**Costo aceptado:** el deploy tiene que saber construir solo una parte del monorepo (se resuelve con
-`--workspace` en los comandos de build de Vercel/Render).
-
-### 3.2 Angular con **SSG / prerender** (no SPA client-side)
-
-**Qué es:** en el build, Angular renderiza cada ruta a un `.html` completo con el contenido dentro.
-Se sirve ese HTML estático (rápido, indexable) y luego Angular "hidrata" en el cliente para
-animaciones y formulario.
-
-**Por qué:** es la corrección directa del hallazgo de la sección 1. Un portafolio tiene que ser
-legible por buscadores y crawlers de IA sin ejecutar JS. SSG > SSR acá porque el contenido es
-mayormente estático (no cambia por request) y SSG permite hosting estático más barato y rápido.
-
-### 3.3 Backend: **NestJS ligero** (no serverless function, no servicio de formularios)
-
-**Por qué NestJS:**
-- Aporta valor de portafolio: demuestra Angular + NestJS full-stack.
-- El scope es chico: 1 endpoint de contacto (envía email) + rate limiting + honeypot. Opcional:
-  contador de visitas/likes.
-
-**Alternativas descartadas:** Formspree / Web3Forms (no muestran skill de backend); serverless
-function suelta (menos estructura, pero se puede reconsiderar si el hosting de la API es un problema).
-
-### 3.4 i18n: **bilingüe ES/EN con switch**
-
-Enfoque técnico a definir en Fase 6. Preferencia actual: `@angular/localize` con builds localizados
-(`/es`, `/en` como rutas reales) porque es lo correcto para SEO/SSG — cada idioma es HTML estático
-propio e indexable. Alternativa más simple (`ngx-translate`, runtime) se evaluará si el build
-localizado complica el pipeline.
-
-### 3.5 Estilos: **SCSS + design tokens**, tema oscuro por defecto con toggle
-
-Tokens (colores, espaciado, tipografía, radios) como CSS custom properties. Tema claro/oscuro por
-`data-theme` en `<html>`, persistido en `localStorage`, respeta `prefers-color-scheme` en la
-primera visita.
-
-### 3.6 Animaciones: **GSAP + ScrollTrigger** + Angular Animations API
-
-Respeta `prefers-reduced-motion` (sin animaciones no esenciales si el usuario lo pide).
-GSAP para scroll-driven y timelines complejas; Angular Animations para transiciones de estado
-y de ruta.
-
-### 3.7 Contenido: **datos estructurados en TS/JSON**, sin CMS
-
-Los proyectos, experiencia y skills viven como datos tipados en el repo. Sin CMS: menos
-infraestructura, y el contenido cambia poco.
-
-### 3.8 Extras incluidos desde el inicio
-
-| Extra | Por qué ahora |
-|-------|---------------|
-| **CI (GitHub Actions)** | Lint + test + build en cada push/PR. Base para deploy automático. Barato de montar con el repo vacío, caro después. |
-| **Playwright E2E** | El plan pide "prueba end-to-end del formulario". Playwright prueba flujos reales (form, switch idioma/tema) en navegador. |
-| **Lighthouse CI** | Meta del plan: Lighthouse ≥90. Lo hace automático y bloqueante en cada PR, en vez de una revisión manual al final. |
-
-**Pospuesto:** OG images dinámicas — se decide junto con "¿hay páginas de detalle por proyecto?".
-Si son pocas rutas fijas, bastan 1-2 imágenes estáticas.
+- [ ] **CV / lista de proyectos reales:** por proyecto — nombre, descripción, stack, link demo,
+      link repo, capturas.
+- [ ] **Foto / avatar** y **links de redes** (LinkedIn, GitHub, email…).
+- [ ] **Paleta de color / vibe visual.** Hoy hay una paleta **provisional** (tema oscuro, acento
+      periwinkle `#7c8cff`). Cambiarla = editar solo `apps/web/src/styles/_theme.scss`.
 
 ---
 
-## 4. Estructura del repo
+## 4. Cómo correr el proyecto
+
+```bash
+nvm use              # Node 22.23.1 (lo exige Angular 22; la máquina tiene v20 y v22)
+npm install          # una vez, instala todos los workspaces
+npm run web          # dev server de apps/web → http://localhost:4200
+npm run api          # dev server de apps/api → http://localhost:3000
+
+npm run typecheck    # \
+npm run lint         #  } lo que corre la CI en cada push/PR
+npm run test         #  }
+npm run build        # /
+```
+
+`git push` lo hace Marco (el ssh-agent no siempre está cargado en la sesión del asistente).
+
+---
+
+## 5. Qué hay construido hoy
+
+**Stack:** monorepo npm workspaces · `apps/web` Angular 22 (standalone, signals, SSG/prerender,
+SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS solo-tipos.
+
+- **`apps/web` — SSG:** `app.routes.server.ts` prerenderea `**` → todas las rutas a HTML estático.
+  `angular.json` usa `outputMode: "server"` (genera también un server Express de fallback); en el
+  despliegue evaluar `"static"` si el hosting es puramente estático.
+- **`apps/web` — sistema de diseño** (`src/styles/`): `_tokens.scss` (escala: tipografía, espaciado
+  4px, radios, sombras, movimiento, z-index — como CSS custom properties; breakpoints como vars
+  SCSS), `_theme.scss` (colores semánticos: `--bg`, `--surface`, `--text`, `--accent`…; oscuro por
+  defecto, claro con `[data-theme='light']`), `_reset.scss` (reset moderno + `prefers-reduced-motion`),
+  `_base.scss` (estilos base + `.container` / `.visually-hidden` / `.skip-link`).
+- **`apps/web` — tema:** `app/core/theme.service.ts` — signal + `localStorage`, SSR-safe, escribe
+  `data-theme` en `<html>`. Script anti-flash en `index.html`. Pendiente: respetar
+  `prefers-color-scheme` en la primera visita (hoy siempre arranca oscuro).
+- **`apps/web` — layout:** `app/layout/header` (sticky, marca, nav a secciones futuras, toggle
+  sol/luna), `app/layout/footer`, `app/pages/home` (hero provisional). `app.html` = skip-link →
+  header → `<main>` con router-outlet → footer. Convención de nombres del scaffold de Angular 22:
+  archivo `nombre.ts`, clase sin sufijo (`Header`), selector `app-…`, componentes `OnPush`.
+- **`apps/api`:** solo el scaffold — `GET /` placeholder. El endpoint de contacto real llega en Fase 9.
+- **`libs/shared`** (`@portfolio/shared`): interfaces `Project`, `Experience`, `Skill`, `SocialLink`
+  + `Locale` / `Localized<T>`. **Solo tipos, sin build** — `exports` apunta a `src/index.ts` y los
+  `import type` se borran al compilar. Si se necesita un valor en runtime, hay que agregar build a
+  `dist/`. Detalle en `libs/shared/README.md`.
+- **CI** (`.github/workflows/ci.yml`): push a `main` + PRs → un job en ubuntu que corre
+  typecheck / lint / test / build. Scripts de la raíz **explícitos por workspace** (el combo
+  `--workspaces --if-present` falla al anidar `npm run`). Pendiente: `apps/web` no tiene linter
+  (agregar `angular-eslint`).
+
+---
+
+## 6. Decisiones y su porqué
+
+### npm workspaces (no Nx, no repos separados)
+Nx aporta cache de builds y `affected`, valioso en monorepos grandes; acá hay 2 apps + 1 lib y el
+beneficio no se nota, solo el costo (deps que migrar en cada release de Angular). Workspaces da la
+misma estructura `apps/`+`libs/` con cero deps extra. Repos separados obligarían a duplicar o
+publicar `libs/shared`.
+
+### Angular SSG / prerender (no SPA client-side)
+Corrección directa del hallazgo (§1). SSG > SSR porque el contenido es casi todo estático y permite
+hosting estático más barato y rápido.
+
+### Backend NestJS ligero
+Aporta valor de portafolio (full-stack Angular + NestJS). Scope chico: 1 endpoint de contacto +
+rate limiting + honeypot. Descartado Formspree/Web3Forms (no muestran skill de backend).
+
+### i18n con `@angular/localize` (builds localizados)
+`/es` y `/en` como HTML estático propio e indexable — correcto para SEO/SSG. Alternativa runtime
+(`ngx-translate`) se evaluaría solo si el build localizado complica el pipeline.
+
+### Contenido bilingüe en el modelo de datos: `Localized<T> = { es: T; en: T }`
+`@angular/localize` traduce las cadenas de UI, pero los *datos* (proyectos, experiencia) no pasan
+por ese pipeline. Van con los dos idiomas en el mismo objeto. Descartado: dos archivos de datos por
+idioma (difícil de mantener sincronizados).
+
+### Estilos: SCSS + design tokens, tema oscuro por defecto
+Tokens como CSS custom properties (permiten cambiar de tema y leerse desde JS). `data-theme` en
+`<html>`, persistido en `localStorage`.
+
+### Animaciones: GSAP + ScrollTrigger + Angular Animations API
+GSAP para scroll-driven y timelines; Angular Animations para transiciones de estado/ruta. Respeta
+`prefers-reduced-motion`. (Se instala en Fase 7.)
+
+### Contenido en datos tipados, sin CMS
+Menos infraestructura y el contenido cambia poco.
+
+### Extras desde el inicio: CI, Playwright E2E, Lighthouse CI
+Baratos de montar temprano, caros después. Playwright cubre la "prueba E2E del formulario" del plan;
+Lighthouse CI hace la meta "≥90" automática y bloqueante. **Pospuesto:** OG images dinámicas (se
+decide junto con "¿hay páginas de detalle por proyecto?").
+
+---
+
+## 7. Estructura del repo
 
 ```
 Portfolio-Developer/
 ├── apps/
-│   ├── web/          # Angular (SSG) — la página
-│   └── api/          # NestJS — contacto por email + anti-spam
+│   ├── web/     # Angular 22 (SSG) — el sitio
+│   └── api/     # NestJS 12 — contacto por email + anti-spam
 ├── libs/
-│   └── shared/       # interfaces TS: Project, Experience, Skill, SocialLink
-├── .github/
-│   └── workflows/    # CI
-├── package.json      # raíz: define workspaces + scripts orquestadores
-├── .nvmrc            # Node 20.19.2
-├── .editorconfig
-├── .gitignore
-├── ARCHITECTURE.md   # este archivo
-├── README.md
-└── LICENSE           # MIT
+│   └── shared/  # @portfolio/shared — interfaces TS (solo tipos)
+├── .github/workflows/ci.yml
+├── package.json         # raíz: workspaces + scripts orquestadores
+├── .nvmrc               # 22.23.1
+├── ARCHITECTURE.md · README.md · LICENSE (MIT) · .editorconfig · .gitignore
 ```
 
 ---
 
-## 5. Secciones del sitio (Fase 7+)
+## 8. Secciones del sitio (Fase 7+)
 
-1. **Hero** — nombre, rol, propuesta de valor, animación de texto, CTAs, marquee de tecnologías.
-2. **Sobre mí** — foto, historia, stats.
-3. **Stack / Habilidades** — por categoría.
-4. **Proyectos destacados** (3-6) — la sección más importante: imagen, badges de tech, links
-   demo/repo, estructura problema → solución → impacto.
-5. **Experiencia** — timeline.
-6. **Certificaciones / logros** — opcional.
-7. **Contacto** — formulario + links directos.
-8. **Footer**.
+Hero · Sobre mí · Stack/Habilidades (por categoría) · **Proyectos destacados** (3–6, la sección más
+importante: imagen, badges de tech, links demo/repo, problema→solución→impacto) · Experiencia
+(timeline) · Certificaciones (opcional) · Contacto (form + links) · Footer.
 
 ---
 
-## 6. SEO / GEO (Fase 10)
+## 9. SEO / GEO (Fase 10)
 
-- Prerender/SSG de todas las rutas.
-- Meta tags por página: `title`, `description`, Open Graph, Twitter Card.
-- JSON-LD: `schema.org/Person` + `WebSite` + `ProfilePage`.
-- `sitemap.xml`, `robots.txt`.
-- `llms.txt` en la raíz.
-- Accesibilidad (a11y): skip-link, focus-visible, roles/labels, contraste.
-- Performance: Lighthouse ≥90 en Performance / SEO / Accessibility / Best Practices.
-
----
-
-## 7. Convenciones
-
-### Commits (Conventional Commits)
-
-`tipo(scope): descripción en minúscula`
-
-- **tipos:** `feat`, `fix`, `chore`, `docs`, `style`, `refactor`, `test`, `ci`, `perf`, `build`
-- **scopes:** `web`, `api`, `shared`, `ci`, `repo` (o vacío para cambios transversales)
-- Un commit por hito / funcionalidad. `ARCHITECTURE.md` se actualiza en el mismo commit cuando aplica.
-
-Ejemplos: `feat(web): scaffold angular app with ssg`, `docs: update architecture status`,
-`ci: add lint and build workflow`.
-
-### Branching
-
-`main` es la rama de despliegue. Trabajo en ramas `feat/...` o `fix/...` cuando el cambio es grande;
-commits directos a `main` para el scaffolding inicial.
-
-### Push
-
-El `ssh-agent` de esta máquina no siempre está cargado en la sesión. Los `git push` los ejecuta
-Marco (con su passphrase). Los commits locales los hace el asistente.
+- [ ] Prerender/SSG de todas las rutas
+- [ ] Meta tags por página: `title`, `description`, Open Graph, Twitter Card
+- [ ] JSON-LD: `schema.org/Person` + `WebSite` + `ProfilePage`
+- [ ] `sitemap.xml`, `robots.txt`, `llms.txt`
+- [ ] a11y: skip-link ✅ · focus-visible ✅ · roles/labels · contraste
+- [ ] Lighthouse ≥ 90 en Performance / SEO / Accessibility / Best Practices
 
 ---
 
-## 8. Pendiente de Marco (bloquea Fase 8 en adelante)
+## 10. Convenciones
 
-- [ ] **CV / lista de proyectos reales:** nombre, descripción, stack, link demo, link repo, capturas.
-- [ ] **Foto / avatar** y links de redes (LinkedIn, GitHub, email, etc.).
-- [ ] **Preferencia de paleta de color / vibe visual.**
+**Commits** (Conventional Commits): `tipo(scope): descripción en minúscula`. Tipos: `feat`, `fix`,
+`chore`, `docs`, `style`, `refactor`, `test`, `ci`, `perf`, `build`. Scopes: `web`, `api`, `shared`,
+`ci`, `repo`. **Sin footer de atribución de IA.** `ARCHITECTURE.md` se actualiza en el mismo commit.
 
----
+**Flujo de trabajo:** el asistente escribe el código (incluido lo visual) y explica cada archivo;
+**Marco revisa y hace el commit** con el mensaje que se le entrega; Marco hace el `git push`.
 
-## 9. Verificación (antes de dar por cerrado)
-
-- `curl` / view-source del build final: contenido presente sin ejecutar JS (valida SSG).
-- Lighthouse ≥90 en Performance / SEO / Accessibility / Best Practices.
-- Prueba end-to-end del formulario de contacto.
-- Prueba del switch de idioma y de tema.
-- Revisión responsive: mobile / tablet / desktop.
+**Branching:** commits directos a `main` por ahora (repo nuevo, un solo dev).
 
 ---
 
-## 10. Bitácora de cambios
+## 11. Verificación antes de dar por cerrado
 
-| Fecha | Cambio |
-|-------|--------|
-| 2026-09-01 | Paso 1: esqueleto del monorepo — git init, npm workspaces, archivos raíz, `ARCHITECTURE.md`. |
-| 2026-09-02 | Paso 2: `apps/web` scaffoldeado con Angular 22 + SSR/prerender. Node subido a 22.23.1 (Angular 22 lo exige). Build verificado: el HTML prerendereado tiene contenido real. |
-| 2026-09-02 | Paso 3: `apps/api` scaffoldeado con NestJS 12 (ESM, oxlint, Vitest). Quitado `@nestjs/mau` → 0 vulnerabilidades. Build y test verificados. |
-| 2026-09-02 | Historial aplastado en 1 commit inicial limpio (sin footer de IA), `push --force`. |
-| 2026-09-02 | Paso 4: `libs/shared` (`@portfolio/shared`) — interfaces `Project`/`Experience`/`Skill`/`SocialLink` + `Localized<T>` para contenido bilingüe. Paquete solo-tipos, sin build. Wiring con las 2 apps verificado. |
-| 2026-09-02 | Paso 5: CI con GitHub Actions (typecheck + lint + test + build en push/PR). Scripts de la raíz reescritos explícitos por workspace. `typecheck` agregado a `apps/api`. Badge en README. |
-| 2026-09-02 | Paso 6 chunk A: base del sistema de diseño en `apps/web/src/styles/` (tokens de escala, tema oscuro/claro con `data-theme`, reset moderno, estilos base, utilidades). Fuentes Inter + JetBrains Mono. `index.html` con metadatos reales. Paleta provisional. (`d1d1424`) |
-| 2026-09-02 | Paso 6 chunks B+C: `ThemeService` (signal + localStorage, SSR-safe) + anti-flash + toggle sol/luna. Layout shell (header sticky + footer + home mínima), reemplaza la landing de bienvenida de Angular. Ruta `''` → `Home`. Primera vista real del sitio. |
+- `curl` / view-source del build: contenido presente sin ejecutar JS (valida SSG)
+- Lighthouse ≥ 90 en las 4 categorías
+- Prueba E2E del formulario de contacto
+- Prueba del switch de idioma y de tema
+- Responsive: mobile / tablet / desktop
+
+---
+
+## 12. Bitácora
+
+| Fecha | Hito |
+|---|---|
+| 2026-09-01 | Paso 1 — esqueleto del monorepo (npm workspaces, `ARCHITECTURE.md`). |
+| 2026-09-02 | Paso 2 — `apps/web` Angular 22 + SSR/prerender. Node → 22.23.1. SSG verificado. |
+| 2026-09-02 | Paso 3 — `apps/api` NestJS 12. Quitado `@nestjs/mau` → 0 vulnerabilidades. |
+| 2026-09-02 | Historial aplastado en 1 commit inicial limpio (`push --force`). |
+| 2026-09-02 | Paso 4 — `libs/shared` (`@portfolio/shared`): interfaces + `Localized<T>`, solo tipos. `2dfecab` |
+| 2026-09-02 | Paso 5 — CI GitHub Actions (typecheck/lint/test/build). Badge en README. `05acc1f` |
+| 2026-09-02 | Paso 6 A — base del sistema de diseño (tokens, tema, reset, fuentes). `d1d1424` |
+| 2026-09-02 | Paso 6 B+C — `ThemeService` + toggle · layout shell (header/footer/home). Primera vista real del sitio. `a204ce6` |
