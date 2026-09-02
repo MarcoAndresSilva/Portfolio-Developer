@@ -1,0 +1,69 @@
+// =============================================================================
+// Tokens de color — semánticos (nombrados por función, no por color).
+//
+// Estrategia de tema:
+//   :root                     → tema OSCURO (por defecto, siempre)
+//   :root[data-theme='light'] → tema CLARO (cuando el toggle lo activa)
+//
+// El atributo data-theme lo pone/quita el ThemeService en <html> (sub-paso 6.3).
+//
+// PALETA PROVISIONAL: acento periwinkle sobrio. Se ajusta cuando Marco defina
+// el vibe visual (pendiente en ARCHITECTURE.md §8).
+// =============================================================================
+
+:root {
+  color-scheme: dark;
+
+  --bg: #0b0d12;
+  --surface: #12151c;
+  --surface-2: #1a1e27;
+  --surface-3: #232833;
+
+  --border: #262b36;
+  --border-strong: #363c48;
+
+  --text: #e8eaed;
+  --text-muted: #9aa1ac;
+  --text-subtle: #6b7280;
+
+  --accent: #7c8cff;
+  --accent-hover: #9aa6ff;
+  --accent-soft: rgba(124, 140, 255, 0.14); // fondo tenue para chips/hover
+  --accent-contrast: #0b0d12; // texto sobre un fondo de acento sólido
+
+  --success: #4ade80;
+  --danger: #f87171;
+
+  --focus-ring: #7c8cff;
+
+  // Gradiente de marca, para acentos grandes (hero, dividers)
+  --gradient-brand: linear-gradient(135deg, #7c8cff 0%, #b58cff 100%);
+}
+
+:root[data-theme='light'] {
+  color-scheme: light;
+
+  --bg: #ffffff;
+  --surface: #f7f8fa;
+  --surface-2: #eef0f4;
+  --surface-3: #e4e7ec;
+
+  --border: #e0e3e9;
+  --border-strong: #c9cdd6;
+
+  --text: #1a1d24;
+  --text-muted: #545b66;
+  --text-subtle: #8a919c;
+
+  --accent: #4f46e5;
+  --accent-hover: #4338ca;
+  --accent-soft: rgba(79, 70, 229, 0.1);
+  --accent-contrast: #ffffff;
+
+  --success: #16a34a;
+  --danger: #dc2626;
+
+  --focus-ring: #4f46e5;
+
+  --gradient-brand: linear-gradient(135deg, #4f46e5 0%, #9333ea 100%);
+}

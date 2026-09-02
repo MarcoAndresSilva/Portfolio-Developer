@@ -1,0 +1,86 @@
+// =============================================================================
+// Tokens de escala — valores base del sistema de diseño.
+// Acá va SOLO lo que NO cambia entre tema claro y oscuro.
+// Los colores van en _theme.scss.
+//
+// Se exponen como CSS custom properties para poder usarlas en cualquier .scss,
+// en los componentes y en runtime (JS).
+// =============================================================================
+
+:root {
+  // --- Tipografía -------------------------------------------------------------
+  --font-sans: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, monospace;
+
+  // Escala de tamaños (ratio ~1.25 "major third")
+  --text-xs: 0.75rem; // 12px
+  --text-sm: 0.875rem; // 14px
+  --text-base: 1rem; // 16px
+  --text-lg: 1.125rem; // 18px
+  --text-xl: 1.5rem; // 24px
+  --text-2xl: 1.953rem; // ~31px
+  --text-3xl: 2.441rem; // ~39px
+  --text-4xl: 3.052rem; // ~49px
+  --text-5xl: 3.815rem; // ~61px
+
+  --leading-tight: 1.15;
+  --leading-snug: 1.35;
+  --leading-normal: 1.6;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --tracking-tight: -0.02em;
+  --tracking-normal: 0;
+
+  // --- Espaciado (escala de 4px) -------------------------------------------
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+  --space-32: 8rem;
+
+  // --- Radios -----------------------------------------------------------------
+  --radius-sm: 0.25rem;
+  --radius-md: 0.5rem;
+  --radius-lg: 1rem;
+  --radius-full: 999px;
+
+  // --- Sombras --------------------------------------------------------------
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.12);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.18);
+  --shadow-lg: 0 16px 40px rgba(0, 0, 0, 0.28);
+
+  // --- Layout -------------------------------------------------------------
+  --container-max: 72rem; // 1152px, ancho máximo del contenido
+  --container-pad: var(--space-6);
+  --header-height: 4rem;
+
+  // --- Movimiento -------------------------------------------------------
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.65, 0, 0.35, 1);
+  --duration-fast: 150ms;
+  --duration-base: 250ms;
+  --duration-slow: 400ms;
+
+  // --- Capas (z-index) ------------------------------------------------------
+  --z-header: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+}
+
+// Breakpoints — como variables SCSS: las media queries no leen custom properties.
+$bp-sm: 40rem; // 640px
+$bp-md: 48rem; // 768px
+$bp-lg: 64rem; // 1024px
+$bp-xl: 80rem; // 1280px

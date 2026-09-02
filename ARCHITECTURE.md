@@ -4,7 +4,7 @@
 > léelo primero: acá está qué se construyó, por qué se tomó cada decisión, y cuáles son los
 > siguientes pasos. Se actualiza en cada hito (idealmente en el mismo commit que introduce el cambio).
 
-Última actualización: **2026-09-02** — Paso 5 completado (CI con GitHub Actions).
+Última actualización: **2026-09-02** — Paso 6 en curso (base del sistema de diseño: tokens + tema).
 
 ---
 
@@ -36,7 +36,7 @@ Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja 
 | 3 | `apps/api` — NestJS | ✅ Hecho |
 | 4 | `libs/shared` + wiring entre apps | ✅ Hecho |
 | 5 | CI (GitHub Actions) | ✅ Hecho |
-| 6 | Sistema de diseño + layout + i18n base | ⏳ Siguiente |
+| 6 | Sistema de diseño + layout + i18n base | ⏳ En curso |
 | 7 | Hero + Sobre mí + Skills con animaciones | ⬜ Pendiente |
 | 8 | Proyectos destacados (bloqueado: necesita contenido real de Marco) | ⬜ Pendiente |
 | 9 | Experiencia + Contacto (form conectado a API + anti-spam) | ⬜ Pendiente |
@@ -44,9 +44,18 @@ Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja 
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ Pendiente |
 | 12 | Despliegue (web + api) + Google Search Console | ⬜ Pendiente |
 
-**Próximo paso concreto:** Paso 6 — sistema de diseño y layout: tokens SCSS (colores, espaciado,
-tipografía), tema oscuro/claro con toggle, header + nav + footer, grid responsive, y base de i18n
-ES/EN. Reemplaza el `app.html` de bienvenida de Angular.
+**Próximo paso concreto:** Paso 6, chunk B — `ThemeService` (signal + `localStorage`, SSR-safe,
+pone `data-theme` en `<html>`) + script anti-flash en `index.html` + botón toggle.
+Después chunk C (layout: header + footer, reemplazar `app.html`) y chunk D (i18n ES/EN).
+
+### Paso 6 — sub-progreso
+
+| Chunk | Contenido | Estado |
+|-------|-----------|--------|
+| A | Base del sistema de diseño (tokens, tema, reset, base, fuentes) | ✅ Hecho (sin commitear aún / commiteado) |
+| B | ThemeService + toggle de tema | ⬜ |
+| C | Layout shell: header + footer, reemplaza `app.html` de bienvenida | ⬜ |
+| D | Base i18n ES/EN (`@angular/localize`) + toggle de idioma | ⬜ |
 
 ### Notas de entorno
 
@@ -115,6 +124,29 @@ ES/EN. Reemplaza el `app.html` de bienvenida de Angular.
   sumar `apps/web` al script `lint` de la raíz.
 - Badge de estado en el `README.md`.
 - **Verificado en local:** los 4 pasos pasan en verde.
+
+### Sistema de diseño (`apps/web/src/styles/`)
+
+- **`_tokens.scss`** — tokens de escala (lo que no cambia entre temas): tipografía (familia,
+  escala ~1.25, pesos), espaciado (escala de 4px), radios, sombras, layout (`--container-max`,
+  `--header-height`), movimiento (`--ease-out`, duraciones), z-index. Todo como CSS custom
+  properties en `:root`. Los **breakpoints** (`$bp-sm`..`$bp-xl`) van como variables SCSS porque
+  las media queries no leen custom properties.
+- **`_theme.scss`** — tokens de color **semánticos** (nombrados por función: `--bg`, `--surface`,
+  `--text`, `--text-muted`, `--border`, `--accent`, `--focus-ring`, `--gradient-brand`…).
+  `:root` = tema **oscuro** (default siempre). `:root[data-theme='light']` = tema claro.
+  El `ThemeService` (chunk B) pone/quita `data-theme` en `<html>`.
+  **Paleta provisional** (acento periwinkle `#7c8cff`) hasta que Marco defina el vibe visual (§8).
+- **`_reset.scss`** — reset moderno (box-sizing, sin márgenes, media block-level, `font: inherit`
+  en form controls) + bloque `prefers-reduced-motion` que anula animaciones/transiciones.
+- **`_base.scss`** — estilos de elementos sin clase con los tokens (body, h1-h4, p, a, code,
+  `:focus-visible`, `::selection`) + utilidades: `.container`, `.visually-hidden`, `.skip-link`.
+- **`styles.scss`** — `@use` de los 4 en orden de cascada: tokens → theme → reset → base.
+- **`index.html`** — `lang="es"`, `<title>` y `<meta description>` reales, `theme-color`,
+  fuentes Inter + JetBrains Mono desde Google Fonts (con `preconnect`).
+- **Verificado:** `build` de web OK, tokens presentes en el CSS prerendereado, tests pasan.
+  La página de bienvenida de Angular se ve distinta/rara con el reset aplicado — es esperable,
+  se reemplaza en el chunk C.
 
 ### Decisión: contenido bilingüe en el modelo de datos
 
@@ -307,3 +339,4 @@ Marco (con su passphrase). Los commits locales los hace el asistente.
 | 2026-09-02 | Historial aplastado en 1 commit inicial limpio (sin footer de IA), `push --force`. |
 | 2026-09-02 | Paso 4: `libs/shared` (`@portfolio/shared`) — interfaces `Project`/`Experience`/`Skill`/`SocialLink` + `Localized<T>` para contenido bilingüe. Paquete solo-tipos, sin build. Wiring con las 2 apps verificado. |
 | 2026-09-02 | Paso 5: CI con GitHub Actions (typecheck + lint + test + build en push/PR). Scripts de la raíz reescritos explícitos por workspace. `typecheck` agregado a `apps/api`. Badge en README. |
+| 2026-09-02 | Paso 6 chunk A: base del sistema de diseño en `apps/web/src/styles/` (tokens de escala, tema oscuro/claro con `data-theme`, reset moderno, estilos base, utilidades). Fuentes Inter + JetBrains Mono. `index.html` con metadatos reales. Paleta provisional. |
