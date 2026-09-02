@@ -1,5 +1,7 @@
 # Portfolio-Developer
 
+[![CI](https://github.com/MarcoAndresSilva/Portfolio-Developer/actions/workflows/ci.yml/badge.svg)](https://github.com/MarcoAndresSilva/Portfolio-Developer/actions/workflows/ci.yml)
+
 Portafolio web de **Marco Andrés Silva** — desarrollador Full Stack (Angular / NestJS).
 
 Pensado como carta de presentación para reclutadores humanos **y** para buscadores / crawlers de IA:
@@ -23,10 +25,13 @@ contenido real en el HTML (SSG), no una SPA que muestra "necesitas JavaScript".
 npm install          # instala todos los workspaces
 npm run web           # levanta apps/web en dev
 npm run api           # levanta apps/api en dev
-npm run build         # build de todos los workspaces
-npm run test          # tests de todos los workspaces
-npm run lint          # lint de todos los workspaces
+npm run typecheck     # tsc de libs/shared y apps/api
+npm run lint          # oxlint de apps/api
+npm run test          # tests de apps/web y apps/api
+npm run build         # build de apps/web y apps/api
 ```
+
+Estos 4 últimos son los que corre la CI (`.github/workflows/ci.yml`) en cada push y PR.
 
 ## Documentación
 

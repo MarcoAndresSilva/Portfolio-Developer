@@ -4,7 +4,7 @@
 > léelo primero: acá está qué se construyó, por qué se tomó cada decisión, y cuáles son los
 > siguientes pasos. Se actualiza en cada hito (idealmente en el mismo commit que introduce el cambio).
 
-Última actualización: **2026-09-02** — Paso 3 completado (NestJS scaffoldeado y verificado).
+Última actualización: **2026-09-02** — Paso 5 completado (CI con GitHub Actions).
 
 ---
 
@@ -34,9 +34,9 @@ Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja 
 | 1 | Esqueleto del monorepo (git, workspaces, archivos raíz, docs) | ✅ Hecho |
 | 2 | `apps/web` — Angular con SSG | ✅ Hecho |
 | 3 | `apps/api` — NestJS | ✅ Hecho |
-| 4 | `libs/shared` + wiring entre apps | ⏳ Siguiente |
-| 5 | CI (GitHub Actions) | ⬜ Pendiente |
-| 6 | Sistema de diseño + layout + i18n base | ⬜ Pendiente |
+| 4 | `libs/shared` + wiring entre apps | ✅ Hecho |
+| 5 | CI (GitHub Actions) | ✅ Hecho |
+| 6 | Sistema de diseño + layout + i18n base | ⏳ Siguiente |
 | 7 | Hero + Sobre mí + Skills con animaciones | ⬜ Pendiente |
 | 8 | Proyectos destacados (bloqueado: necesita contenido real de Marco) | ⬜ Pendiente |
 | 9 | Experiencia + Contacto (form conectado a API + anti-spam) | ⬜ Pendiente |
@@ -44,9 +44,9 @@ Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja 
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ Pendiente |
 | 12 | Despliegue (web + api) + Google Search Console | ⬜ Pendiente |
 
-**Próximo paso concreto:** Paso 4 — `libs/shared`: paquete TS con las interfaces
-(`Project`, `Experience`, `Skill`, `SocialLink`) y wiring para que `apps/web` y `apps/api`
-lo importen como `@portfolio/shared`. Commit `feat(shared): add shared types package`.
+**Próximo paso concreto:** Paso 6 — sistema de diseño y layout: tokens SCSS (colores, espaciado,
+tipografía), tema oscuro/claro con toggle, header + nav + footer, grid responsive, y base de i18n
+ES/EN. Reemplaza el `app.html` de bienvenida de Angular.
 
 ### Notas de entorno
 
@@ -81,6 +81,48 @@ lo importen como `@portfolio/shared`. Commit `feat(shared): add shared types pac
   script `deploy`. Eso eliminó las 5 vulnerabilidades de npm audit que arrastraba (inquirer / tmp
   / undici). `npm audit` → **0 vulnerabilidades**. También se corrigió `license` a MIT y `author`.
 - **Verificado:** `npm run build -w apps/api` compila; `npm run test -w apps/api` pasa (1 test).
+
+### Estado de `libs/shared`
+
+- Paquete `@portfolio/shared`, **solo tipos** (interfaces y type aliases, sin código en runtime).
+- `exports` apunta directo a `src/index.ts` — **sin paso de build**. Funciona porque los `import type`
+  se borran al compilar: Angular (esbuild) igual podría empaquetar `.ts`, y NestJS (tsc/nodenext)
+  nunca intenta resolverlo en runtime. Si en el futuro se necesita un valor compartido (const/enum),
+  hay que agregar `tsc → dist/` y apuntar `exports` al `.js`. Está documentado en `libs/shared/README.md`.
+- **Modelos:** `Locale` / `Localized<T>` (contenido bilingüe ES-EN como `Record<Locale, T>`),
+  `Skill` / `SkillCategory`, `Project` / `ProjectLinks` / `ProjectImage` (con `problem`/`solution`/`impact`),
+  `Experience`, `SocialLink` / `SocialPlatform`.
+- **Wiring:** `apps/web` y `apps/api` declaran `"@portfolio/shared": "*"`; `npm install` crea el
+  symlink `node_modules/@portfolio/shared → libs/shared`.
+- Script `typecheck` en `libs/shared` y en la raíz (`npm run typecheck`, corre en todos los workspaces).
+- **Verificado:** `typecheck` de la lib pasa; con imports de prueba, `apps/web` y `apps/api` resuelven
+  `@portfolio/shared` y buildean OK.
+
+### Estado de CI (`.github/workflows/ci.yml`)
+
+- **Trigger:** push a `main` y cualquier pull request.
+- **Un job (`verify`)** en `ubuntu-latest`: checkout → `setup-node` (lee `.nvmrc` → Node 22.23.1,
+  cache de npm) → `npm ci` → `npm run typecheck` → `npm run lint` → `npm run test` → `npm run build`.
+- `concurrency` cancela runs viejos si llegan pushes seguidos a la misma rama.
+- `permissions: contents: read` (mínimo privilegio).
+- **Scripts de la raíz** (explícitos, no `--workspaces --if-present` porque ese combo es poco
+  fiable al anidar `npm run`):
+  - `typecheck` → `libs/shared` (`tsc`) + `apps/api` (`tsc -p tsconfig.build.json --noEmit`)
+  - `lint` → `apps/api` (`oxlint`)
+  - `test` → `apps/web` (`ng test`, Vitest, corre y sale) + `apps/api` (`vitest run`)
+  - `build` → `apps/web` (`ng build`, incluye chequeo de templates con ngc) + `apps/api` (`nest build`)
+- **Pendiente:** `apps/web` no tiene linter aún. Agregar `angular-eslint` en la Fase 6 o 7 y
+  sumar `apps/web` al script `lint` de la raíz.
+- Badge de estado en el `README.md`.
+- **Verificado en local:** los 4 pasos pasan en verde.
+
+### Decisión: contenido bilingüe en el modelo de datos
+
+El contenido de texto de cara al usuario (summary, problem, role, etc.) se tipa como `Localized<T>` =
+`{ es: T; en: T }`. Los datos (proyectos, experiencia) traen los dos idiomas en el mismo objeto.
+`@angular/localize` se encargará de las cadenas de UI (botones, labels), pero el contenido de datos
+no pasa por ese pipeline, así que se modela explícito. Alternativa descartada: dos archivos de datos
+separados por idioma (más difícil de mantener sincronizados).
 
 ---
 
@@ -262,3 +304,6 @@ Marco (con su passphrase). Los commits locales los hace el asistente.
 | 2026-09-01 | Paso 1: esqueleto del monorepo — git init, npm workspaces, archivos raíz, `ARCHITECTURE.md`. |
 | 2026-09-02 | Paso 2: `apps/web` scaffoldeado con Angular 22 + SSR/prerender. Node subido a 22.23.1 (Angular 22 lo exige). Build verificado: el HTML prerendereado tiene contenido real. |
 | 2026-09-02 | Paso 3: `apps/api` scaffoldeado con NestJS 12 (ESM, oxlint, Vitest). Quitado `@nestjs/mau` → 0 vulnerabilidades. Build y test verificados. |
+| 2026-09-02 | Historial aplastado en 1 commit inicial limpio (sin footer de IA), `push --force`. |
+| 2026-09-02 | Paso 4: `libs/shared` (`@portfolio/shared`) — interfaces `Project`/`Experience`/`Skill`/`SocialLink` + `Localized<T>` para contenido bilingüe. Paquete solo-tipos, sin build. Wiring con las 2 apps verificado. |
+| 2026-09-02 | Paso 5: CI con GitHub Actions (typecheck + lint + test + build en push/PR). Scripts de la raíz reescritos explícitos por workspace. `typecheck` agregado a `apps/api`. Badge en README. |
