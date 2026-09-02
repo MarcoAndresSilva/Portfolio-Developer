@@ -1,0 +1,43 @@
+# Dependencies
+node_modules/
+.pnpm-store/
+
+# Build output
+dist/
+tmp/
+out-tsc/
+/apps/**/dist/
+/libs/**/dist/
+*.tsbuildinfo
+
+# Angular
+.angular/
+.nx/
+
+# NestJS
+apps/api/dist/
+
+# Testing
+coverage/
+/playwright-report/
+/playwright/.cache/
+/test-results/
+.lighthouseci/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Editors / OS
+.idea/
+.vscode/*
+!.vscode/extensions.json
+!.vscode/settings.json
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+yarn-error.log*

@@ -1,0 +1,22 @@
+{
+  "name": "portfolio-developer",
+  "version": "0.0.0",
+  "description": "Portafolio de desarrollador de Marco Andrés Silva. Angular (SSG) + NestJS, monorepo con npm workspaces.",
+  "private": true,
+  "author": "Marco Andrés Silva <marco.silvaponce10@gmail.com>",
+  "license": "MIT",
+  "engines": {
+    "node": ">=22.22.3"
+  },
+  "workspaces": [
+    "apps/*",
+    "libs/*"
+  ],
+  "scripts": {
+    "web": "npm run start --workspace apps/web",
+    "api": "npm run start:dev --workspace apps/api",
+    "build": "npm run build --workspaces --if-present",
+    "test": "npm run test --workspaces --if-present",
+    "lint": "npm run lint --workspaces --if-present"
+  }
+}
