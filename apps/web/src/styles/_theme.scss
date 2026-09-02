@@ -2,16 +2,18 @@
 // Tokens de color — semánticos (nombrados por función, no por color).
 //
 // Estrategia de tema:
-//   :root                     → tema OSCURO (por defecto, siempre)
-//   :root[data-theme='light'] → tema CLARO (cuando el toggle lo activa)
+//   :root  y  :root[data-theme='dark']  → tema OSCURO (por defecto)
+//   :root[data-theme='light']            → tema CLARO
 //
-// El atributo data-theme lo pone/quita el ThemeService en <html> (sub-paso 6.3).
+// El ThemeService siempre escribe data-theme explícito en <html>. Sin atributo
+// (primer render en el server / antes de hidratar) también cae en oscuro.
 //
 // PALETA PROVISIONAL: acento periwinkle sobrio. Se ajusta cuando Marco defina
 // el vibe visual (pendiente en ARCHITECTURE.md §8).
 // =============================================================================
 
-:root {
+:root,
+:root[data-theme='dark'] {
   color-scheme: dark;
 
   --bg: #0b0d12;

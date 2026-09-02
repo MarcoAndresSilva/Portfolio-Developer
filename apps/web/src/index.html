@@ -10,6 +10,16 @@
   <meta name="theme-color" content="#0b0d12">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
+  <!-- Anti-flash: aplica el tema guardado antes del primer pintado. -->
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('theme');
+        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+      } catch (e) {}
+    })();
+  </script>
+
   <!-- Fuentes -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>

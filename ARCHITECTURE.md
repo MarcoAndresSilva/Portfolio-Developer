@@ -4,7 +4,7 @@
 > léelo primero: acá está qué se construyó, por qué se tomó cada decisión, y cuáles son los
 > siguientes pasos. Se actualiza en cada hito (idealmente en el mismo commit que introduce el cambio).
 
-Última actualización: **2026-09-02** — Paso 6 en curso (base del sistema de diseño: tokens + tema).
+Última actualización: **2026-09-02** — Paso 6 en curso (chunks A–C: diseño + tema + layout).
 
 ---
 
@@ -44,17 +44,17 @@ Este proyecto corrige eso de raíz con **Angular SSG**: el contenido real viaja 
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ Pendiente |
 | 12 | Despliegue (web + api) + Google Search Console | ⬜ Pendiente |
 
-**Próximo paso concreto:** Paso 6, chunk B — `ThemeService` (signal + `localStorage`, SSR-safe,
-pone `data-theme` en `<html>`) + script anti-flash en `index.html` + botón toggle.
-Después chunk C (layout: header + footer, reemplazar `app.html`) y chunk D (i18n ES/EN).
+**Próximo paso concreto:** Paso 6, chunk D — base i18n ES/EN con `@angular/localize`:
+marcar los textos de UI, configurar los locales y builds localizados, y agregar el toggle de idioma
+en el header. Después: Paso 7 (Hero real + Sobre mí + Skills con animaciones).
 
 ### Paso 6 — sub-progreso
 
 | Chunk | Contenido | Estado |
 |-------|-----------|--------|
-| A | Base del sistema de diseño (tokens, tema, reset, base, fuentes) | ✅ Hecho (sin commitear aún / commiteado) |
-| B | ThemeService + toggle de tema | ⬜ |
-| C | Layout shell: header + footer, reemplaza `app.html` de bienvenida | ⬜ |
+| A | Base del sistema de diseño (tokens, tema, reset, base, fuentes) | ✅ Hecho (`d1d1424`) |
+| B | ThemeService + toggle de tema | ✅ Hecho (con chunk C) |
+| C | Layout shell: header + footer, home mínima, reemplaza `app.html` | ✅ Hecho |
 | D | Base i18n ES/EN (`@angular/localize`) + toggle de idioma | ⬜ |
 
 ### Notas de entorno
@@ -147,6 +147,35 @@ Después chunk C (layout: header + footer, reemplazar `app.html`) y chunk D (i18
 - **Verificado:** `build` de web OK, tokens presentes en el CSS prerendereado, tests pasan.
   La página de bienvenida de Angular se ve distinta/rara con el reset aplicado — es esperable,
   se reemplaza en el chunk C.
+
+### Tema claro/oscuro (`apps/web/src/app/core/theme.service.ts`)
+
+- `ThemeService` (`providedIn: 'root'`): `signal<Theme>` con la elección actual, `toggle()` y `set()`.
+- **SSR-safe:** usa `isPlatformBrowser(PLATFORM_ID)`; en el server no toca `document` ni
+  `localStorage` y devuelve `'dark'` por defecto.
+- Un `effect()` sincroniza el valor a `<html data-theme="...">` y a `localStorage` cada vez que cambia.
+- **Anti-flash:** un `<script>` inline en `index.html` (antes de las fuentes) lee `localStorage` y
+  pone `data-theme` antes del primer pintado, así no hay parpadeo al recargar en modo claro.
+- Los tokens de `_theme.scss` ahora responden a `:root`, `:root[data-theme='dark']` y
+  `:root[data-theme='light']`.
+- **Pendiente:** respetar `prefers-color-scheme` en la primera visita (hoy siempre arranca oscuro).
+
+### Layout (`apps/web/src/app/`)
+
+- **`layout/header/`** — sticky, con blur. Marca "MS / Marco Silva" (`routerLink="/"`), nav con
+  anclas a las secciones futuras (`#sobre-mi`, `#stack`, …; se ocultan bajo `$bp-md`), y botón de
+  tema con icono sol/luna. Inyecta `ThemeService`.
+- **`layout/footer/`** — borde superior, `© <año> Marco Andrés Silva` + "Hecho con Angular y NestJS".
+  Los links de redes entran cuando Marco los entregue (§8).
+- **`pages/home/`** — hero mínimo provisional: eyebrow, título con nombre en gradiente, lead, y dos
+  botones (`.btn--primary` / `.btn--ghost`). Se reemplaza por el Hero real en el Paso 7.
+- **`app.ts` / `app.html`** — shell: `.skip-link` → `<app-header>` → `<main id="main-content">` con
+  `<router-outlet>` → `<app-footer>`. `app.scss`: grid `auto 1fr auto` para footer pegado abajo.
+- **`app.routes.ts`** — ruta `''` → `Home` con `title`. Componentes `OnPush`.
+- **`app.spec.ts`** — actualizado (el test viejo buscaba "Hello, web"); ahora verifica que rendericen
+  la marca del header y el skip-link. 3 tests pasan.
+- **Convención de nombres** (la del scaffold de Angular 22): archivos `nombre.ts` sin sufijo
+  `.component`, clases sin sufijo (`Header`, `Footer`, `Home`), selector con prefijo `app-`.
 
 ### Decisión: contenido bilingüe en el modelo de datos
 
@@ -339,4 +368,5 @@ Marco (con su passphrase). Los commits locales los hace el asistente.
 | 2026-09-02 | Historial aplastado en 1 commit inicial limpio (sin footer de IA), `push --force`. |
 | 2026-09-02 | Paso 4: `libs/shared` (`@portfolio/shared`) — interfaces `Project`/`Experience`/`Skill`/`SocialLink` + `Localized<T>` para contenido bilingüe. Paquete solo-tipos, sin build. Wiring con las 2 apps verificado. |
 | 2026-09-02 | Paso 5: CI con GitHub Actions (typecheck + lint + test + build en push/PR). Scripts de la raíz reescritos explícitos por workspace. `typecheck` agregado a `apps/api`. Badge en README. |
-| 2026-09-02 | Paso 6 chunk A: base del sistema de diseño en `apps/web/src/styles/` (tokens de escala, tema oscuro/claro con `data-theme`, reset moderno, estilos base, utilidades). Fuentes Inter + JetBrains Mono. `index.html` con metadatos reales. Paleta provisional. |
+| 2026-09-02 | Paso 6 chunk A: base del sistema de diseño en `apps/web/src/styles/` (tokens de escala, tema oscuro/claro con `data-theme`, reset moderno, estilos base, utilidades). Fuentes Inter + JetBrains Mono. `index.html` con metadatos reales. Paleta provisional. (`d1d1424`) |
+| 2026-09-02 | Paso 6 chunks B+C: `ThemeService` (signal + localStorage, SSR-safe) + anti-flash + toggle sol/luna. Layout shell (header sticky + footer + home mínima), reemplaza la landing de bienvenida de Angular. Ruta `''` → `Home`. Primera vista real del sitio. |
