@@ -5,12 +5,13 @@ import {
   afterNextRender,
   inject,
 } from '@angular/core';
+import { About } from '../../sections/about/about';
 import { Skills } from '../../sections/skills/skills';
 import { Typewriter } from '../../core/motion/typewriter.directive';
 
 @Component({
   selector: 'app-home',
-  imports: [Skills, Typewriter],
+  imports: [About, Skills, Typewriter],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

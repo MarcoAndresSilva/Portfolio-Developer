@@ -177,6 +177,126 @@
         <source>LinkedIn de Marco Silva (abre en una pestaña nueva)</source>
       </segment>
     </unit>
+    <unit id="about.title">
+      <notes>
+        <note category="location">src/app/sections/about/about.html:4,6</note>
+      </notes>
+      <segment>
+        <source>Sobre mí</source>
+      </segment>
+    </unit>
+    <unit id="about.lead">
+      <notes>
+        <note category="location">src/app/sections/about/about.html:9,11</note>
+      </notes>
+      <segment>
+        <source> Ingeniero en Informática con más de 3 años transformando desafíos de negocio en soluciones digitales escalables. </source>
+      </segment>
+    </unit>
+    <unit id="about.p1">
+      <notes>
+        <note category="location">src/app/sections/about/about.html:13,16</note>
+      </notes>
+      <segment>
+        <source> Mi foco actual está en Fintech: contribuyo al desarrollo de ecosistemas de OpenBanking bajo la Ley Fintech chilena, donde el día a día es OAuth2, estándares transaccionales bancarios y APIs que tienen que estar siempre arriba. </source>
+      </segment>
+    </unit>
+    <unit id="about.p2">
+      <notes>
+        <note category="location">src/app/sections/about/about.html:19,22</note>
+      </notes>
+      <segment>
+        <source> En el frontend trabajo Angular desde la v5 hasta la v19 —RxJS, signals y optimización de performance—; en el backend, APIs con NestJS y Node.js. Me tomo en serio la accesibilidad (WCAG 2.0), los principios SOLID y el código que otra persona pueda leer sin sufrir. </source>
+      </segment>
+    </unit>
+    <unit id="about.p3">
+      <notes>
+        <note category="location">src/app/sections/about/about.html:25,27</note>
+      </notes>
+      <segment>
+        <source> He trabajado en entornos corporativos, públicos y startups, con metodologías ágiles (Scrum), lo que me deja adaptarme rápido a distintas arquitecturas y equipos. </source>
+      </segment>
+    </unit>
+    <unit id="about.fact.education">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:27</note>
+      </notes>
+      <segment>
+        <source>Formación</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.education.value">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:28</note>
+      </notes>
+      <segment>
+        <source>Ingeniería en Informática — Duoc UC</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.experience">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:31</note>
+      </notes>
+      <segment>
+        <source>Experiencia</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.experience.value">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:32</note>
+      </notes>
+      <segment>
+        <source>+3 años, fullstack</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.focus">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:35</note>
+      </notes>
+      <segment>
+        <source>Enfoque</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.focus.value">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:36</note>
+      </notes>
+      <segment>
+        <source>Fintech · OpenBanking · Microfrontends · BFF</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.location">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:39</note>
+      </notes>
+      <segment>
+        <source>Ubicación</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.location.value">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:40</note>
+      </notes>
+      <segment>
+        <source>Santiago, Chile</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.availability">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:43</note>
+      </notes>
+      <segment>
+        <source>Disponibilidad</source>
+      </segment>
+    </unit>
+    <unit id="about.fact.availability.value">
+      <notes>
+        <note category="location">src/app/sections/about/about.ts:44</note>
+      </notes>
+      <segment>
+        <source>Abierto a nuevas oportunidades</source>
+      </segment>
+    </unit>
     <unit id="skills.title">
       <notes>
         <note category="location">src/app/sections/skills/skills.html:5,7</note>

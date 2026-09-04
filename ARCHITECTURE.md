@@ -4,10 +4,11 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-04 — Pasos 7A y 7B hechos: animaciones base, sección Stack, efecto
-"máquina de escribir" en la frase del hero, y hero definitivo (frase de valor Fintech/OpenBanking,
-CTAs, links GitHub/LinkedIn, timeline GSAP). Marco entregó headline/bio/redes (§3) y descartó la
-foto. Próximo: 7C — sección "Sobre mí".
+**Última actualización:** 2026-09-04 — **Paso 7 cerrado**: animaciones base, hero definitivo
+(frase de valor Fintech/OpenBanking, CTAs, links GitHub/LinkedIn, timeline GSAP, efecto máquina de
+escribir), sección "Sobre mí" (bio + ficha de datos) y sección "Stack". Marco entregó
+headline/bio/redes (§3) y descartó la foto. Próximo: **Fase 8 — Proyectos destacados** (necesita
+que Marco pase descripción/stack/links de FinTrack e Imperio Barber; ya hay reels).
 
 ---
 
@@ -34,26 +35,26 @@ contenido real viaja dentro del HTML.
 | 4 | `libs/shared` — interfaces TS + wiring | ✅ |
 | 5 | CI (GitHub Actions) | ✅ |
 | 6 | Sistema de diseño + layout + i18n base | ✅ |
-| 7 | Hero real + Sobre mí + Skills, con animaciones | ⏳ **← próximo** |
-| 8 | Proyectos destacados — **bloqueada: necesita contenido de Marco** | ⬜ |
+| 7 | Hero real + Sobre mí + Skills, con animaciones | ✅ |
+| 8 | Proyectos destacados — **necesita descripción/stack/links de Marco** | ⬜ **← próximo** |
 | 9 | Experiencia (timeline) + Contacto (form → API + anti-spam) | ⬜ |
 | 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
 | 12 | Despliegue web + api + Google Search Console | ⬜ |
 
-**Paso 7 — sub-progreso:**
+**Paso 7 — sub-progreso (cerrado):**
 
 | Chunk | Qué | Estado |
 |---|---|---|
 | A | Base de animaciones (`[appReveal]` + `_motion.scss` + GSAP lazy) · sección Stack · efecto máquina de escribir en la frase del hero (`[appTypewriter]`) | ✅ |
 | B | Hero definitivo: eyebrow + frase de valor (foco Fintech/OpenBanking) + CTAs + links GitHub/LinkedIn + timeline GSAP | ✅ |
-| C | Sección "Sobre mí" (bio ya entregada) — sin bloqueos | ⬜ **← próximo** |
+| C | Sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`): bio en prosa + ficha `<dl>` de datos (formación, experiencia, enfoque, ubicación, disponibilidad). Sin foto. | ✅ |
 
-**Próximo paso concreto:** Paso 7 chunk C — sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`)
-con la bio de §3 (Ingeniero en Informática, +3 años, Fintech/OpenBanking, Angular/NestJS, WCAG/SOLID,
-entornos corp/públicos/startups). Sin foto. Reutiliza las primitivas `.section*` y `[appReveal]`.
-Después, Fase 8 (proyectos) — ya no está bloqueada del todo: hay reels de FinTrack e Imperio Barber,
-falta que Marco pase descripción/stack/links de cada uno.
+**Próximo paso concreto:** Fase 8 — sección "Proyectos destacados" (`app/sections/projects/`,
+`id="proyectos"`), la más importante del sitio. Necesita que Marco pase, por proyecto: nombre,
+problema→solución→impacto, stack, links demo/repo, capturas. Candidatos con reel ya en el repo:
+**FinTrack** e **Imperio Barber**. El modelo `Project` ya existe en `@portfolio/shared` (usar
+`Localized<T>` para es/en).
 
 Marcar cada texto nuevo con `i18n` / `$localize`, correr `npm run extract-i18n --workspace apps/web`
 y traducir en `messages.en.xlf`.
@@ -152,8 +153,10 @@ SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS 
   ("Ver proyectos" `#proyectos`, "Contacto" `#contacto`) y links a GitHub/LinkedIn (iconos SVG inline,
   `target="_blank"` + `rel="noopener noreferrer"`, `aria-label` traducido). Entrada con
   `gsap.timeline()` (eyebrow → título → lead → acciones, solapadas).
-- **`apps/web` — secciones de la home** (`app/sections/`): `skills` (Stack & habilidades —
-  tecnologías por categoría, datos tipados en el componente). Pendiente: "Sobre mí".
+- **`apps/web` — secciones de la home** (`app/sections/`): `about` ("Sobre mí" — bio en prosa +
+  ficha `<dl>` de datos; párrafos con `i18n`, ficha con `$localize`) · `skills` (Stack & habilidades
+  — tecnologías por categoría, datos tipados en el componente). Numeradas con eyebrow (`01`, `02`…).
+  Orden en la home: hero → about → skills. Pendiente: proyectos, experiencia, contacto.
 - **`apps/api`:** solo el scaffold — `GET /` placeholder. El endpoint de contacto real llega en Fase 9.
 - **`libs/shared`** (`@portfolio/shared`): interfaces `Project`, `Experience`, `Skill`, `SocialLink`
   + `Locale` / `Localized<T>`. **Solo tipos, sin build** — `exports` apunta a `src/index.ts` y los
@@ -292,3 +295,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-03 | Paso 7 A — base de animaciones (`[appReveal]` + `_motion.scss` + GSAP lazy, progressive enhancement con `.js`) y sección "Stack & habilidades". |
 | 2026-09-04 | Efecto "máquina de escribir" en la frase del hero (`[appTypewriter]`, atraviesa hijos). Marco entregó headline/bio/redes desde LinkedIn (§3) y descartó la foto. |
 | 2026-09-04 | Paso 7 B — hero definitivo: frase de valor (foco Fintech/OpenBanking), CTAs, links GitHub/LinkedIn, entrada con `gsap.timeline()`. |
+| 2026-09-04 | Paso 7 C — sección "Sobre mí" (`app/sections/about`): bio + ficha de datos. **Cierra la Fase 7.** |

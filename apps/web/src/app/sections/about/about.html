@@ -1,0 +1,41 @@
+<section id="sobre-mi" class="section" aria-labelledby="about-title">
+  <div class="container">
+    <p class="section__eyebrow" appReveal>01</p>
+    <h2 id="about-title" class="section__title" appReveal i18n="@@about.title">Sobre mí</h2>
+
+    <div class="about__grid">
+      <div class="about__body">
+        <p class="section__lead about__lead" appReveal i18n="@@about.lead">
+          Ingeniero en Informática con más de 3 años transformando desafíos de
+          negocio en soluciones digitales escalables.
+        </p>
+        <p class="about__p" appReveal [appRevealDelay]="60" i18n="@@about.p1">
+          Mi foco actual está en Fintech: contribuyo al desarrollo de ecosistemas
+          de OpenBanking bajo la Ley Fintech chilena, donde el día a día es OAuth2,
+          estándares transaccionales bancarios y APIs que tienen que estar
+          siempre arriba.
+        </p>
+        <p class="about__p" appReveal [appRevealDelay]="120" i18n="@@about.p2">
+          En el frontend trabajo Angular desde la v5 hasta la v19 —RxJS, signals y
+          optimización de performance—; en el backend, APIs con NestJS y Node.js.
+          Me tomo en serio la accesibilidad (WCAG 2.0), los principios SOLID y el
+          código que otra persona pueda leer sin sufrir.
+        </p>
+        <p class="about__p" appReveal [appRevealDelay]="180" i18n="@@about.p3">
+          He trabajado en entornos corporativos, públicos y startups, con
+          metodologías ágiles (Scrum), lo que me deja adaptarme rápido a distintas
+          arquitecturas y equipos.
+        </p>
+      </div>
+
+      <dl class="about__facts" appReveal [appRevealDelay]="120">
+        @for (fact of facts; track fact.label) {
+          <div class="about__fact">
+            <dt class="about__fact-label">{{ fact.label }}</dt>
+            <dd class="about__fact-value">{{ fact.value }}</dd>
+          </div>
+        }
+      </dl>
+    </div>
+  </div>
+</section>

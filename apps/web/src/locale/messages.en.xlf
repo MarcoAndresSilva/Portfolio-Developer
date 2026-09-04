@@ -133,6 +133,96 @@
         <target>Contact</target>
       </segment>
     </unit>
+    <unit id="about.title">
+      <segment state="translated">
+        <source>Sobre mí</source>
+        <target>About me</target>
+      </segment>
+    </unit>
+    <unit id="about.lead">
+      <segment state="translated">
+        <source> Ingeniero en Informática con más de 3 años transformando desafíos de negocio en soluciones digitales escalables. </source>
+        <target> Computer engineer with 3+ years turning business challenges into scalable digital solutions. </target>
+      </segment>
+    </unit>
+    <unit id="about.p1">
+      <segment state="translated">
+        <source> Mi foco actual está en Fintech: contribuyo al desarrollo de ecosistemas de OpenBanking bajo la Ley Fintech chilena, donde el día a día es OAuth2, estándares transaccionales bancarios y APIs que tienen que estar siempre arriba. </source>
+        <target> My current focus is Fintech: I help build OpenBanking ecosystems under Chile's Fintech Law, where the day-to-day is OAuth2, banking transaction standards and APIs that always have to stay up. </target>
+      </segment>
+    </unit>
+    <unit id="about.p2">
+      <segment state="translated">
+        <source> En el frontend trabajo Angular desde la v5 hasta la v19 —RxJS, signals y optimización de performance—; en el backend, APIs con NestJS y Node.js. Me tomo en serio la accesibilidad (WCAG 2.0), los principios SOLID y el código que otra persona pueda leer sin sufrir. </source>
+        <target> On the frontend I work with Angular from v5 through v19 —RxJS, signals and performance tuning—; on the backend, APIs with NestJS and Node.js. I take accessibility (WCAG 2.0), SOLID principles and code someone else can read without suffering seriously. </target>
+      </segment>
+    </unit>
+    <unit id="about.p3">
+      <segment state="translated">
+        <source> He trabajado en entornos corporativos, públicos y startups, con metodologías ágiles (Scrum), lo que me deja adaptarme rápido a distintas arquitecturas y equipos. </source>
+        <target> I've worked in corporate, public-sector and startup settings, with agile methodologies (Scrum), which lets me adapt quickly to different architectures and teams. </target>
+      </segment>
+    </unit>
+    <unit id="about.fact.education">
+      <segment state="translated">
+        <source>Formación</source>
+        <target>Education</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.education.value">
+      <segment state="translated">
+        <source>Ingeniería en Informática — Duoc UC</source>
+        <target>Computer Engineering — Duoc UC</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.experience">
+      <segment state="translated">
+        <source>Experiencia</source>
+        <target>Experience</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.experience.value">
+      <segment state="translated">
+        <source>+3 años, fullstack</source>
+        <target>3+ years, fullstack</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.focus">
+      <segment state="translated">
+        <source>Enfoque</source>
+        <target>Focus</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.focus.value">
+      <segment state="translated">
+        <source>Fintech · OpenBanking · Microfrontends · BFF</source>
+        <target>Fintech · OpenBanking · Microfrontends · BFF</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.location">
+      <segment state="translated">
+        <source>Ubicación</source>
+        <target>Location</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.location.value">
+      <segment state="translated">
+        <source>Santiago, Chile</source>
+        <target>Santiago, Chile</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.availability">
+      <segment state="translated">
+        <source>Disponibilidad</source>
+        <target>Availability</target>
+      </segment>
+    </unit>
+    <unit id="about.fact.availability.value">
+      <segment state="translated">
+        <source>Abierto a nuevas oportunidades</source>
+        <target>Open to new opportunities</target>
+      </segment>
+    </unit>
     <unit id="skills.title">
       <segment state="translated">
         <source> Stack &amp; habilidades </source>
