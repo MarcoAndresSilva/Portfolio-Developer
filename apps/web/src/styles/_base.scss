@@ -71,6 +71,32 @@ kbd {
   color: var(--accent-contrast);
 }
 
+// --- Secciones -------------------------------------------------------------
+// Primitivas compartidas por las secciones de la home (Stack, Sobre mí, …).
+
+.section {
+  padding-block: var(--space-24);
+  border-top: 1px solid var(--border);
+}
+
+.section__eyebrow {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--accent);
+  margin-bottom: var(--space-3);
+}
+
+.section__title {
+  font-size: var(--text-3xl);
+  margin-bottom: var(--space-4);
+}
+
+.section__lead {
+  max-width: 42rem;
+  font-size: var(--text-lg);
+  margin-bottom: var(--space-12);
+}
+
 // --- Utilidades -------------------------------------------------------------
 
 // Centra el contenido con ancho máximo y padding lateral responsive.

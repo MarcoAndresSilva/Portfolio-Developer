@@ -1,6 +1,7 @@
 // Estilos globales del sitio. El orden importa (cascada CSS):
-// tokens → colores/tema → reset → base.
+// tokens → colores/tema → reset → base → motion.
 @use 'styles/tokens';
 @use 'styles/theme';
 @use 'styles/reset';
 @use 'styles/base';
+@use 'styles/motion';

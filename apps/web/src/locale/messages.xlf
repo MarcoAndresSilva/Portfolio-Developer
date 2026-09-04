@@ -123,31 +123,31 @@
     </unit>
     <unit id="hero.eyebrow">
       <notes>
-        <note category="location">src/app/pages/home/home.html:3,4</note>
+        <note category="location">src/app/pages/home/home.html:3,5</note>
       </notes>
       <segment>
-        <source>Desarrollador Full Stack</source>
+        <source>Ingeniero en Informática — Fullstack</source>
       </segment>
     </unit>
     <unit id="hero.title">
       <notes>
-        <note category="location">src/app/pages/home/home.html:5,7</note>
+        <note category="location">src/app/pages/home/home.html:11,13</note>
       </notes>
       <segment>
-        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </source>
+        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva.</pc></source>
       </segment>
     </unit>
     <unit id="hero.lead">
       <notes>
-        <note category="location">src/app/pages/home/home.html:8,12</note>
+        <note category="location">src/app/pages/home/home.html:14,17</note>
       </notes>
       <segment>
-        <source> Construyo aplicaciones web con Angular y NestJS. Este portafolio está en construcción — pronto vas a ver acá mis proyectos. </source>
+        <source> Construyo ecosistemas web escalables con Angular y NestJS. Hoy en Fintech: OpenBanking bajo la Ley Fintech chilena, flujos OAuth2 y APIs transaccionales seguras. </source>
       </segment>
     </unit>
     <unit id="hero.cta.projects">
       <notes>
-        <note category="location">src/app/pages/home/home.html:13,14</note>
+        <note category="location">src/app/pages/home/home.html:20,21</note>
       </notes>
       <segment>
         <source>Ver proyectos</source>
@@ -155,10 +155,90 @@
     </unit>
     <unit id="hero.cta.contact">
       <notes>
-        <note category="location">src/app/pages/home/home.html:14,17</note>
+        <note category="location">src/app/pages/home/home.html:21,23</note>
       </notes>
       <segment>
         <source>Contacto</source>
+      </segment>
+    </unit>
+    <unit id="hero.social.github">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:30,32</note>
+      </notes>
+      <segment>
+        <source>GitHub de Marco Silva (abre en una pestaña nueva)</source>
+      </segment>
+    </unit>
+    <unit id="hero.social.linkedin">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:44,46</note>
+      </notes>
+      <segment>
+        <source>LinkedIn de Marco Silva (abre en una pestaña nueva)</source>
+      </segment>
+    </unit>
+    <unit id="skills.title">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.html:5,7</note>
+      </notes>
+      <segment>
+        <source> Stack &amp; habilidades </source>
+      </segment>
+    </unit>
+    <unit id="skills.lead">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.html:8,12</note>
+      </notes>
+      <segment>
+        <source> Trabajo full stack con TypeScript de punta a punta: Angular en el frontend, NestJS y PostgreSQL en el backend, y todo contenedorizado y desplegado. </source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.language">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:27</note>
+      </notes>
+      <segment>
+        <source>Lenguajes</source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.frontend">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:31</note>
+      </notes>
+      <segment>
+        <source>Frontend</source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.backend">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:42</note>
+      </notes>
+      <segment>
+        <source>Backend</source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.database">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:46</note>
+      </notes>
+      <segment>
+        <source>Bases de datos</source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.devops">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:50</note>
+      </notes>
+      <segment>
+        <source>DevOps &amp; despliegue</source>
+      </segment>
+    </unit>
+    <unit id="skills.cat.tooling">
+      <notes>
+        <note category="location">src/app/sections/skills/skills.ts:54</note>
+      </notes>
+      <segment>
+        <source>Testing &amp; tooling</source>
       </segment>
     </unit>
   </file>

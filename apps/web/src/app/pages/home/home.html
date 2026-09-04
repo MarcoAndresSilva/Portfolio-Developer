@@ -1,17 +1,57 @@
 <section class="hero" aria-labelledby="hero-title">
   <div class="container hero__inner">
-    <p class="hero__eyebrow" i18n="@@hero.eyebrow">Desarrollador Full Stack</p>
-    <h1 id="hero-title" class="hero__title" i18n="@@hero.title">
-      Hola, soy <span class="hero__name">Marco Silva</span>.
+    <p class="hero__eyebrow" i18n="@@hero.eyebrow">Ingeniero en Informática — Fullstack</p>
+    <h1
+      id="hero-title"
+      class="hero__title"
+      i18n="@@hero.title"
+      appTypewriter
+      [appTypewriterDelay]="700"
+    >
+      Hola, soy <span class="hero__name">Marco Silva.</span>
     </h1>
     <p class="hero__lead" i18n="@@hero.lead">
-      Construyo aplicaciones web con Angular y NestJS. Este portafolio está en
-      construcción — pronto vas a ver acá mis proyectos.
+      Construyo ecosistemas web escalables con Angular y NestJS. Hoy en Fintech:
+      OpenBanking bajo la Ley Fintech chilena, flujos OAuth2 y APIs
+      transaccionales seguras.
     </p>
 
     <div class="hero__actions">
       <a class="btn btn--primary" href="#proyectos" i18n="@@hero.cta.projects">Ver proyectos</a>
       <a class="btn btn--ghost" href="#contacto" i18n="@@hero.cta.contact">Contacto</a>
+
+      <span class="hero__social">
+        <a
+          class="hero__social-link"
+          href="https://github.com/MarcoAndresSilva"
+          target="_blank"
+          rel="noopener noreferrer"
+          i18n-aria-label="@@hero.social.github"
+          aria-label="GitHub de Marco Silva (abre en una pestaña nueva)"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path
+              d="M12 .5C5.37.5 0 5.78 0 12.29c0 5.2 3.44 9.6 8.21 11.16.6.11.82-.25.82-.56 0-.28-.01-1.02-.02-2-3.34.71-4.04-1.58-4.04-1.58-.55-1.37-1.33-1.74-1.33-1.74-1.09-.72.08-.71.08-.71 1.2.08 1.84 1.21 1.84 1.21 1.07 1.8 2.81 1.28 3.5.98.11-.76.42-1.28.76-1.58-2.67-.29-5.47-1.31-5.47-5.83 0-1.29.47-2.34 1.24-3.17-.12-.29-.54-1.48.12-3.09 0 0 1.01-.32 3.3 1.21a11.6 11.6 0 0 1 6 0c2.29-1.53 3.3-1.21 3.3-1.21.66 1.61.24 2.8.12 3.09.77.83 1.24 1.88 1.24 3.17 0 4.53-2.81 5.53-5.49 5.82.43.36.81 1.08.81 2.18 0 1.57-.01 2.84-.01 3.23 0 .31.22.68.83.56A12.02 12.02 0 0 0 24 12.29C24 5.78 18.63.5 12 .5Z"
+            />
+          </svg>
+        </a>
+        <a
+          class="hero__social-link"
+          href="https://www.linkedin.com/in/marco-andres-silva-ponce-b42286b4/"
+          target="_blank"
+          rel="noopener noreferrer"
+          i18n-aria-label="@@hero.social.linkedin"
+          aria-label="LinkedIn de Marco Silva (abre en una pestaña nueva)"
+        >
+          <svg viewBox="0 0 24 24" width="20" height="20" fill="currentColor" aria-hidden="true">
+            <path
+              d="M20.45 20.45h-3.56v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.56V9h3.56v11.45ZM22.22 0H1.77C.79 0 0 .77 0 1.72v20.56C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.72V1.72C24 .77 23.2 0 22.22 0Z"
+            />
+          </svg>
+        </a>
+      </span>
     </div>
   </div>
 </section>
+
+<app-skills />

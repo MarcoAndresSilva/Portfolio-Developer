@@ -1,0 +1,25 @@
+<section id="stack" class="section" aria-labelledby="skills-title">
+  <div class="container">
+    <p class="section__eyebrow" appReveal>01</p>
+    <h2 id="skills-title" class="section__title" appReveal i18n="@@skills.title">
+      Stack &amp; habilidades
+    </h2>
+    <p class="section__lead" appReveal i18n="@@skills.lead">
+      Trabajo full stack con TypeScript de punta a punta: Angular en el frontend,
+      NestJS y PostgreSQL en el backend, y todo contenedorizado y desplegado.
+    </p>
+
+    <ul class="skills__grid" role="list">
+      @for (group of groups; track group.label; let i = $index) {
+        <li class="skills__group" appReveal [appRevealDelay]="i * 70">
+          <h3 class="skills__cat">{{ group.label }}</h3>
+          <ul class="skills__chips" role="list">
+            @for (skill of group.skills; track skill) {
+              <li class="chip">{{ skill }}</li>
+            }
+          </ul>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

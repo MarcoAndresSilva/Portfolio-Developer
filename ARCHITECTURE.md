@@ -4,7 +4,10 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-03 — Paso 6 completo (i18n ES/EN). Próximo: Paso 7.
+**Última actualización:** 2026-09-04 — Pasos 7A y 7B hechos: animaciones base, sección Stack, efecto
+"máquina de escribir" en la frase del hero, y hero definitivo (frase de valor Fintech/OpenBanking,
+CTAs, links GitHub/LinkedIn, timeline GSAP). Marco entregó headline/bio/redes (§3) y descartó la
+foto. Próximo: 7C — sección "Sobre mí".
 
 ---
 
@@ -38,29 +41,46 @@ contenido real viaja dentro del HTML.
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
 | 12 | Despliegue web + api + Google Search Console | ⬜ |
 
-**Paso 6 — sub-progreso:**
+**Paso 7 — sub-progreso:**
 
 | Chunk | Qué | Estado |
 |---|---|---|
-| A | Base del sistema de diseño (tokens, tema, reset, fuentes) | ✅ `d1d1424` |
-| B+C | `ThemeService` + toggle · layout shell (header/footer/home) | ✅ `a204ce6` |
-| D | i18n ES/EN con `@angular/localize` + toggle de idioma | ✅ |
+| A | Base de animaciones (`[appReveal]` + `_motion.scss` + GSAP lazy) · sección Stack · efecto máquina de escribir en la frase del hero (`[appTypewriter]`) | ✅ |
+| B | Hero definitivo: eyebrow + frase de valor (foco Fintech/OpenBanking) + CTAs + links GitHub/LinkedIn + timeline GSAP | ✅ |
+| C | Sección "Sobre mí" (bio ya entregada) — sin bloqueos | ⬜ **← próximo** |
 
-**Próximo paso concreto:** Paso 7 — Hero definitivo + sección "Sobre mí" + "Stack / Habilidades"
-(por categoría), maquetadas y con contenido real, más las animaciones de entrada (se instala GSAP +
-ScrollTrigger en este paso). Marcar cada texto nuevo con `i18n` / `$localize` y correr
-`npm run extract-i18n --workspace apps/web` para regenerar `messages.xlf`, luego traducir en
-`messages.en.xlf`.
+**Próximo paso concreto:** Paso 7 chunk C — sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`)
+con la bio de §3 (Ingeniero en Informática, +3 años, Fintech/OpenBanking, Angular/NestJS, WCAG/SOLID,
+entornos corp/públicos/startups). Sin foto. Reutiliza las primitivas `.section*` y `[appReveal]`.
+Después, Fase 8 (proyectos) — ya no está bloqueada del todo: hay reels de FinTrack e Imperio Barber,
+falta que Marco pase descripción/stack/links de cada uno.
+
+Marcar cada texto nuevo con `i18n` / `$localize`, correr `npm run extract-i18n --workspace apps/web`
+y traducir en `messages.en.xlf`.
 
 ---
 
 ## 3. Pendiente de Marco (bloquea Fase 8 en adelante)
 
 - [ ] **CV / lista de proyectos reales:** por proyecto — nombre, descripción, stack, link demo,
-      link repo, capturas.
-- [ ] **Foto / avatar** y **links de redes** (LinkedIn, GitHub, email…).
+      link repo, capturas. (Ya hay reels en la raíz: `FinTrack-reel-*.mp4`, `demo-imperio-barber.mp4`.)
 - [ ] **Paleta de color / vibe visual.** Hoy hay una paleta **provisional** (tema oscuro, acento
       periwinkle `#7c8cff`). Cambiarla = editar solo `apps/web/src/styles/_theme.scss`.
+- ~~Foto / avatar~~ — **descartado por Marco** (2026-09-04): el hero va sin foto.
+
+**Entregado (2026-09-04, del perfil de LinkedIn):**
+
+- **Headline:** Software Engineer · Fullstack Developer · Angular & NestJS · TypeScript · Microfront ·
+  BFF · Fintech & OpenBanking.
+- **Bio:** Ingeniero en Informática (Duoc UC), +3 años de experiencia. Foco actual en Fintech —
+  ecosistemas de OpenBanking bajo la Ley Fintech chilena. Frontend: Angular (v5–v19), RxJS,
+  performance. Backend: APIs con NestJS y Node.js. Seguridad: OAuth2, estándares transaccionales
+  bancarios. Calidad: accesibilidad (WCAG 2.0), SOLID, código limpio. Experiencia en entornos
+  corporativos, públicos y startups; Scrum. Ubicación: Área metropolitana de Santiago, Chile.
+- **Redes:** GitHub `https://github.com/MarcoAndresSilva` ·
+  LinkedIn `https://www.linkedin.com/in/marco-andres-silva-ponce-b42286b4/` ·
+  email `marco.silvaponce10@gmail.com`.
+- Nombre completo: **Marco Andrés Silva Ponce**. En el sitio se usa **Marco Silva** como nombre corto.
 
 ---
 
@@ -106,14 +126,34 @@ SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS 
   4px, radios, sombras, movimiento, z-index — como CSS custom properties; breakpoints como vars
   SCSS), `_theme.scss` (colores semánticos: `--bg`, `--surface`, `--text`, `--accent`…; oscuro por
   defecto, claro con `[data-theme='light']`), `_reset.scss` (reset moderno + `prefers-reduced-motion`),
-  `_base.scss` (estilos base + `.container` / `.visually-hidden` / `.skip-link`).
+  `_base.scss` (estilos base + `.container` / `.visually-hidden` / `.skip-link` + primitivas
+  `.section*`), `_motion.scss` (estados de animación).
+- **`apps/web` — animaciones:** progressive enhancement. El script inline de `index.html` pone
+  `.js` en `<html>` **antes del primer pintado**; todos los estados iniciales (ocultos) viven bajo
+  `:root.js` en `_motion.scss`, así sin JS no se oculta nada y no hay flash en el HTML
+  prerenderizado. `core/motion/reveal.directive.ts` (`[appReveal]`, `[appRevealDelay]`) revela con
+  `IntersectionObserver` al entrar en viewport (host class `reveal` → viaja en el SSR). El hero
+  anima con **GSAP** (`import()` diferido → chunk aparte, nunca en SSR, corre en `afterNextRender`).
+  `core/motion/typewriter.directive.ts` (`[appTypewriter]`, `[appTypewriterDelay]`) re-teclea el
+  contenido del elemento carácter por carácter, atravesando también los hijos (así el `<span>` del
+  degradado del nombre se conserva y se llena en su turno); el texto real vive en la plantilla
+  (indexable y accesible), reserva el alto antes de arrancar para no desmaquetar, y el cursor
+  parpadeante es un `::after` al final del `<h1>` (`_motion.scss`). Se usa en la frase del hero.
+  Todo respeta `prefers-reduced-motion` vía CSS / early-return.
 - **`apps/web` — tema:** `app/core/theme.service.ts` — signal + `localStorage`, SSR-safe, escribe
   `data-theme` en `<html>`. Script anti-flash en `index.html`. Pendiente: respetar
   `prefers-color-scheme` en la primera visita (hoy siempre arranca oscuro).
 - **`apps/web` — layout:** `app/layout/header` (sticky, marca, nav a secciones futuras, toggle
-  sol/luna), `app/layout/footer`, `app/pages/home` (hero provisional). `app.html` = skip-link →
+  sol/luna, toggle ES/EN), `app/layout/footer`, `app/pages/home`. `app.html` = skip-link →
   header → `<main>` con router-outlet → footer. Convención de nombres del scaffold de Angular 22:
   archivo `nombre.ts`, clase sin sufijo (`Header`), selector `app-…`, componentes `OnPush`.
+- **`apps/web` — hero** (`app/pages/home`): copy real — eyebrow "Ingeniero en Informática — Fullstack",
+  nombre con efecto máquina de escribir, frase de valor con foco Fintech/OpenBanking, CTAs
+  ("Ver proyectos" `#proyectos`, "Contacto" `#contacto`) y links a GitHub/LinkedIn (iconos SVG inline,
+  `target="_blank"` + `rel="noopener noreferrer"`, `aria-label` traducido). Entrada con
+  `gsap.timeline()` (eyebrow → título → lead → acciones, solapadas).
+- **`apps/web` — secciones de la home** (`app/sections/`): `skills` (Stack & habilidades —
+  tecnologías por categoría, datos tipados en el componente). Pendiente: "Sobre mí".
 - **`apps/api`:** solo el scaffold — `GET /` placeholder. El endpoint de contacto real llega en Fase 9.
 - **`libs/shared`** (`@portfolio/shared`): interfaces `Project`, `Experience`, `Skill`, `SocialLink`
   + `Locale` / `Localized<T>`. **Solo tipos, sin build** — `exports` apunta a `src/index.ts` y los
@@ -160,9 +200,12 @@ idioma (difícil de mantener sincronizados).
 Tokens como CSS custom properties (permiten cambiar de tema y leerse desde JS). `data-theme` en
 `<html>`, persistido en `localStorage`.
 
-### Animaciones: GSAP + ScrollTrigger + Angular Animations API
-GSAP para scroll-driven y timelines; Angular Animations para transiciones de estado/ruta. Respeta
-`prefers-reduced-motion`. (Se instala en Fase 7.)
+### Animaciones: GSAP + Angular Animations API
+GSAP para timelines y scroll-driven; Angular Animations para transiciones de estado/ruta. Respeta
+`prefers-reduced-motion`. **Instalado en Paso 7A.** GSAP entra con `import()` diferido (chunk
+aparte, fuera del bundle inicial) porque solo se usa post-render. Los *reveals* simples al hacer
+scroll no usan GSAP — van con `IntersectionObserver` (`[appReveal]`), que es gratis. `ScrollTrigger`
+se sumará cuando haya efectos scroll-driven reales (Fase 11); hoy no hace falta.
 
 ### Contenido en datos tipados, sin CMS
 Menos infraestructura y el contenido cambia poco.
@@ -246,3 +289,6 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-02 | Paso 6 A — base del sistema de diseño (tokens, tema, reset, fuentes). `d1d1424` |
 | 2026-09-02 | Paso 6 B+C — `ThemeService` + toggle · layout shell (header/footer/home). Primera vista real del sitio. `a204ce6` |
 | 2026-09-03 | Paso 6 D — i18n ES/EN con `@angular/localize` (builds localizados). `outputMode` → `static`. Toggle de idioma en el header. Cierra el Paso 6. |
+| 2026-09-03 | Paso 7 A — base de animaciones (`[appReveal]` + `_motion.scss` + GSAP lazy, progressive enhancement con `.js`) y sección "Stack & habilidades". |
+| 2026-09-04 | Efecto "máquina de escribir" en la frase del hero (`[appTypewriter]`, atraviesa hijos). Marco entregó headline/bio/redes desde LinkedIn (§3) y descartó la foto. |
+| 2026-09-04 | Paso 7 B — hero definitivo: frase de valor (foco Fintech/OpenBanking), CTAs, links GitHub/LinkedIn, entrada con `gsap.timeline()`. |

@@ -36,7 +36,38 @@
 .hero__actions {
   display: flex;
   flex-wrap: wrap;
+  align-items: center;
   gap: var(--space-4);
+}
+
+.hero__social {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-2);
+  padding-left: var(--space-4);
+  border-left: 1px solid var(--border);
+}
+
+.hero__social-link {
+  display: inline-flex;
+  padding: var(--space-2);
+  border-radius: var(--radius-md);
+  color: var(--text-muted);
+  transition:
+    color var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--accent);
+    background-color: var(--accent-soft);
+  }
+}
+
+@media (max-width: 30rem) {
+  .hero__social {
+    padding-left: 0;
+    border-left: 0;
+  }
 }
 
 .btn {

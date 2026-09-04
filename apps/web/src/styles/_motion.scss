@@ -1,0 +1,83 @@
+// =============================================================================
+// Animaciones de entrada.
+//
+// Regla de oro: sin JS no se oculta NADA. Todos los estados iniciales viven
+// bajo `:root.js` (la clase la pone el script inline de index.html antes del
+// primer pintado) y se anulan con `prefers-reduced-motion: reduce`.
+//
+//   - .reveal        → lo aplica el directive [appReveal] como host class, así
+//                      ya viaja en el HTML prerenderizado (sin flash).
+//   - .is-revealed   → lo agrega el directive al entrar en viewport.
+// =============================================================================
+
+:root.js {
+  .reveal {
+    opacity: 0;
+    transform: translateY(1.25rem);
+    transition:
+      opacity var(--duration-slow) var(--ease-out),
+      transform var(--duration-slow) var(--ease-out);
+    transition-delay: var(--reveal-delay, 0ms);
+    will-change: opacity, transform;
+  }
+
+  .reveal.is-revealed {
+    opacity: 1;
+    transform: none;
+  }
+
+  // El hero anima con GSAP (ver home.ts); acá solo se ocultan los hijos antes
+  // de que arranque la timeline.
+  .hero__eyebrow,
+  .hero__title,
+  .hero__lead,
+  .hero__actions {
+    opacity: 0;
+  }
+
+  // Cursor del efecto "máquina de escribir" del hero (ver typewriter.directive).
+  // Va al final del `<h1>`, así sigue al texto tanto en "Hola, soy" como en el
+  // nombre. Sólido mientras teclea, parpadea al terminar.
+  .hero__title.is-typing::after,
+  .hero__title.is-typed::after {
+    content: '';
+    display: inline-block;
+    width: 3px;
+    height: 1em;
+    margin-left: 0.06em;
+    translate: 0 0.12em;
+    background: var(--accent);
+    animation: hero-caret-blink 1.05s step-end infinite;
+  }
+
+  .hero__title.is-typing::after {
+    animation: none;
+  }
+}
+
+@keyframes hero-caret-blink {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root.js {
+    .reveal {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+
+    .hero__eyebrow,
+    .hero__title,
+    .hero__lead,
+    .hero__actions {
+      opacity: 1;
+    }
+  }
+}

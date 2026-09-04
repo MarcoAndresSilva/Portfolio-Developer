@@ -10,12 +10,17 @@
   <meta name="theme-color" content="#0b0d12">
   <link rel="icon" type="image/x-icon" href="favicon.ico">
 
-  <!-- Anti-flash: aplica el tema guardado antes del primer pintado. -->
+  <!-- Antes del primer pintado:
+       1. marca .js en <html> → habilita los estados iniciales de las animaciones
+          (sin JS, el contenido se ve siempre, sin ocultar nada).
+       2. aplica el tema guardado para evitar el parpadeo claro/oscuro. -->
   <script>
     (function () {
+      var el = document.documentElement;
+      el.classList.add('js');
       try {
         var t = localStorage.getItem('theme');
-        document.documentElement.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
+        el.setAttribute('data-theme', t === 'light' ? 'light' : 'dark');
       } catch (e) {}
     })();
   </script>

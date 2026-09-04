@@ -93,20 +93,32 @@
     </unit>
     <unit id="hero.eyebrow">
       <segment state="translated">
-        <source>Desarrollador Full Stack</source>
-        <target>Full Stack Developer</target>
+        <source>Ingeniero en Informática — Fullstack</source>
+        <target>Software Engineer — Fullstack</target>
       </segment>
     </unit>
     <unit id="hero.title">
       <segment state="translated">
-        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </source>
-        <target> Hi, I'm <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </target>
+        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva.</pc></source>
+        <target> Hi, I'm <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva.</pc></target>
       </segment>
     </unit>
     <unit id="hero.lead">
       <segment state="translated">
-        <source> Construyo aplicaciones web con Angular y NestJS. Este portafolio está en construcción — pronto vas a ver acá mis proyectos. </source>
-        <target> I build web applications with Angular and NestJS. This portfolio is under construction — my projects will be here soon. </target>
+        <source> Construyo ecosistemas web escalables con Angular y NestJS. Hoy en Fintech: OpenBanking bajo la Ley Fintech chilena, flujos OAuth2 y APIs transaccionales seguras. </source>
+        <target> I build scalable web ecosystems with Angular and NestJS. Currently in Fintech: OpenBanking under Chile's Fintech Law, OAuth2 flows and secure transactional APIs. </target>
+      </segment>
+    </unit>
+    <unit id="hero.social.github">
+      <segment state="translated">
+        <source>GitHub de Marco Silva (abre en una pestaña nueva)</source>
+        <target>Marco Silva's GitHub (opens in a new tab)</target>
+      </segment>
+    </unit>
+    <unit id="hero.social.linkedin">
+      <segment state="translated">
+        <source>LinkedIn de Marco Silva (abre en una pestaña nueva)</source>
+        <target>Marco Silva's LinkedIn (opens in a new tab)</target>
       </segment>
     </unit>
     <unit id="hero.cta.projects">
@@ -119,6 +131,54 @@
       <segment state="translated">
         <source>Contacto</source>
         <target>Contact</target>
+      </segment>
+    </unit>
+    <unit id="skills.title">
+      <segment state="translated">
+        <source> Stack &amp; habilidades </source>
+        <target> Stack &amp; skills </target>
+      </segment>
+    </unit>
+    <unit id="skills.lead">
+      <segment state="translated">
+        <source> Trabajo full stack con TypeScript de punta a punta: Angular en el frontend, NestJS y PostgreSQL en el backend, y todo contenedorizado y desplegado. </source>
+        <target> I work full stack with TypeScript end to end: Angular on the frontend, NestJS and PostgreSQL on the backend, all containerized and deployed. </target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.language">
+      <segment state="translated">
+        <source>Lenguajes</source>
+        <target>Languages</target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.frontend">
+      <segment state="translated">
+        <source>Frontend</source>
+        <target>Frontend</target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.backend">
+      <segment state="translated">
+        <source>Backend</source>
+        <target>Backend</target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.database">
+      <segment state="translated">
+        <source>Bases de datos</source>
+        <target>Databases</target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.devops">
+      <segment state="translated">
+        <source>DevOps &amp; despliegue</source>
+        <target>DevOps &amp; deployment</target>
+      </segment>
+    </unit>
+    <unit id="skills.cat.tooling">
+      <segment state="translated">
+        <source>Testing &amp; tooling</source>
+        <target>Testing &amp; tooling</target>
       </segment>
     </unit>
   </file>
