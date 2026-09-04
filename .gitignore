@@ -2,6 +2,13 @@
 node_modules/
 .pnpm-store/
 
+# WSL / Windows cruft
+*:Zone.Identifier
+
+# Material de trabajo, no va al repo (datos personales / binarios pesados)
+/*.pdf
+/*.mp4
+
 # Build output
 dist/
 tmp/
