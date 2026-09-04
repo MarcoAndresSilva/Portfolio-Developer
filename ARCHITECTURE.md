@@ -4,7 +4,7 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-02 — Paso 6 en curso (falta chunk D: i18n).
+**Última actualización:** 2026-09-03 — Paso 6 completo (i18n ES/EN). Próximo: Paso 7.
 
 ---
 
@@ -30,8 +30,8 @@ contenido real viaja dentro del HTML.
 | 3 | `apps/api` — NestJS 12 | ✅ |
 | 4 | `libs/shared` — interfaces TS + wiring | ✅ |
 | 5 | CI (GitHub Actions) | ✅ |
-| 6 | Sistema de diseño + layout + i18n base | ⏳ en curso |
-| 7 | Hero real + Sobre mí + Skills, con animaciones | ⬜ |
+| 6 | Sistema de diseño + layout + i18n base | ✅ |
+| 7 | Hero real + Sobre mí + Skills, con animaciones | ⏳ **← próximo** |
 | 8 | Proyectos destacados — **bloqueada: necesita contenido de Marco** | ⬜ |
 | 9 | Experiencia (timeline) + Contacto (form → API + anti-spam) | ⬜ |
 | 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ |
@@ -44,11 +44,13 @@ contenido real viaja dentro del HTML.
 |---|---|---|
 | A | Base del sistema de diseño (tokens, tema, reset, fuentes) | ✅ `d1d1424` |
 | B+C | `ThemeService` + toggle · layout shell (header/footer/home) | ✅ `a204ce6` |
-| D | i18n ES/EN con `@angular/localize` + toggle de idioma | ⬜ **← próximo** |
+| D | i18n ES/EN con `@angular/localize` + toggle de idioma | ✅ |
 
-**Próximo paso concreto:** Paso 6 chunk D — instalar y configurar `@angular/localize`, marcar los
-textos de UI (header, footer, home), definir los locales `es` (default) / `en` y builds localizados,
-y agregar el toggle de idioma en el header. Con eso se cierra el Paso 6.
+**Próximo paso concreto:** Paso 7 — Hero definitivo + sección "Sobre mí" + "Stack / Habilidades"
+(por categoría), maquetadas y con contenido real, más las animaciones de entrada (se instala GSAP +
+ScrollTrigger en este paso). Marcar cada texto nuevo con `i18n` / `$localize` y correr
+`npm run extract-i18n --workspace apps/web` para regenerar `messages.xlf`, luego traducir en
+`messages.en.xlf`.
 
 ---
 
@@ -67,8 +69,10 @@ y agregar el toggle de idioma en el header. Con eso se cierra el Paso 6.
 ```bash
 nvm use              # Node 22.23.1 (lo exige Angular 22; la máquina tiene v20 y v22)
 npm install          # una vez, instala todos los workspaces
-npm run web          # dev server de apps/web → http://localhost:4200
+npm run web          # dev server de apps/web (locale es) → http://localhost:4200
 npm run api          # dev server de apps/api → http://localhost:3000
+npm run start:en --workspace apps/web   # dev server con el locale en (previsualizar traducción)
+npm run extract-i18n --workspace apps/web   # regenerar src/locale/messages.xlf tras tocar textos
 
 npm run typecheck    # \
 npm run lint         #  } lo que corre la CI en cada push/PR
@@ -86,8 +90,18 @@ npm run build        # /
 SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS solo-tipos.
 
 - **`apps/web` — SSG:** `app.routes.server.ts` prerenderea `**` → todas las rutas a HTML estático.
-  `angular.json` usa `outputMode: "server"` (genera también un server Express de fallback); en el
-  despliegue evaluar `"static"` si el hosting es puramente estático.
+  `angular.json` usa `outputMode: "static"` (prerender puro vía `main.server.ts`, sin server
+  Express). El scaffold `server.ts` se eliminó. `express` sigue como dep transitiva de `@angular/ssr`.
+- **`apps/web` — i18n:** `@angular/localize` con **builds localizados** (`localize: true` en el
+  config de producción). `angular.json` → `i18n`: `sourceLocale` `es` (`subPath: "es"`) y locale
+  `en` (`subPath: "en"`, `src/locale/messages.en.xlf`). `npm run build` genera
+  `dist/web/browser/es/` y `dist/web/browser/en/` como sitios estáticos independientes; el postbuild
+  `scripts/root-index.mjs` escribe un `dist/web/browser/index.html` que redirige según
+  `navigator.language`. Textos de UI marcados con `i18n=` / `$localize` (IDs explícitos `@@...`).
+  `core/locale.service.ts` calcula el link al otro idioma (preserva ruta/query/hash) y el header
+  tiene el toggle ES/EN. Los **datos** (proyectos, etc.) no pasan por este pipeline — van con
+  `Localized<T>`. Pendiente Fase 10: `<link rel="alternate" hreflang>` y `<meta description>` por
+  locale (hoy el `index.html` base queda en es en ambos builds).
 - **`apps/web` — sistema de diseño** (`src/styles/`): `_tokens.scss` (escala: tipografía, espaciado
   4px, radios, sombras, movimiento, z-index — como CSS custom properties; breakpoints como vars
   SCSS), `_theme.scss` (colores semánticos: `--bg`, `--surface`, `--text`, `--accent`…; oscuro por
@@ -130,7 +144,12 @@ rate limiting + honeypot. Descartado Formspree/Web3Forms (no muestran skill de b
 
 ### i18n con `@angular/localize` (builds localizados)
 `/es` y `/en` como HTML estático propio e indexable — correcto para SEO/SSG. Alternativa runtime
-(`ngx-translate`) se evaluaría solo si el build localizado complica el pipeline.
+(`ngx-translate`) se evaluaría solo si el build localizado complica el pipeline. **Implementado en
+Paso 6D.** Se cambió `outputMode` de `server` a `static`: el sitio no tiene lógica de servidor
+(el form de contacto va a la API NestJS aparte), y con `static` cada locale es una carpeta estática
+independiente desplegable en cualquier hosting — evita tener dos bundles de servidor y un router
+raíz. Ambos locales van con `subPath` (`/es`, `/en`); la raíz `/` la resuelve un `index.html` de
+redirección generado en el postbuild (en Fase 12 se puede pasar a una regla del hosting).
 
 ### Contenido bilingüe en el modelo de datos: `Localized<T> = { es: T; en: T }`
 `@angular/localize` traduce las cadenas de UI, pero los *datos* (proyectos, experiencia) no pasan
@@ -226,3 +245,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-02 | Paso 5 — CI GitHub Actions (typecheck/lint/test/build). Badge en README. `05acc1f` |
 | 2026-09-02 | Paso 6 A — base del sistema de diseño (tokens, tema, reset, fuentes). `d1d1424` |
 | 2026-09-02 | Paso 6 B+C — `ThemeService` + toggle · layout shell (header/footer/home). Primera vista real del sitio. `a204ce6` |
+| 2026-09-03 | Paso 6 D — i18n ES/EN con `@angular/localize` (builds localizados). `outputMode` → `static`. Toggle de idioma en el header. Cierra el Paso 6. |

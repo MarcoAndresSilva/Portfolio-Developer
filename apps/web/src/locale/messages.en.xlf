@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="es" trgLang="en">
+  <file id="ngi18n" original="ng.template">
+    <unit id="skip.link">
+      <segment state="translated">
+        <source>Saltar al contenido</source>
+        <target>Skip to content</target>
+      </segment>
+    </unit>
+    <unit id="home.title">
+      <segment state="translated">
+        <source>Marco Andrés Silva — Desarrollador Full Stack</source>
+        <target>Marco Andrés Silva — Full Stack Developer</target>
+      </segment>
+    </unit>
+    <unit id="footer.copy">
+      <segment state="translated">
+        <source>© <ph id="0" equiv="INTERPOLATION" disp="{{ year }}"/> Marco Andrés Silva</source>
+        <target>© <ph id="0" equiv="INTERPOLATION" disp="{{ year }}"/> Marco Andrés Silva</target>
+      </segment>
+    </unit>
+    <unit id="footer.made">
+      <segment state="translated">
+        <source>Hecho con Angular y NestJS</source>
+        <target>Built with Angular and NestJS</target>
+      </segment>
+    </unit>
+    <unit id="brand.home">
+      <segment state="translated">
+        <source>Inicio</source>
+        <target>Home</target>
+      </segment>
+    </unit>
+    <unit id="nav.sections">
+      <segment state="translated">
+        <source>Secciones</source>
+        <target>Sections</target>
+      </segment>
+    </unit>
+    <unit id="nav.about">
+      <segment state="translated">
+        <source>Sobre mí</source>
+        <target>About</target>
+      </segment>
+    </unit>
+    <unit id="nav.stack">
+      <segment state="translated">
+        <source>Stack</source>
+        <target>Stack</target>
+      </segment>
+    </unit>
+    <unit id="nav.projects">
+      <segment state="translated">
+        <source>Proyectos</source>
+        <target>Projects</target>
+      </segment>
+    </unit>
+    <unit id="nav.experience">
+      <segment state="translated">
+        <source>Experiencia</source>
+        <target>Experience</target>
+      </segment>
+    </unit>
+    <unit id="nav.contact">
+      <segment state="translated">
+        <source>Contacto</source>
+        <target>Contact</target>
+      </segment>
+    </unit>
+    <unit id="theme.toLight">
+      <segment state="translated">
+        <source>Cambiar a tema claro</source>
+        <target>Switch to light theme</target>
+      </segment>
+    </unit>
+    <unit id="theme.toDark">
+      <segment state="translated">
+        <source>Cambiar a tema oscuro</source>
+        <target>Switch to dark theme</target>
+      </segment>
+    </unit>
+    <unit id="lang.toEn">
+      <segment state="translated">
+        <source>Ver el sitio en inglés</source>
+        <target>View the site in English</target>
+      </segment>
+    </unit>
+    <unit id="lang.toEs">
+      <segment state="translated">
+        <source>Ver el sitio en español</source>
+        <target>View the site in Spanish</target>
+      </segment>
+    </unit>
+    <unit id="hero.eyebrow">
+      <segment state="translated">
+        <source>Desarrollador Full Stack</source>
+        <target>Full Stack Developer</target>
+      </segment>
+    </unit>
+    <unit id="hero.title">
+      <segment state="translated">
+        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </source>
+        <target> Hi, I'm <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </target>
+      </segment>
+    </unit>
+    <unit id="hero.lead">
+      <segment state="translated">
+        <source> Construyo aplicaciones web con Angular y NestJS. Este portafolio está en construcción — pronto vas a ver acá mis proyectos. </source>
+        <target> I build web applications with Angular and NestJS. This portfolio is under construction — my projects will be here soon. </target>
+      </segment>
+    </unit>
+    <unit id="hero.cta.projects">
+      <segment state="translated">
+        <source>Ver proyectos</source>
+        <target>View projects</target>
+      </segment>
+    </unit>
+    <unit id="hero.cta.contact">
+      <segment state="translated">
+        <source>Contacto</source>
+        <target>Contact</target>
+      </segment>
+    </unit>
+  </file>
+</xliff>

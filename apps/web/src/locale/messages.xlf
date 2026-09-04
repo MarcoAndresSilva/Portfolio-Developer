@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<xliff version="2.0" xmlns="urn:oasis:names:tc:xliff:document:2.0" srcLang="es">
+  <file id="ngi18n" original="ng.template">
+    <unit id="skip.link">
+      <notes>
+        <note category="location">src/app/app.html:1,5</note>
+      </notes>
+      <segment>
+        <source>Saltar al contenido</source>
+      </segment>
+    </unit>
+    <unit id="home.title">
+      <notes>
+        <note category="location">src/app/app.routes.ts:8</note>
+      </notes>
+      <segment>
+        <source>Marco Andrés Silva — Desarrollador Full Stack</source>
+      </segment>
+    </unit>
+    <unit id="footer.copy">
+      <notes>
+        <note category="location">src/app/layout/footer/footer.html:3,4</note>
+      </notes>
+      <segment>
+        <source>© <ph id="0" equiv="INTERPOLATION" disp="{{ year }}"/> Marco Andrés Silva</source>
+      </segment>
+    </unit>
+    <unit id="footer.made">
+      <notes>
+        <note category="location">src/app/layout/footer/footer.html:4,7</note>
+      </notes>
+      <segment>
+        <source>Hecho con Angular y NestJS</source>
+      </segment>
+    </unit>
+    <unit id="brand.home">
+      <notes>
+        <note category="location">src/app/layout/header/header.html:4</note>
+      </notes>
+      <segment>
+        <source>Inicio</source>
+      </segment>
+    </unit>
+    <unit id="nav.sections">
+      <notes>
+        <note category="location">src/app/layout/header/header.html:8,9</note>
+      </notes>
+      <segment>
+        <source>Secciones</source>
+      </segment>
+    </unit>
+    <unit id="nav.about">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:23</note>
+      </notes>
+      <segment>
+        <source>Sobre mí</source>
+      </segment>
+    </unit>
+    <unit id="nav.stack">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:24</note>
+      </notes>
+      <segment>
+        <source>Stack</source>
+      </segment>
+    </unit>
+    <unit id="nav.projects">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:25</note>
+      </notes>
+      <segment>
+        <source>Proyectos</source>
+      </segment>
+    </unit>
+    <unit id="nav.experience">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:26</note>
+      </notes>
+      <segment>
+        <source>Experiencia</source>
+      </segment>
+    </unit>
+    <unit id="nav.contact">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:27</note>
+      </notes>
+      <segment>
+        <source>Contacto</source>
+      </segment>
+    </unit>
+    <unit id="theme.toLight">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:36</note>
+      </notes>
+      <segment>
+        <source>Cambiar a tema claro</source>
+      </segment>
+    </unit>
+    <unit id="theme.toDark">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:37</note>
+      </notes>
+      <segment>
+        <source>Cambiar a tema oscuro</source>
+      </segment>
+    </unit>
+    <unit id="lang.toEn">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:42</note>
+      </notes>
+      <segment>
+        <source>Ver el sitio en inglés</source>
+      </segment>
+    </unit>
+    <unit id="lang.toEs">
+      <notes>
+        <note category="location">src/app/layout/header/header.ts:43</note>
+      </notes>
+      <segment>
+        <source>Ver el sitio en español</source>
+      </segment>
+    </unit>
+    <unit id="hero.eyebrow">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:3,4</note>
+      </notes>
+      <segment>
+        <source>Desarrollador Full Stack</source>
+      </segment>
+    </unit>
+    <unit id="hero.title">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:5,7</note>
+      </notes>
+      <segment>
+        <source> Hola, soy <pc id="0" equivStart="START_TAG_SPAN" equivEnd="CLOSE_TAG_SPAN" type="other" dispStart="&lt;span class=&quot;hero__name&quot;&gt;" dispEnd="&lt;/span&gt;">Marco Silva</pc>. </source>
+      </segment>
+    </unit>
+    <unit id="hero.lead">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:8,12</note>
+      </notes>
+      <segment>
+        <source> Construyo aplicaciones web con Angular y NestJS. Este portafolio está en construcción — pronto vas a ver acá mis proyectos. </source>
+      </segment>
+    </unit>
+    <unit id="hero.cta.projects">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:13,14</note>
+      </notes>
+      <segment>
+        <source>Ver proyectos</source>
+      </segment>
+    </unit>
+    <unit id="hero.cta.contact">
+      <notes>
+        <note category="location">src/app/pages/home/home.html:14,17</note>
+      </notes>
+      <segment>
+        <source>Contacto</source>
+      </segment>
+    </unit>
+  </file>
+</xliff>

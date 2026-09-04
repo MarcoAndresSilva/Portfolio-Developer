@@ -5,6 +5,6 @@ export const routes: Routes = [
   {
     path: '',
     component: Home,
-    title: 'Marco Andrés Silva — Desarrollador Full Stack',
+    title: $localize`:@@home.title:Marco Andrés Silva — Desarrollador Full Stack`,
   },
 ];
