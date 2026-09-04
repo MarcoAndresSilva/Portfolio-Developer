@@ -13,6 +13,8 @@ async function bootstrap() {
     .filter(Boolean);
   app.enableCors({ origin: origins, methods: ['POST', 'GET'] });
 
-  await app.listen(process.env.PORT ?? 3000);
+  // 3100 en dev para no chocar con otros NestJS locales (que toman 3000).
+  // En producción el hosting inyecta PORT.
+  await app.listen(process.env.PORT ?? 3100);
 }
 await bootstrap();

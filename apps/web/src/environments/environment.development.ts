@@ -1,5 +1,6 @@
 /** Configuración de desarrollo — `npm run web` (dev server de Angular). */
 export const environment = {
   production: false,
-  apiUrl: 'http://localhost:3000',
+  // La API (`npm run api`) corre en 3100 — ver apps/api/src/main.ts.
+  apiUrl: 'http://localhost:3100',
 };

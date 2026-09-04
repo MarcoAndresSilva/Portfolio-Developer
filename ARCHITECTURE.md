@@ -111,7 +111,7 @@ y traducir en `messages.en.xlf`.
 nvm use              # Node 22.23.1 (lo exige Angular 22; la máquina tiene v20 y v22)
 npm install          # una vez, instala todos los workspaces
 npm run web          # dev server de apps/web (locale es) → http://localhost:4200
-npm run api          # dev server de apps/api → http://localhost:3000
+npm run api          # dev server de apps/api → http://localhost:3100 (el form de contacto lo necesita)
 npm run start:en --workspace apps/web   # dev server con el locale en (previsualizar traducción)
 npm run extract-i18n --workspace apps/web   # regenerar src/locale/messages.xlf tras tocar textos
 
