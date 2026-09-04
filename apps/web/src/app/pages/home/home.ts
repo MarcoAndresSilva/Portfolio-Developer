@@ -6,12 +6,15 @@ import {
   inject,
 } from '@angular/core';
 import { About } from '../../sections/about/about';
+import { Contact } from '../../sections/contact/contact';
+import { Experience } from '../../sections/experience/experience';
+import { Projects } from '../../sections/projects/projects';
 import { Skills } from '../../sections/skills/skills';
 import { Typewriter } from '../../core/motion/typewriter.directive';
 
 @Component({
   selector: 'app-home',
-  imports: [About, Skills, Typewriter],
+  imports: [About, Contact, Experience, Projects, Skills, Typewriter],
   templateUrl: './home.html',
   styleUrl: './home.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

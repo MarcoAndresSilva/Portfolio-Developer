@@ -4,11 +4,12 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-04 — **Paso 7 cerrado**: animaciones base, hero definitivo
-(frase de valor Fintech/OpenBanking, CTAs, links GitHub/LinkedIn, timeline GSAP, efecto máquina de
-escribir), sección "Sobre mí" (bio + ficha de datos) y sección "Stack". Marco entregó
-headline/bio/redes (§3) y descartó la foto. Próximo: **Fase 8 — Proyectos destacados** (necesita
-que Marco pase descripción/stack/links de FinTrack e Imperio Barber; ya hay reels).
+**Última actualización:** 2026-09-04 — **Fase 9 cerrada** (a nivel código): sección `contact`
+(form → `POST /contact` NestJS, honeypot + rate-limit) con envío de email por SMTP/nodemailer
+(fallback a log si no hay creds); sección `experience` (`app/sections/experience`) — timeline
+vertical con toggle Full stack / Frontend / Backend que reescribe los logros (los 3 CVs de Marco en
+una vista). **Falta operativo, no código:** desplegar la API + fijar `apiUrl` de prod + creds SMTP
+(`SMTP_*`). Próximo: **Fase 10 — SEO/GEO + Lighthouse + a11y**.
 
 ---
 
@@ -36,9 +37,9 @@ contenido real viaja dentro del HTML.
 | 5 | CI (GitHub Actions) | ✅ |
 | 6 | Sistema de diseño + layout + i18n base | ✅ |
 | 7 | Hero real + Sobre mí + Skills, con animaciones | ✅ |
-| 8 | Proyectos destacados — **necesita descripción/stack/links de Marco** | ⬜ **← próximo** |
-| 9 | Experiencia (timeline) + Contacto (form → API + anti-spam) | ⬜ |
-| 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ |
+| 8 | Proyectos destacados — sección lista; falta afinar `stack`/links (Marco) | ✅ |
+| 9 | Contacto (form → API + anti-spam + email) · Experiencia (timeline + toggle) | ✅ |
+| 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ **← próximo** |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
 | 12 | Despliegue web + api + Google Search Console | ⬜ |
 
@@ -50,21 +51,37 @@ contenido real viaja dentro del HTML.
 | B | Hero definitivo: eyebrow + frase de valor (foco Fintech/OpenBanking) + CTAs + links GitHub/LinkedIn + timeline GSAP | ✅ |
 | C | Sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`): bio en prosa + ficha `<dl>` de datos (formación, experiencia, enfoque, ubicación, disponibilidad). Sin foto. | ✅ |
 
-**Próximo paso concreto:** Fase 8 — sección "Proyectos destacados" (`app/sections/projects/`,
-`id="proyectos"`), la más importante del sitio. Necesita que Marco pase, por proyecto: nombre,
-problema→solución→impacto, stack, links demo/repo, capturas. Candidatos con reel ya en el repo:
-**FinTrack** e **Imperio Barber**. El modelo `Project` ya existe en `@portfolio/shared` (usar
-`Localized<T>` para es/en).
+**Próximo paso concreto:** Fase 10 — SEO/GEO. Meta tags por locale (`title`, `description`, OG,
+Twitter Card), JSON-LD (`Person` + `WebSite` + `ProfilePage`), `sitemap.xml` / `robots.txt` /
+`llms.txt`, `<link rel="alternate" hreflang>`. Después Lighthouse CI (meta ≥90 x4) y auditoría a11y.
+
+**Operativo pendiente (no es código, lo hace Marco):**
+1. **Desplegar la API** (`apps/api`) — recomendado **Render** (free): New → Web Service → repo,
+   root dir `apps/api`, build `npm install && npm run build`, start `node dist/main`. Da una URL
+   `https://<algo>.onrender.com`.
+2. Pegar esa URL en `apps/web/src/environments/environment.ts` (`apiUrl`) y en la API poner
+   `CORS_ORIGIN` = dominio del sitio (Netlify).
+3. **Email:** en Render, env vars `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
+   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<app password de Google>`. Sin esto el
+   endpoint responde 202 pero solo loguea (no envía).
+
+**Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
+Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
 
 Marcar cada texto nuevo con `i18n` / `$localize`, correr `npm run extract-i18n --workspace apps/web`
 y traducir en `messages.en.xlf`.
 
 ---
 
-## 3. Pendiente de Marco (bloquea Fase 8 en adelante)
+## 3. Pendiente de Marco
 
-- [ ] **CV / lista de proyectos reales:** por proyecto — nombre, descripción, stack, link demo,
-      link repo, capturas. (Ya hay reels en la raíz: `FinTrack-reel-*.mp4`, `demo-imperio-barber.mp4`.)
+- [ ] **Desplegar la API + creds SMTP + `apiUrl` de prod** — ver "próximo paso concreto" §2.
+- [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
+      - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
+        `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
+        "En uso a diario", Prisma agregado.
+      - **Imperio Barber:** confirmar `stack` real, `links.demo` cuando termine el despliegue.
+      - Los videos están en `apps/web/public/media/` — conviene comprimirlos.
 - [ ] **Paleta de color / vibe visual.** Hoy hay una paleta **provisional** (tema oscuro, acento
       periwinkle `#7c8cff`). Cambiarla = editar solo `apps/web/src/styles/_theme.scss`.
 - ~~Foto / avatar~~ — **descartado por Marco** (2026-09-04): el hero va sin foto.
@@ -82,6 +99,9 @@ y traducir en `messages.en.xlf`.
   LinkedIn `https://www.linkedin.com/in/marco-andres-silva-ponce-b42286b4/` ·
   email `marco.silvaponce10@gmail.com`.
 - Nombre completo: **Marco Andrés Silva Ponce**. En el sitio se usa **Marco Silva** como nombre corto.
+- **CVs** (Fullstack / Frontend / Backend, 2026): entregados el 2026-09-04. **Gitignoreados** (traen
+  teléfono personal). El historial laboral ya vive tipado en `app/sections/experience/experience.ts`;
+  el toggle de la sección refleja las 3 versiones. Correo de contacto: `marco.silvaponce10@gmail.com`.
 
 ---
 
@@ -153,11 +173,26 @@ SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS 
   ("Ver proyectos" `#proyectos`, "Contacto" `#contacto`) y links a GitHub/LinkedIn (iconos SVG inline,
   `target="_blank"` + `rel="noopener noreferrer"`, `aria-label` traducido). Entrada con
   `gsap.timeline()` (eyebrow → título → lead → acciones, solapadas).
-- **`apps/web` — secciones de la home** (`app/sections/`): `about` ("Sobre mí" — bio en prosa +
-  ficha `<dl>` de datos; párrafos con `i18n`, ficha con `$localize`) · `skills` (Stack & habilidades
-  — tecnologías por categoría, datos tipados en el componente). Numeradas con eyebrow (`01`, `02`…).
-  Orden en la home: hero → about → skills. Pendiente: proyectos, experiencia, contacto.
-- **`apps/api`:** solo el scaffold — `GET /` placeholder. El endpoint de contacto real llega en Fase 9.
+- **`apps/web` — secciones de la home** (`app/sections/`): `about` ("Sobre mí" — bio + ficha `<dl>`)
+  · `skills` (Stack — tecnologías por categoría) · `projects` ("Proyectos destacados" — cards con
+  `<video>`/`<img>`, badge de estado, resumen, highlights, badges de stack y links; datos bilingües
+  con `Localized<T>` en el componente, locale vía `LocaleService`) · `experience` ("Experiencia" —
+  timeline vertical `<ol>` con eje; toggle Full stack / Frontend / Backend (`signal`) que reescribe
+  los `highlights` de cada puesto; datos tipados de los 3 CVs, fechas `YYYY-MM` formateadas con
+  `Intl`) · `contact` (formulario reactivo + honeypot oculto; estados `idle/sending/ok/error` con
+  signal; `HttpClient` → `POST {apiUrl}/contact`; `aria-invalid`/`aria-describedby`,
+  `role="status"`/`"alert"`). Numeradas con eyebrow (`01`…`05`). Orden: hero → about → skills →
+  projects → experience → contact. `.chip` y `.btn` son primitivas compartidas en `_base.scss`.
+  `apiUrl` sale de `src/environments/` (`environment.ts` prod / `environment.development.ts` dev,
+  vía `fileReplacements`).
+- **`apps/api` — contacto** (`src/contact/`): `POST /contact` → 202 `{ ok: true }`.
+  `contact.dto.ts` valida a mano (nombre 2-80, email regex ≤160, mensaje 10-2000) — sin
+  `class-validator` (NestJS 12 + TS 6 recientes, y son 3 campos). Honeypot `company`: si trae algo
+  responde 202 igual pero descarta. `RateLimitGuard` — ventana deslizante en memoria, 5 req/min por
+  IP (`@nestjs/throttler` aún no soporta NestJS 12). `ContactService.deliver` envía por SMTP con
+  **nodemailer** si hay `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS` (destino `CONTACT_TO`, default el gmail
+  de Marco); si no, registra en log (así corre en local sin config). `main.ts`: CORS desde
+  `CORS_ORIGIN` (coma-separado, default `localhost:4200`). `GET /` sigue siendo el placeholder.
 - **`libs/shared`** (`@portfolio/shared`): interfaces `Project`, `Experience`, `Skill`, `SocialLink`
   + `Locale` / `Localized<T>`. **Solo tipos, sin build** — `exports` apunta a `src/index.ts` y los
   `import type` se borran al compilar. Si se necesita un valor en runtime, hay que agregar build a
@@ -184,6 +219,17 @@ hosting estático más barato y rápido.
 ### Backend NestJS ligero
 Aporta valor de portafolio (full-stack Angular + NestJS). Scope chico: 1 endpoint de contacto +
 rate limiting + honeypot. Descartado Formspree/Web3Forms (no muestran skill de backend).
+**Implementado en Fase 9.** Validación **a mano** en vez de `class-validator`, y rate-limit con un
+**guard propio** en vez de `@nestjs/throttler` (no soporta NestJS 12 todavía): son 3 campos y 1
+endpoint, no justifica arrastrar deps + decoradores nuevos con TS 6 recién salido. Email por
+**nodemailer/SMTP** detrás de `ContactService.deliver` (Gmail con app password); se prefirió SMTP a
+Resend porque no hay dominio propio y el envío es self-to-self.
+
+### Sección Experiencia: un timeline con toggle de enfoque
+Marco mantiene 3 CVs (Fullstack / Frontend / Backend) con el mismo historial y distinta énfasis.
+En vez de elegir uno, la sección tiene un toggle que reescribe los logros según el enfoque — las 3
+versiones vivas en una vista, y de paso comunica que adapta el mensaje a la audiencia. Solo Megadev
+y Rindegastos varían por enfoque; el resto usa la versión `fullstack` como fallback.
 
 ### i18n con `@angular/localize` (builds localizados)
 `/es` y `/en` como HTML estático propio e indexable — correcto para SEO/SSG. Alternativa runtime
@@ -296,3 +342,7 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-04 | Efecto "máquina de escribir" en la frase del hero (`[appTypewriter]`, atraviesa hijos). Marco entregó headline/bio/redes desde LinkedIn (§3) y descartó la foto. |
 | 2026-09-04 | Paso 7 B — hero definitivo: frase de valor (foco Fintech/OpenBanking), CTAs, links GitHub/LinkedIn, entrada con `gsap.timeline()`. |
 | 2026-09-04 | Paso 7 C — sección "Sobre mí" (`app/sections/about`): bio + ficha de datos. **Cierra la Fase 7.** |
+| 2026-09-04 | Fase 8 — sección "Proyectos destacados" (`app/sections/projects`): cards FinTrack + Imperio Barber con video (`public/media/`), badge de estado, highlights. Contenido casi final. |
+| 2026-09-04 | Fase 9 A — **Contacto**: sección `app/sections/contact` (form reactivo + honeypot) → `POST /contact` NestJS (`apps/api/src/contact`: validación a mano, honeypot, `RateLimitGuard`). `provideHttpClient`, `src/environments/`, CORS. Probado 202/400/honeypot. |
+| 2026-09-04 | Fase 9 B — envío de email por SMTP/nodemailer en `ContactService` (fallback a log). Marco entregó los 3 CVs (gitignoreados). |
+| 2026-09-04 | Fase 9 C — sección **Experiencia** (`app/sections/experience`): timeline vertical con toggle Full stack / Frontend / Backend (los 3 CVs en una vista). **Cierra la Fase 9.** |

@@ -223,6 +223,150 @@
         <target>Open to new opportunities</target>
       </segment>
     </unit>
+    <unit id="experience.title">
+      <segment state="translated">
+        <source> Experiencia </source>
+        <target> Experience </target>
+      </segment>
+    </unit>
+    <unit id="experience.lead">
+      <segment state="translated">
+        <source> De 4 años en infraestructura TI a desarrollo full stack. Hoy construyo OpenBanking bajo la Ley Fintech chilena. </source>
+        <target> From 4 years in IT infrastructure to full stack development. Today I build OpenBanking under Chile's Fintech Law. </target>
+      </segment>
+    </unit>
+    <unit id="experience.focus.fullstack">
+      <segment state="translated">
+        <source>Full stack</source>
+        <target>Full stack</target>
+      </segment>
+    </unit>
+    <unit id="experience.focus.frontend">
+      <segment state="translated">
+        <source>Frontend</source>
+        <target>Frontend</target>
+      </segment>
+    </unit>
+    <unit id="experience.focus.backend">
+      <segment state="translated">
+        <source>Backend</source>
+        <target>Backend</target>
+      </segment>
+    </unit>
+    <unit id="experience.present">
+      <segment state="translated">
+        <source>Actualidad</source>
+        <target>Present</target>
+      </segment>
+    </unit>
+    <unit id="experience.focus.legend">
+      <segment state="translated">
+        <source>Ver los logros con enfoque:</source>
+        <target>View achievements with focus:</target>
+      </segment>
+    </unit>
+    <unit id="contact.title">
+      <segment state="translated">
+        <source>Contacto</source>
+        <target>Contact</target>
+      </segment>
+    </unit>
+    <unit id="contact.lead">
+      <segment state="translated">
+        <source> ¿Tenés un proyecto o una oportunidad en mente? Escribime y te respondo a la brevedad. También podés hacerlo directo a <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a [href]=&quot;&apos;mailto:&apos; + email&quot;&gt;" dispEnd="&lt;/a&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ email }}"/></pc>. </source>
+        <target> Got a project or an opportunity in mind? Send me a message and I'll get back to you shortly. You can also reach me directly at <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a [href]=&quot;&apos;mailto:&apos; + email&quot;&gt;" dispEnd="&lt;/a&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ email }}"/></pc>. </target>
+      </segment>
+    </unit>
+    <unit id="contact.field.name">
+      <segment state="translated">
+        <source>Nombre</source>
+        <target>Name</target>
+      </segment>
+    </unit>
+    <unit id="contact.error.name">
+      <segment state="translated">
+        <source> Escribí tu nombre (entre 2 y 80 caracteres). </source>
+        <target> Enter your name (2 to 80 characters). </target>
+      </segment>
+    </unit>
+    <unit id="contact.field.email">
+      <segment state="translated">
+        <source>Email</source>
+        <target>Email</target>
+      </segment>
+    </unit>
+    <unit id="contact.error.email">
+      <segment state="translated">
+        <source> Ingresá un email válido. </source>
+        <target> Enter a valid email address. </target>
+      </segment>
+    </unit>
+    <unit id="contact.field.message">
+      <segment state="translated">
+        <source>Mensaje</source>
+        <target>Message</target>
+      </segment>
+    </unit>
+    <unit id="contact.error.message">
+      <segment state="translated">
+        <source> El mensaje debe tener entre 10 y 2000 caracteres. </source>
+        <target> The message must be between 10 and 2000 characters. </target>
+      </segment>
+    </unit>
+    <unit id="contact.submit.sending">
+      <segment state="translated">
+        <source>Enviando…</source>
+        <target>Sending…</target>
+      </segment>
+    </unit>
+    <unit id="contact.submit.idle">
+      <segment state="translated">
+        <source>Enviar mensaje</source>
+        <target>Send message</target>
+      </segment>
+    </unit>
+    <unit id="contact.status.ok">
+      <segment state="translated">
+        <source> ¡Gracias! Tu mensaje llegó. Te respondo pronto. </source>
+        <target> Thanks! Your message came through. I'll reply soon. </target>
+      </segment>
+    </unit>
+    <unit id="contact.status.error">
+      <segment state="translated">
+        <source> No se pudo enviar. Probá de nuevo en un momento o escribime por email. </source>
+        <target> Couldn't send it. Try again in a moment or reach me by email. </target>
+      </segment>
+    </unit>
+    <unit id="projects.title">
+      <segment state="translated">
+        <source> Proyectos destacados </source>
+        <target> Featured projects </target>
+      </segment>
+    </unit>
+    <unit id="projects.lead">
+      <segment state="translated">
+        <source> Una selección de lo que he construido, contada como problema, solución y resultado. El detalle completo de cada uno, pronto. </source>
+        <target> A selection of what I've built, told as problem, solution and result. Full write-ups for each, coming soon. </target>
+      </segment>
+    </unit>
+    <unit id="projects.link.demo">
+      <segment state="translated">
+        <source>Ver demo</source>
+        <target>View demo</target>
+      </segment>
+    </unit>
+    <unit id="projects.link.repo">
+      <segment state="translated">
+        <source>Código</source>
+        <target>Code</target>
+      </segment>
+    </unit>
+    <unit id="projects.link.newTab">
+      <segment state="translated">
+        <source>(abre en una pestaña nueva)</source>
+        <target>(opens in a new tab)</target>
+      </segment>
+    </unit>
     <unit id="skills.title">
       <segment state="translated">
         <source> Stack &amp; habilidades </source>

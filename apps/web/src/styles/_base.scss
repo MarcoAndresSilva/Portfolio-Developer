@@ -97,6 +97,58 @@ kbd {
   margin-bottom: var(--space-12);
 }
 
+// Etiqueta redondeada para tecnologías (Stack, Proyectos).
+.chip {
+  padding: var(--space-1) var(--space-3);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background-color: var(--surface);
+  font-size: var(--text-sm);
+  color: var(--text);
+}
+
+// Botón — usado en el hero y en el formulario de contacto.
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3) var(--space-6);
+  border-radius: var(--radius-md);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  border: 1px solid transparent;
+  cursor: pointer;
+  transition:
+    transform var(--duration-fast) var(--ease-out),
+    background-color var(--duration-fast) var(--ease-out),
+    border-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    transform: translateY(-2px);
+  }
+
+  &--primary {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+
+    &:hover {
+      background-color: var(--accent-hover);
+      color: var(--accent-contrast);
+    }
+  }
+
+  &--ghost {
+    border-color: var(--border-strong);
+    color: var(--text);
+
+    &:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+    }
+  }
+}
+
 // --- Utilidades -------------------------------------------------------------
 
 // Centra el contenido con ancho máximo y padding lateral responsive.

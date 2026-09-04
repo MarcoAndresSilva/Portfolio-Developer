@@ -1,0 +1,76 @@
+@use '../../../styles/tokens' as t;
+
+.contact__form {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 34rem;
+}
+
+.contact__field {
+  display: grid;
+  gap: var(--space-2);
+
+  label {
+    font-size: var(--text-sm);
+    font-weight: var(--weight-medium);
+    color: var(--text);
+  }
+
+  input,
+  textarea {
+    width: 100%;
+    padding: var(--space-3);
+    font: inherit;
+    color: var(--text);
+    background-color: var(--surface);
+    border: 1px solid var(--border-strong);
+    border-radius: var(--radius-md);
+    transition: border-color var(--duration-fast) var(--ease-out);
+
+    &:focus {
+      outline: none;
+      border-color: var(--accent);
+    }
+
+    &[aria-invalid='true'] {
+      border-color: var(--danger);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 7rem;
+  }
+}
+
+.contact__error {
+  font-size: var(--text-sm);
+  color: var(--danger);
+}
+
+// Honeypot: fuera de la vista y del flujo, sin usar display:none (algunos bots
+// lo detectan).
+.contact__hp {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.contact__status {
+  font-size: var(--text-sm);
+
+  &--ok {
+    color: var(--success);
+  }
+
+  &--error {
+    color: var(--danger);
+  }
+}
+
+.btn[disabled] {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

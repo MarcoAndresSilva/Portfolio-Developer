@@ -1,0 +1,57 @@
+<section id="experiencia" class="section" aria-labelledby="experience-title">
+  <div class="container">
+    <p class="section__eyebrow" appReveal>04</p>
+    <h2 id="experience-title" class="section__title" appReveal i18n="@@experience.title">
+      Experiencia
+    </h2>
+    <p class="section__lead" appReveal i18n="@@experience.lead">
+      De 4 años en infraestructura TI a desarrollo full stack. Hoy construyo
+      OpenBanking bajo la Ley Fintech chilena.
+    </p>
+
+    <div class="xp__focus" role="group" [attr.aria-label]="focusLegend" appReveal>
+      @for (f of focuses; track f.id) {
+        <button
+          type="button"
+          class="xp__focus-btn"
+          [class.is-active]="focus() === f.id"
+          [attr.aria-pressed]="focus() === f.id"
+          (click)="setFocus(f.id)"
+        >
+          {{ f.label }}
+        </button>
+      }
+    </div>
+
+    <ol class="xp__timeline" role="list">
+      @for (job of jobs(); track job.company; let i = $index) {
+        <li class="xp__item" appReveal [appRevealDelay]="i * 70">
+          <div class="xp__marker" aria-hidden="true"></div>
+          <div class="xp__card">
+            <div class="xp__head">
+              <h3 class="xp__company">{{ job.company }}</h3>
+              <span class="xp__period" [class.xp__period--current]="job.current">
+                {{ job.period }}
+              </span>
+            </div>
+            <p class="xp__role">
+              {{ job.role }}@if (job.location) { <span class="xp__loc"> · {{ job.location }}</span> }
+            </p>
+
+            <ul class="xp__highlights" role="list">
+              @for (point of job.highlights; track point) {
+                <li>{{ point }}</li>
+              }
+            </ul>
+
+            <ul class="xp__stack" role="list">
+              @for (tech of job.stack; track tech) {
+                <li class="chip">{{ tech }}</li>
+              }
+            </ul>
+          </div>
+        </li>
+      }
+    </ol>
+  </div>
+</section>

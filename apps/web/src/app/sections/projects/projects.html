@@ -1,0 +1,94 @@
+<section id="proyectos" class="section" aria-labelledby="projects-title">
+  <div class="container">
+    <p class="section__eyebrow" appReveal>03</p>
+    <h2 id="projects-title" class="section__title" appReveal i18n="@@projects.title">
+      Proyectos destacados
+    </h2>
+    <p class="section__lead" appReveal i18n="@@projects.lead">
+      Una selección de lo que he construido, contada como problema, solución y
+      resultado. El detalle completo de cada uno, pronto.
+    </p>
+
+    <ul class="projects__list" role="list">
+      @for (project of projects; track project.slug; let i = $index) {
+        <li class="project" appReveal [appRevealDelay]="i * 90">
+          <div class="project__media">
+            @if (project.media.type === 'video') {
+              <video
+                class="project__video"
+                [src]="project.media.src"
+                [attr.aria-label]="text(project.mediaAlt)"
+                preload="metadata"
+                controls
+                playsinline
+                muted
+                loop
+              ></video>
+            } @else {
+              <img
+                class="project__img"
+                [src]="project.media.src"
+                [alt]="text(project.mediaAlt)"
+                loading="lazy"
+                decoding="async"
+              />
+            }
+          </div>
+
+          <div class="project__body">
+            <div class="project__head">
+              <h3 class="project__title">{{ project.title }}</h3>
+              <span class="project__year">{{ project.year }}</span>
+              @if (project.status) {
+                <span class="project__status">{{ text(project.status) }}</span>
+              }
+            </div>
+
+            <p class="project__summary">{{ text(project.summary) }}</p>
+
+            @if (project.highlights; as highlights) {
+              <ul class="project__highlights" role="list">
+                @for (point of list(highlights); track point) {
+                  <li>{{ point }}</li>
+                }
+              </ul>
+            }
+
+            <ul class="project__stack" role="list">
+              @for (tech of project.stack; track tech) {
+                <li class="chip">{{ tech }}</li>
+              }
+            </ul>
+
+            @if (project.links.demo || project.links.repo) {
+              <div class="project__links">
+                @if (project.links.demo) {
+                  <a
+                    class="project__link"
+                    [href]="project.links.demo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ labels.demo }}
+                    <span class="visually-hidden"> {{ labels.newTab }}</span>
+                  </a>
+                }
+                @if (project.links.repo) {
+                  <a
+                    class="project__link"
+                    [href]="project.links.repo"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    {{ labels.repo }}
+                    <span class="visually-hidden"> {{ labels.newTab }}</span>
+                  </a>
+                }
+              </div>
+            }
+          </div>
+        </li>
+      }
+    </ul>
+  </div>
+</section>

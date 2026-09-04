@@ -297,6 +297,198 @@
         <source>Abierto a nuevas oportunidades</source>
       </segment>
     </unit>
+    <unit id="contact.title">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:4,5</note>
+      </notes>
+      <segment>
+        <source>Contacto</source>
+      </segment>
+    </unit>
+    <unit id="contact.lead">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:6,11</note>
+      </notes>
+      <segment>
+        <source> ¿Tenés un proyecto o una oportunidad en mente? Escribime y te respondo a la brevedad. También podés hacerlo directo a <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a [href]=&quot;&apos;mailto:&apos; + email&quot;&gt;" dispEnd="&lt;/a&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ email }}"/></pc>. </source>
+      </segment>
+    </unit>
+    <unit id="contact.field.name">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:13,15</note>
+      </notes>
+      <segment>
+        <source>Nombre</source>
+      </segment>
+    </unit>
+    <unit id="contact.error.name">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:24,26</note>
+      </notes>
+      <segment>
+        <source> Escribí tu nombre (entre 2 y 80 caracteres). </source>
+      </segment>
+    </unit>
+    <unit id="contact.field.email">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:30,32</note>
+      </notes>
+      <segment>
+        <source>Email</source>
+      </segment>
+    </unit>
+    <unit id="contact.error.email">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:41,43</note>
+      </notes>
+      <segment>
+        <source> Ingresá un email válido. </source>
+      </segment>
+    </unit>
+    <unit id="contact.field.message">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:47,49</note>
+      </notes>
+      <segment>
+        <source>Mensaje</source>
+      </segment>
+    </unit>
+    <unit id="contact.error.message">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:57,59</note>
+      </notes>
+      <segment>
+        <source> El mensaje debe tener entre 10 y 2000 caracteres. </source>
+      </segment>
+    </unit>
+    <unit id="contact.submit.sending">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:70,72</note>
+      </notes>
+      <segment>
+        <source>Enviando…</source>
+      </segment>
+    </unit>
+    <unit id="contact.submit.idle">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:72,75</note>
+      </notes>
+      <segment>
+        <source>Enviar mensaje</source>
+      </segment>
+    </unit>
+    <unit id="contact.status.ok">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:78,80</note>
+      </notes>
+      <segment>
+        <source> ¡Gracias! Tu mensaje llegó. Te respondo pronto. </source>
+      </segment>
+    </unit>
+    <unit id="contact.status.error">
+      <notes>
+        <note category="location">src/app/sections/contact/contact.html:82,85</note>
+      </notes>
+      <segment>
+        <source> No se pudo enviar. Probá de nuevo en un momento o escribime por email. </source>
+      </segment>
+    </unit>
+    <unit id="experience.title">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.html:5,7</note>
+      </notes>
+      <segment>
+        <source> Experiencia </source>
+      </segment>
+    </unit>
+    <unit id="experience.lead">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.html:8,12</note>
+      </notes>
+      <segment>
+        <source> De 4 años en infraestructura TI a desarrollo full stack. Hoy construyo OpenBanking bajo la Ley Fintech chilena. </source>
+      </segment>
+    </unit>
+    <unit id="experience.focus.fullstack">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.ts:200</note>
+      </notes>
+      <segment>
+        <source>Full stack</source>
+      </segment>
+    </unit>
+    <unit id="experience.focus.frontend">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.ts:201</note>
+      </notes>
+      <segment>
+        <source>Frontend</source>
+      </segment>
+    </unit>
+    <unit id="experience.focus.backend">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.ts:202</note>
+      </notes>
+      <segment>
+        <source>Backend</source>
+      </segment>
+    </unit>
+    <unit id="experience.present">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.ts:205</note>
+      </notes>
+      <segment>
+        <source>Actualidad</source>
+      </segment>
+    </unit>
+    <unit id="experience.focus.legend">
+      <notes>
+        <note category="location">src/app/sections/experience/experience.ts:206</note>
+      </notes>
+      <segment>
+        <source>Ver los logros con enfoque:</source>
+      </segment>
+    </unit>
+    <unit id="projects.title">
+      <notes>
+        <note category="location">src/app/sections/projects/projects.html:5,7</note>
+      </notes>
+      <segment>
+        <source> Proyectos destacados </source>
+      </segment>
+    </unit>
+    <unit id="projects.lead">
+      <notes>
+        <note category="location">src/app/sections/projects/projects.html:8,12</note>
+      </notes>
+      <segment>
+        <source> Una selección de lo que he construido, contada como problema, solución y resultado. El detalle completo de cada uno, pronto. </source>
+      </segment>
+    </unit>
+    <unit id="projects.link.demo">
+      <notes>
+        <note category="location">src/app/sections/projects/projects.ts:120</note>
+      </notes>
+      <segment>
+        <source>Ver demo</source>
+      </segment>
+    </unit>
+    <unit id="projects.link.repo">
+      <notes>
+        <note category="location">src/app/sections/projects/projects.ts:121</note>
+      </notes>
+      <segment>
+        <source>Código</source>
+      </segment>
+    </unit>
+    <unit id="projects.link.newTab">
+      <notes>
+        <note category="location">src/app/sections/projects/projects.ts:122</note>
+      </notes>
+      <segment>
+        <source>(abre en una pestaña nueva)</source>
+      </segment>
+    </unit>
     <unit id="skills.title">
       <notes>
         <note category="location">src/app/sections/skills/skills.html:5,7</note>

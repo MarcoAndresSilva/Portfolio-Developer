@@ -1,0 +1,139 @@
+@use '../../../styles/tokens' as t;
+
+.xp__focus {
+  display: inline-flex;
+  gap: var(--space-1);
+  margin-bottom: var(--space-12);
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-full);
+  background-color: var(--surface);
+}
+
+.xp__focus-btn {
+  padding: var(--space-2) var(--space-4);
+  border: 0;
+  border-radius: var(--radius-full);
+  background: transparent;
+  color: var(--text-muted);
+  font: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+  transition:
+    background-color var(--duration-fast) var(--ease-out),
+    color var(--duration-fast) var(--ease-out);
+
+  &:hover {
+    color: var(--text);
+  }
+
+  &.is-active {
+    background-color: var(--accent);
+    color: var(--accent-contrast);
+  }
+}
+
+.xp__timeline {
+  display: grid;
+  gap: var(--space-10);
+}
+
+.xp__item {
+  position: relative;
+  padding-left: var(--space-8);
+
+  // Línea del eje: une los marcadores.
+  &::before {
+    content: '';
+    position: absolute;
+    left: 5px;
+    top: 0.4rem;
+    bottom: calc(var(--space-10) * -1);
+    width: 2px;
+    background-color: var(--border);
+  }
+
+  &:last-child::before {
+    display: none;
+  }
+}
+
+.xp__marker {
+  position: absolute;
+  left: 0;
+  top: 0.35rem;
+  width: 12px;
+  height: 12px;
+  border-radius: var(--radius-full);
+  background-color: var(--bg);
+  border: 2px solid var(--border-strong);
+}
+
+// El puesto actual (primero) resalta.
+.xp__item:first-child .xp__marker {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.xp__head {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: var(--space-1) var(--space-3);
+}
+
+.xp__company {
+  font-size: var(--text-lg);
+}
+
+.xp__period {
+  font-family: var(--font-mono);
+  font-size: var(--text-sm);
+  color: var(--text-subtle);
+
+  &--current {
+    color: var(--accent);
+  }
+}
+
+.xp__role {
+  margin-top: var(--space-1);
+  margin-bottom: var(--space-4);
+  color: var(--text);
+  font-size: var(--text-sm);
+}
+
+.xp__loc {
+  color: var(--text-subtle);
+}
+
+.xp__highlights {
+  display: grid;
+  gap: var(--space-2);
+  margin-bottom: var(--space-4);
+  max-width: 44rem;
+
+  li {
+    position: relative;
+    padding-left: var(--space-5);
+    color: var(--text-muted);
+    line-height: var(--leading-snug);
+  }
+
+  li::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0.55em;
+    width: 6px;
+    height: 6px;
+    border-radius: var(--radius-full);
+    background-color: var(--accent);
+  }
+}
+
+.xp__stack {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+}
