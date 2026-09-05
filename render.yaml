@@ -1,0 +1,34 @@
+# Blueprint de Render para apps/api — https://render.com/docs/blueprint-spec
+#
+# En render.com: New → Blueprint → conectar este repo. Render lee este archivo
+# solo y crea el servicio con estos comandos (nada de completar formularios a mano).
+#
+# Ojo: NO se fija un "root directory" en apps/api. Esto es un monorepo con npm
+# workspaces — el `npm ci` tiene que correr en la raíz del repo para que resuelva
+# bien `@portfolio/shared` (si corriera solo dentro de apps/api, no lo encontraría).
+services:
+  - type: web
+    name: portfoliodev-api
+    runtime: node
+    plan: free
+    buildCommand: npm ci && npm run build --workspace apps/api
+    startCommand: node apps/api/dist/main.js
+    envVars:
+      # Dominio del sitio publicado (Netlify o el que sea) — sin esto, el CORS
+      # bloquea las peticiones del formulario de contacto.
+      - key: CORS_ORIGIN
+        sync: false
+      # SMTP para el envío de email real (ver ContactService). Sin estas 3, el
+      # endpoint sigue funcionando pero solo registra el mensaje en el log.
+      - key: SMTP_HOST
+        sync: false
+      - key: SMTP_PORT
+        sync: false
+      - key: SMTP_USER
+        sync: false
+      - key: SMTP_PASS
+        sync: false
+      # Opcional: a dónde llegan los mensajes. Por defecto es el gmail de Marco
+      # (ver ContactService), no hace falta setearla salvo que se quiera cambiar.
+      - key: CONTACT_TO
+        sync: false

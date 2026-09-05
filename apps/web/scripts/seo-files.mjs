@@ -1,13 +1,17 @@
-// Escribe robots.txt, sitemap.xml y llms.txt en la raíz de dist/web/browser/.
+// Escribe robots.txt, sitemap.xml, llms.txt y copia og-image.png a la raíz de
+// dist/web/browser/.
 //
 // No pueden ir en `public/` porque ahí Angular los copiaría dentro de cada
-// locale (`es/robots.txt`, `en/robots.txt`) y estos van en la raíz del dominio.
+// locale (`es/robots.txt`, `en/robots.txt`, `es/og-image.png`...) y estos tienen
+// que quedar en la raíz del dominio — `SeoService` arma `og:image` como
+// `{siteUrl}/og-image.png`, sin el prefijo de locale.
 //
 // `SITE_URL` (env) debe coincidir con `siteUrl` de src/environments/environment.ts.
-import { writeFile } from 'node:fs/promises';
+import { copyFile, writeFile } from 'node:fs/promises';
 import { join } from 'node:path';
 
 const site = (process.env.SITE_URL ?? 'https://marco-silva.dev').replace(/\/$/, '');
+const publicDir = join(import.meta.dirname, '..', 'public');
 const outDir = join(import.meta.dirname, '..', 'dist', 'web', 'browser');
 
 const robots = `User-agent: *
@@ -72,5 +76,12 @@ await Promise.all([
   writeFile(join(outDir, 'sitemap.xml'), sitemap, 'utf8'),
   writeFile(join(outDir, 'llms.txt'), llms, 'utf8'),
 ]);
+
+try {
+  await copyFile(join(publicDir, 'og-image.png'), join(outDir, 'og-image.png'));
+  console.log('Copied og-image.png to dist root');
+} catch {
+  console.warn('og-image.png no encontrada en apps/web/public/ — og:image quedará roto.');
+}
 
 console.log(`Wrote robots.txt, sitemap.xml, llms.txt (site: ${site})`);

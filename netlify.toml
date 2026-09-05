@@ -1,0 +1,19 @@
+# Config de Netlify para el sitio (apps/web) — https://docs.netlify.com/configure-builds/file-based-configuration/
+#
+# En netlify.com: Add new site → importar este repo. Netlify lee este archivo
+# solo (no hace falta tocar nada en la UI de "Build settings").
+#
+# Igual que en Render: no se usa un "base directory" en apps/web. El `npm install`
+# automático de Netlify corre en la raíz del repo (monorepo con npm workspaces),
+# y desde ahí se apunta el build al workspace correcto.
+[build]
+  command = "npm run build --workspace apps/web"
+  publish = "apps/web/dist/web/browser"
+
+[build.environment]
+  NODE_VERSION = "22.23.1"
+  # El dominio final del sitio (lo asigna Netlify, o el propio si se configura).
+  # Tiene que coincidir con `siteUrl` de apps/web/src/environments/environment.ts
+  # para que sitemap.xml / robots.txt / llms.txt usen el dominio correcto
+  # (ver apps/web/scripts/seo-files.mjs).
+  SITE_URL = "https://marco-silva.dev"

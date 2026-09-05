@@ -9,7 +9,8 @@ prerender el `<title>`, `description`, Open Graph, Twitter Card, `canonical`, `h
 x-default) y JSON-LD (`Person` + `WebSite` + `ProfilePage`) por locale; postbuild escribe
 `robots.txt`, `sitemap.xml` y `llms.txt` en la raíz del `dist`. Lighthouse CI corre en cada push
 (GitHub Actions) con reporte descargable; primer run: **todo verde**. a11y: contraste corregido +
-honeypot sin `aria-hidden` contradictorio. **Falta:** OG image, `siteUrl` real.
+honeypot sin `aria-hidden` contradictorio. OG image generada (SVG→PNG, paleta del sitio,
+sin foto ni stock) y copiada a la raíz del build. **Falta:** `siteUrl` real.
 **Operativo pendiente (Marco):** desplegar API + `apiUrl`/`siteUrl` de prod + creds SMTP.
 
 ---
@@ -54,21 +55,24 @@ contenido real viaja dentro del HTML.
 
 **Próximo paso concreto:** Fase 11 (pulido) o directo Fase 12 (deploy) — a elección de Marco. Igual
 quedan 2 cosas chicas de la Fase 10 abiertas:
-1. **OG image** (`public/og-image.png`, 1200×630) — la manda Marco.
-2. Subir `categories:performance` de `warn` a `error` en `lighthouserc.json` una vez que se vean
+1. Subir `categories:performance` de `warn` a `error` en `lighthouserc.json` una vez que se vean
    varios runs verdes con buen puntaje (hoy está en warn porque nunca se probó localmente — no hay
    Chrome en el entorno de desarrollo — y no quisimos bloquear el CI a ciegas con el primer número).
 
-**Operativo pendiente (no es código, lo hace Marco):**
-1. **Desplegar la API** (`apps/api`) — recomendado **Render** (free): New → Web Service → repo,
-   root dir `apps/api`, build `npm install && npm run build`, start `node dist/main`. Da una URL
-   `https://<algo>.onrender.com`.
-2. Pegar esa URL en `apps/web/src/environments/environment.ts` (`apiUrl`), poner ahí también el
-   `siteUrl` (dominio Netlify), y en la API `CORS_ORIGIN` = ese `siteUrl`. `SITE_URL` (env del
-   build) debe coincidir con `siteUrl` para que sitemap/robots/llms usen el dominio correcto.
-3. **Email:** en Render, env vars `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
-   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<app password de Google>`. Sin esto el
-   endpoint responde 202 pero solo loguea (no envía).
+**Operativo pendiente (no es código, ya no hay que adivinar comandos — quedaron en `render.yaml`
+y `netlify.toml`, Marco solo conecta las cuentas):**
+1. **API en Render:** render.com → New → **Blueprint** → conectar el repo → Render lee `render.yaml`
+   solo y crea el servicio. Pide completar a mano las env vars marcadas `sync: false`: `CORS_ORIGIN`
+   (recién se sabrá después del paso 3), `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
+   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<app password de Google>`. Sin las SMTP el
+   endpoint responde 202 igual pero solo loguea (no envía el mail).
+2. Copiar la URL que da Render (`https://portfoliodev-api.onrender.com` o la que asigne) a
+   `apps/web/src/environments/environment.ts` → `apiUrl`.
+3. **Sitio en Netlify:** netlify.com → Add new site → importar el repo → Netlify lee `netlify.toml`
+   solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura). Ese dominio va en 3
+   lugares: `siteUrl` de `environment.ts`, `SITE_URL` de `netlify.toml`, y `CORS_ORIGIN` en Render
+   (paso 1) — los tres tienen que coincidir.
+4. Con `apiUrl`/`siteUrl` actualizados, commit + push → build + deploy automático en ambos lados.
 
 **Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
 Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
@@ -81,7 +85,6 @@ y traducir en `messages.en.xlf`.
 ## 3. Pendiente de Marco
 
 - [ ] **Desplegar la API + creds SMTP + `apiUrl`/`siteUrl` de prod** — ver "próximo paso concreto" §2.
-- [ ] **OG image** — `apps/web/public/og-image.png`, 1200×630, para las previews de LinkedIn/Twitter.
 - [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
       - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
         `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
@@ -288,6 +291,9 @@ Portfolio-Developer/
 ├── libs/
 │   └── shared/  # @portfolio/shared — interfaces TS (solo tipos)
 ├── .github/workflows/ci.yml
+├── render.yaml          # Blueprint de Render para apps/api (Fase 12)
+├── netlify.toml         # Config de Netlify para apps/web (Fase 12)
+├── lighthouserc.json    # Config de Lighthouse CI
 ├── package.json         # raíz: workspaces + scripts orquestadores
 ├── .nvmrc               # 22.23.1
 ├── ARCHITECTURE.md · README.md · LICENSE (MIT) · .editorconfig · .gitignore
@@ -313,7 +319,8 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 - [x] `sitemap.xml`, `robots.txt`, `llms.txt` — `scripts/seo-files.mjs` (postbuild, a la raíz del
       `dist`; no en `public/` porque ahí se copiarían dentro de cada locale). `SITE_URL` (env) debe
       coincidir con `siteUrl` de `environment.ts`.
-- [ ] **OG image** `apps/web/public/og-image.png` (1200×630) — la referencia ya está, falta el archivo.
+- [x] **OG image** `apps/web/public/og-image.png` (1200×630) — generada con `@resvg/resvg-js`
+      (SVG con la paleta del sitio, sin foto), copiada a la raíz del `dist` por `seo-files.mjs`.
 - [x] a11y: skip-link · focus-visible · roles/labels (form, toggles) · contraste AA en ambos temas
       (se corrigió `--text-subtle` en claro, 3:1 → 4.8:1) · honeypot sin `aria-hidden` contradictorio.
 - [x] Lighthouse CI (`@lhci/cli` + `lighthouserc.json`) en el workflow — corre en cada push, sube el
@@ -371,3 +378,5 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-04 | `fix` — API dev en :3100 (3000 tomado por otro NestJS local de Marco). `914b210` |
 | 2026-09-04 | Fase 10 A — SEO/GEO: `SeoService` (meta + OG + Twitter + canonical + hreflang + JSON-LD `Person`/`WebSite`/`ProfilePage`, por locale, en el prerender) y `scripts/seo-files.mjs` (robots.txt / sitemap.xml / llms.txt). |
 | 2026-09-05 | Fase 10 B — Lighthouse CI (`@lhci/cli`, `lighthouserc.json`) en el workflow + reporte como artefacto. a11y: contraste de `--text-subtle` (tema claro) y honeypot del form sin `aria-hidden` contradictorio. **Cierra la Fase 10.** Primer run en GitHub Actions: todo verde. |
+| 2026-09-05 | Ordenamos el estado del proyecto (Fases 1-10 cerradas) y preparamos la Fase 12: `render.yaml` (Blueprint API) + `netlify.toml` (config del sitio) — el deploy queda en 2 clics de conectar cuenta, sin adivinar comandos. |
+| 2026-09-05 | OG image generada con `@resvg/resvg-js` (SVG con la paleta del sitio → PNG, sin foto ni stock), copiada a la raíz del `dist` por `seo-files.mjs`. |
