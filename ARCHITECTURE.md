@@ -4,14 +4,25 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-05 — **Fase 10 cerrada**. `SeoService` pone en el
-prerender el `<title>`, `description`, Open Graph, Twitter Card, `canonical`, `hreflang` (es/en/
-x-default) y JSON-LD (`Person` + `WebSite` + `ProfilePage`) por locale; postbuild escribe
-`robots.txt`, `sitemap.xml` y `llms.txt` en la raíz del `dist`. Lighthouse CI corre en cada push
-(GitHub Actions) con reporte descargable; primer run: **todo verde**. a11y: contraste corregido +
-honeypot sin `aria-hidden` contradictorio. OG image generada (SVG→PNG, paleta del sitio,
-sin foto ni stock) y copiada a la raíz del build. **Falta:** `siteUrl` real.
-**Operativo pendiente (Marco):** desplegar API + `apiUrl`/`siteUrl` de prod + creds SMTP.
+**Última actualización:** 2026-09-05 — **Fase 10 cerrada** (SEO/GEO + Lighthouse CI + a11y, todo
+verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
+- ✅ Blueprint desplegado en Render (`portfoliodev-api`, a partir de `render.yaml`).
+- ⏳ **Siguiente acción concreta:** confirmar que el servicio de Render quedó "Live" y conseguir su
+  URL (`https://portfoliodev-api.onrender.com` o la que haya asignado). Sin esa URL no se puede
+  seguir.
+- ⬜ Después: paso 2 — crear el sitio en Netlify (`netlify.toml` ya está listo, mismo mecanismo de
+  Blueprint que Render: Add new site → importar el repo, Netlify lo lee solo).
+- ⬜ Paso 3 — cruzar las URLs: `apiUrl` y `siteUrl` en `apps/web/src/environments/environment.ts`,
+  `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render (hoy tiene el placeholder
+  `http://localhost:4200`, puesto a propósito para no bloquear el Blueprint). Commit + push.
+- ⬜ Paso 4 — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
+- **SMTP quedó sin configurar a propósito** (Marco lo dejó vacío en el Blueprint) — el form de
+  contacto ya funciona igual, solo que por ahora registra el mensaje en el log de Render en vez de
+  mandar el email. Se completa después sacando un "app password" en
+  myaccount.google.com/apppasswords y cargando `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` en
+  las env vars del servicio de Render (no hace falta redesplegar desde cero, Render reinicia solo).
+
+Guía completa del deploy paso a paso: ver "Operativo pendiente" más abajo en esta sección.
 
 ---
 
@@ -43,7 +54,7 @@ contenido real viaja dentro del HTML.
 | 9 | Contacto (form → API + anti-spam + email) · Experiencia (timeline + toggle) | ✅ |
 | 10 | SEO/GEO + Lighthouse CI (pasando en GitHub Actions) + fixes de a11y | ✅ |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
-| 12 | Despliegue web + api + Google Search Console | ⬜ |
+| 12 | Despliegue web + api + Google Search Console — **en curso** (ver §2 arriba) | ⏳ **← acá estamos** |
 
 **Paso 7 — sub-progreso (cerrado):**
 
@@ -59,20 +70,23 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
    varios runs verdes con buen puntaje (hoy está en warn porque nunca se probó localmente — no hay
    Chrome en el entorno de desarrollo — y no quisimos bloquear el CI a ciegas con el primer número).
 
-**Operativo pendiente (no es código, ya no hay que adivinar comandos — quedaron en `render.yaml`
-y `netlify.toml`, Marco solo conecta las cuentas):**
-1. **API en Render:** render.com → New → **Blueprint** → conectar el repo → Render lee `render.yaml`
-   solo y crea el servicio. Pide completar a mano las env vars marcadas `sync: false`: `CORS_ORIGIN`
-   (recién se sabrá después del paso 3), `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
-   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<app password de Google>`. Sin las SMTP el
-   endpoint responde 202 igual pero solo loguea (no envía el mail).
-2. Copiar la URL que da Render (`https://portfoliodev-api.onrender.com` o la que asigne) a
-   `apps/web/src/environments/environment.ts` → `apiUrl`.
-3. **Sitio en Netlify:** netlify.com → Add new site → importar el repo → Netlify lee `netlify.toml`
-   solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura). Ese dominio va en 3
-   lugares: `siteUrl` de `environment.ts`, `SITE_URL` de `netlify.toml`, y `CORS_ORIGIN` en Render
-   (paso 1) — los tres tienen que coincidir.
-4. Con `apiUrl`/`siteUrl` actualizados, commit + push → build + deploy automático en ambos lados.
+**Operativo pendiente — deploy paso a paso (no es código, Marco conecta las cuentas):**
+1. ✅ **API en Render:** render.com → New → **Blueprint** → repo → Render leyó `render.yaml` solo.
+   Env vars cargadas: `CORS_ORIGIN=http://localhost:4200` (placeholder a propósito, se corrige en
+   el paso 3), `SMTP_*` **vacías** (a propósito — el form funciona igual, solo loguea en vez de
+   mandar mail hasta que se completen), `CONTACT_TO` vacío (usa el default del código).
+2. ⏳ **← acá estamos:** confirmar "Live" en el dashboard de Render y conseguir la URL del servicio.
+3. ⬜ Con esa URL: pegarla en `apps/web/src/environments/environment.ts` → `apiUrl`.
+4. ⬜ **Sitio en Netlify:** netlify.com → Add new site → importar el repo → Netlify lee
+   `netlify.toml` solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura).
+5. ⬜ Cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts`, `SITE_URL` de
+   `netlify.toml`, y `CORS_ORIGIN` en las env vars de Render (editable desde su dashboard, no hace
+   falta recrear el Blueprint) — los tres tienen que coincidir.
+6. ⬜ Commit + push → build + deploy automático en ambos lados. Verificar: sitio carga, form de
+   contacto real, `sitemap.xml`/`robots.txt`/`llms.txt` accesibles en el dominio real.
+7. ⬜ (Cuando quiera el email real) sacar un "app password" en myaccount.google.com/apppasswords
+   (2FA activo primero) y cargar `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
+   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<ese app password>` en Render → Environment.
 
 **Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
 Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
@@ -380,3 +394,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | Fase 10 B — Lighthouse CI (`@lhci/cli`, `lighthouserc.json`) en el workflow + reporte como artefacto. a11y: contraste de `--text-subtle` (tema claro) y honeypot del form sin `aria-hidden` contradictorio. **Cierra la Fase 10.** Primer run en GitHub Actions: todo verde. |
 | 2026-09-05 | Ordenamos el estado del proyecto (Fases 1-10 cerradas) y preparamos la Fase 12: `render.yaml` (Blueprint API) + `netlify.toml` (config del sitio) — el deploy queda en 2 clics de conectar cuenta, sin adivinar comandos. |
 | 2026-09-05 | OG image generada con `@resvg/resvg-js` (SVG con la paleta del sitio → PNG, sin foto ni stock), copiada a la raíz del `dist` por `seo-files.mjs`. |
+| 2026-09-05 | Fase 12 arrancada: Blueprint de la API desplegado en Render (`portfoliodev-api`), `SMTP_*`/`CORS_ORIGIN` con placeholders a propósito. Falta: URL de Render, sitio en Netlify, cruzar URLs. |
