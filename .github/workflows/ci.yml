@@ -41,3 +41,13 @@ jobs:
 
       - name: Lighthouse CI
         run: npm run lighthouse
+
+      # Guarda los reportes HTML de Lighthouse como descargable del run, incluso
+      # si el paso de arriba falla (así se puede ver qué anduvo mal).
+      - name: Subir reporte de Lighthouse
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: lighthouse-report
+          path: .lighthouseci
+          retention-days: 14

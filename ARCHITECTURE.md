@@ -4,11 +4,12 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-04 — **Fase 10 parte A (SEO/GEO)**: `SeoService` pone en el
+**Última actualización:** 2026-09-05 — **Fase 10 cerrada**. `SeoService` pone en el
 prerender el `<title>`, `description`, Open Graph, Twitter Card, `canonical`, `hreflang` (es/en/
 x-default) y JSON-LD (`Person` + `WebSite` + `ProfilePage`) por locale; postbuild escribe
-`robots.txt`, `sitemap.xml` y `llms.txt` en la raíz del `dist`. **Falta:** OG image
-(`public/og-image.png`), `siteUrl` real, Lighthouse CI y la pasada de a11y/contraste.
+`robots.txt`, `sitemap.xml` y `llms.txt` en la raíz del `dist`. Lighthouse CI corre en cada push
+(GitHub Actions) con reporte descargable; primer run: **todo verde**. a11y: contraste corregido +
+honeypot sin `aria-hidden` contradictorio. **Falta:** OG image, `siteUrl` real.
 **Operativo pendiente (Marco):** desplegar API + `apiUrl`/`siteUrl` de prod + creds SMTP.
 
 ---
@@ -39,7 +40,7 @@ contenido real viaja dentro del HTML.
 | 7 | Hero real + Sobre mí + Skills, con animaciones | ✅ |
 | 8 | Proyectos destacados — sección lista; falta afinar `stack`/links (Marco) | ✅ |
 | 9 | Contacto (form → API + anti-spam + email) · Experiencia (timeline + toggle) | ✅ |
-| 10 | SEO/GEO (meta + JSON-LD + sitemap/robots/llms) ✅ · Lighthouse CI + a11y ⬜ | ⏳ **← próximo** |
+| 10 | SEO/GEO + Lighthouse CI (pasando en GitHub Actions) + fixes de a11y | ✅ |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
 | 12 | Despliegue web + api + Google Search Console | ⬜ |
 
@@ -51,13 +52,12 @@ contenido real viaja dentro del HTML.
 | B | Hero definitivo: eyebrow + frase de valor (foco Fintech/OpenBanking) + CTAs + links GitHub/LinkedIn + timeline GSAP | ✅ |
 | C | Sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`): bio en prosa + ficha `<dl>` de datos (formación, experiencia, enfoque, ubicación, disponibilidad). Sin foto. | ✅ |
 
-**Próximo paso concreto:** Fase 10 parte B —
-1. **Lighthouse CI**: agregar `@lhci/cli` al workflow (`.github/workflows/ci.yml`), correr contra
-   el `dist` prerenderizado, `assert` ≥90 en Performance / SEO / Accessibility / Best Practices.
-2. **Pasada de a11y**: revisar contraste (el tema claro tiene `--text-subtle` ~3:1), orden de
-   headings, focus visible en el toggle de Experiencia, `aria-current` en el nav del header.
-3. **OG image** (`public/og-image.png`) — la manda Marco.
-Luego Fase 11 (pulido) y 12 (deploy).
+**Próximo paso concreto:** Fase 11 (pulido) o directo Fase 12 (deploy) — a elección de Marco. Igual
+quedan 2 cosas chicas de la Fase 10 abiertas:
+1. **OG image** (`public/og-image.png`, 1200×630) — la manda Marco.
+2. Subir `categories:performance` de `warn` a `error` en `lighthouserc.json` una vez que se vean
+   varios runs verdes con buen puntaje (hoy está en warn porque nunca se probó localmente — no hay
+   Chrome en el entorno de desarrollo — y no quisimos bloquear el CI a ciegas con el primer número).
 
 **Operativo pendiente (no es código, lo hace Marco):**
 1. **Desplegar la API** (`apps/api`) — recomendado **Render** (free): New → Web Service → repo,
@@ -314,10 +314,13 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
       `dist`; no en `public/` porque ahí se copiarían dentro de cada locale). `SITE_URL` (env) debe
       coincidir con `siteUrl` de `environment.ts`.
 - [ ] **OG image** `apps/web/public/og-image.png` (1200×630) — la referencia ya está, falta el archivo.
-- [ ] a11y: skip-link ✅ · focus-visible ✅ · roles/labels ✅ (form, toggles) · **contraste**
-      (`--text-subtle` en tema claro queda ~3:1) — pendiente revisar.
-- [ ] Lighthouse CI ≥ 90 en Performance / SEO / Accessibility / Best Practices — agregar `@lhci/cli`
-      al workflow.
+- [x] a11y: skip-link · focus-visible · roles/labels (form, toggles) · contraste AA en ambos temas
+      (se corrigió `--text-subtle` en claro, 3:1 → 4.8:1) · honeypot sin `aria-hidden` contradictorio.
+- [x] Lighthouse CI (`@lhci/cli` + `lighthouserc.json`) en el workflow — corre en cada push, sube el
+      reporte HTML como artefacto descargable del run ("Subir reporte de Lighthouse"). Bloqueante
+      (`error`, minScore 0.9) en Accessibility/Best-Practices/SEO; Performance en `warn` hasta ver
+      varios runs reales (no se pudo probar en el entorno de desarrollo, sin Chrome). **Primer run
+      en GitHub Actions: los 5 pasos en verde.**
 
 ---
 
@@ -367,3 +370,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-04 | Fase 9 C — sección **Experiencia** (`app/sections/experience`): timeline vertical con toggle Full stack / Frontend / Backend (los 3 CVs en una vista). **Cierra la Fase 9.** |
 | 2026-09-04 | `fix` — API dev en :3100 (3000 tomado por otro NestJS local de Marco). `914b210` |
 | 2026-09-04 | Fase 10 A — SEO/GEO: `SeoService` (meta + OG + Twitter + canonical + hreflang + JSON-LD `Person`/`WebSite`/`ProfilePage`, por locale, en el prerender) y `scripts/seo-files.mjs` (robots.txt / sitemap.xml / llms.txt). |
+| 2026-09-05 | Fase 10 B — Lighthouse CI (`@lhci/cli`, `lighthouserc.json`) en el workflow + reporte como artefacto. a11y: contraste de `--text-subtle` (tema claro) y honeypot del form sin `aria-hidden` contradictorio. **Cierra la Fase 10.** Primer run en GitHub Actions: todo verde. |
