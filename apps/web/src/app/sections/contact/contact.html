@@ -59,10 +59,17 @@
         }
       </div>
 
-      <!-- Honeypot: oculto y fuera del tab order. -->
-      <div class="contact__hp" aria-hidden="true">
-        <label for="contact-company">Company</label>
-        <input id="contact-company" type="text" formControlName="company" tabindex="-1" autocomplete="off" />
+      <!-- Honeypot: fuera de pantalla y del tab order. Sin `aria-hidden` (contiene
+           un campo enfocable); el label le avisa a quien use lector de pantalla. -->
+      <div class="contact__hp">
+        <label for="contact-company" i18n="@@contact.hp">No completes este campo</label>
+        <input
+          id="contact-company"
+          type="text"
+          formControlName="company"
+          tabindex="-1"
+          autocomplete="off"
+        />
       </div>
 
       <button class="btn btn--primary" type="submit" [disabled]="state() === 'sending'">

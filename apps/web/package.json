@@ -6,7 +6,7 @@
     "start": "ng serve",
     "start:en": "ng serve --configuration en",
     "build": "ng build",
-    "postbuild": "node scripts/root-index.mjs",
+    "postbuild": "node scripts/root-index.mjs && node scripts/seo-files.mjs",
     "watch": "ng build --watch --configuration development",
     "test": "ng test",
     "extract-i18n": "ng extract-i18n"

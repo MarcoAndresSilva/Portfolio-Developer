@@ -5,6 +5,6 @@ export const routes: Routes = [
   {
     path: '',
     component: Home,
-    title: $localize`:@@home.title:Marco Andrés Silva — Desarrollador Full Stack`,
+    // El <title> y el resto de meta tags los pone `SeoService` (ver `App`).
   },
 ];

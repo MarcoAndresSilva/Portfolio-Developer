@@ -18,6 +18,10 @@
     "typecheck": "npm run typecheck --workspace libs/shared && npm run typecheck --workspace apps/api",
     "lint": "npm run lint --workspace apps/api",
     "test": "npm run test --workspace apps/web && npm run test --workspace apps/api",
-    "build": "npm run build --workspace apps/web && npm run build --workspace apps/api"
+    "build": "npm run build --workspace apps/web && npm run build --workspace apps/api",
+    "lighthouse": "lhci autorun"
+  },
+  "devDependencies": {
+    "@lhci/cli": "^0.15.1"
   }
 }

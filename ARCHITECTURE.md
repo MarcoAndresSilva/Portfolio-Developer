@@ -4,12 +4,12 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-04 — **Fase 9 cerrada** (a nivel código): sección `contact`
-(form → `POST /contact` NestJS, honeypot + rate-limit) con envío de email por SMTP/nodemailer
-(fallback a log si no hay creds); sección `experience` (`app/sections/experience`) — timeline
-vertical con toggle Full stack / Frontend / Backend que reescribe los logros (los 3 CVs de Marco en
-una vista). **Falta operativo, no código:** desplegar la API + fijar `apiUrl` de prod + creds SMTP
-(`SMTP_*`). Próximo: **Fase 10 — SEO/GEO + Lighthouse + a11y**.
+**Última actualización:** 2026-09-04 — **Fase 10 parte A (SEO/GEO)**: `SeoService` pone en el
+prerender el `<title>`, `description`, Open Graph, Twitter Card, `canonical`, `hreflang` (es/en/
+x-default) y JSON-LD (`Person` + `WebSite` + `ProfilePage`) por locale; postbuild escribe
+`robots.txt`, `sitemap.xml` y `llms.txt` en la raíz del `dist`. **Falta:** OG image
+(`public/og-image.png`), `siteUrl` real, Lighthouse CI y la pasada de a11y/contraste.
+**Operativo pendiente (Marco):** desplegar API + `apiUrl`/`siteUrl` de prod + creds SMTP.
 
 ---
 
@@ -39,7 +39,7 @@ contenido real viaja dentro del HTML.
 | 7 | Hero real + Sobre mí + Skills, con animaciones | ✅ |
 | 8 | Proyectos destacados — sección lista; falta afinar `stack`/links (Marco) | ✅ |
 | 9 | Contacto (form → API + anti-spam + email) · Experiencia (timeline + toggle) | ✅ |
-| 10 | Pasada SEO/GEO + Lighthouse CI + auditoría a11y | ⬜ **← próximo** |
+| 10 | SEO/GEO (meta + JSON-LD + sitemap/robots/llms) ✅ · Lighthouse CI + a11y ⬜ | ⏳ **← próximo** |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
 | 12 | Despliegue web + api + Google Search Console | ⬜ |
 
@@ -51,16 +51,21 @@ contenido real viaja dentro del HTML.
 | B | Hero definitivo: eyebrow + frase de valor (foco Fintech/OpenBanking) + CTAs + links GitHub/LinkedIn + timeline GSAP | ✅ |
 | C | Sección "Sobre mí" (`app/sections/about/`, `id="sobre-mi"`): bio en prosa + ficha `<dl>` de datos (formación, experiencia, enfoque, ubicación, disponibilidad). Sin foto. | ✅ |
 
-**Próximo paso concreto:** Fase 10 — SEO/GEO. Meta tags por locale (`title`, `description`, OG,
-Twitter Card), JSON-LD (`Person` + `WebSite` + `ProfilePage`), `sitemap.xml` / `robots.txt` /
-`llms.txt`, `<link rel="alternate" hreflang>`. Después Lighthouse CI (meta ≥90 x4) y auditoría a11y.
+**Próximo paso concreto:** Fase 10 parte B —
+1. **Lighthouse CI**: agregar `@lhci/cli` al workflow (`.github/workflows/ci.yml`), correr contra
+   el `dist` prerenderizado, `assert` ≥90 en Performance / SEO / Accessibility / Best Practices.
+2. **Pasada de a11y**: revisar contraste (el tema claro tiene `--text-subtle` ~3:1), orden de
+   headings, focus visible en el toggle de Experiencia, `aria-current` en el nav del header.
+3. **OG image** (`public/og-image.png`) — la manda Marco.
+Luego Fase 11 (pulido) y 12 (deploy).
 
 **Operativo pendiente (no es código, lo hace Marco):**
 1. **Desplegar la API** (`apps/api`) — recomendado **Render** (free): New → Web Service → repo,
    root dir `apps/api`, build `npm install && npm run build`, start `node dist/main`. Da una URL
    `https://<algo>.onrender.com`.
-2. Pegar esa URL en `apps/web/src/environments/environment.ts` (`apiUrl`) y en la API poner
-   `CORS_ORIGIN` = dominio del sitio (Netlify).
+2. Pegar esa URL en `apps/web/src/environments/environment.ts` (`apiUrl`), poner ahí también el
+   `siteUrl` (dominio Netlify), y en la API `CORS_ORIGIN` = ese `siteUrl`. `SITE_URL` (env del
+   build) debe coincidir con `siteUrl` para que sitemap/robots/llms usen el dominio correcto.
 3. **Email:** en Render, env vars `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
    `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<app password de Google>`. Sin esto el
    endpoint responde 202 pero solo loguea (no envía).
@@ -75,7 +80,8 @@ y traducir en `messages.en.xlf`.
 
 ## 3. Pendiente de Marco
 
-- [ ] **Desplegar la API + creds SMTP + `apiUrl` de prod** — ver "próximo paso concreto" §2.
+- [ ] **Desplegar la API + creds SMTP + `apiUrl`/`siteUrl` de prod** — ver "próximo paso concreto" §2.
+- [ ] **OG image** — `apps/web/public/og-image.png`, 1200×630, para las previews de LinkedIn/Twitter.
 - [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
       - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
         `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
@@ -164,6 +170,12 @@ SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS 
 - **`apps/web` — tema:** `app/core/theme.service.ts` — signal + `localStorage`, SSR-safe, escribe
   `data-theme` en `<html>`. Script anti-flash en `index.html`. Pendiente: respetar
   `prefers-color-scheme` en la primera visita (hoy siempre arranca oscuro).
+- **`apps/web` — SEO/GEO:** `app/core/seo.service.ts` — lo llama `App` en el constructor
+  (sincrónico → prerender). Pone `<title>` + `description` + Open Graph + Twitter Card (`Meta`/
+  `Title`), `canonical` + `hreflang` (es/en/x-default) y un `<script type="application/ld+json">`
+  con `Person` + `WebSite` + `ProfilePage`. Textos con `$localize` (`@@seo.*`); URLs desde
+  `environment.siteUrl`. `scripts/seo-files.mjs` (postbuild) escribe `robots.txt` / `sitemap.xml` /
+  `llms.txt` en la raíz del `dist`.
 - **`apps/web` — layout:** `app/layout/header` (sticky, marca, nav a secciones futuras, toggle
   sol/luna, toggle ES/EN), `app/layout/footer`, `app/pages/home`. `app.html` = skip-link →
   header → `<main>` con router-outlet → footer. Convención de nombres del scaffold de Angular 22:
@@ -293,12 +305,19 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 
 ## 9. SEO / GEO (Fase 10)
 
-- [ ] Prerender/SSG de todas las rutas
-- [ ] Meta tags por página: `title`, `description`, Open Graph, Twitter Card
-- [ ] JSON-LD: `schema.org/Person` + `WebSite` + `ProfilePage`
-- [ ] `sitemap.xml`, `robots.txt`, `llms.txt`
-- [ ] a11y: skip-link ✅ · focus-visible ✅ · roles/labels · contraste
-- [ ] Lighthouse ≥ 90 en Performance / SEO / Accessibility / Best Practices
+- [x] Prerender/SSG de todas las rutas
+- [x] Meta tags por locale: `title`, `description`, Open Graph, Twitter Card — `core/seo.service.ts`,
+      llamado desde `App` (sincrónico → viaja en el prerender). Textos con `$localize` (`@@seo.*`).
+- [x] `canonical` + `<link rel="alternate" hreflang>` (es / en / x-default)
+- [x] JSON-LD: `Person` + `WebSite` + `ProfilePage` en un `@graph` (mismo `SeoService`)
+- [x] `sitemap.xml`, `robots.txt`, `llms.txt` — `scripts/seo-files.mjs` (postbuild, a la raíz del
+      `dist`; no en `public/` porque ahí se copiarían dentro de cada locale). `SITE_URL` (env) debe
+      coincidir con `siteUrl` de `environment.ts`.
+- [ ] **OG image** `apps/web/public/og-image.png` (1200×630) — la referencia ya está, falta el archivo.
+- [ ] a11y: skip-link ✅ · focus-visible ✅ · roles/labels ✅ (form, toggles) · **contraste**
+      (`--text-subtle` en tema claro queda ~3:1) — pendiente revisar.
+- [ ] Lighthouse CI ≥ 90 en Performance / SEO / Accessibility / Best Practices — agregar `@lhci/cli`
+      al workflow.
 
 ---
 
@@ -346,3 +365,5 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-04 | Fase 9 A — **Contacto**: sección `app/sections/contact` (form reactivo + honeypot) → `POST /contact` NestJS (`apps/api/src/contact`: validación a mano, honeypot, `RateLimitGuard`). `provideHttpClient`, `src/environments/`, CORS. Probado 202/400/honeypot. |
 | 2026-09-04 | Fase 9 B — envío de email por SMTP/nodemailer en `ContactService` (fallback a log). Marco entregó los 3 CVs (gitignoreados). |
 | 2026-09-04 | Fase 9 C — sección **Experiencia** (`app/sections/experience`): timeline vertical con toggle Full stack / Frontend / Backend (los 3 CVs en una vista). **Cierra la Fase 9.** |
+| 2026-09-04 | `fix` — API dev en :3100 (3000 tomado por otro NestJS local de Marco). `914b210` |
+| 2026-09-04 | Fase 10 A — SEO/GEO: `SeoService` (meta + OG + Twitter + canonical + hreflang + JSON-LD `Person`/`WebSite`/`ProfilePage`, por locale, en el prerender) y `scripts/seo-files.mjs` (robots.txt / sitemap.xml / llms.txt). |

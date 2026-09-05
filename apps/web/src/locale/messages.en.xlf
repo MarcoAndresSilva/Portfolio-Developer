@@ -7,10 +7,22 @@
         <target>Skip to content</target>
       </segment>
     </unit>
-    <unit id="home.title">
+    <unit id="seo.title">
       <segment state="translated">
-        <source>Marco Andrés Silva — Desarrollador Full Stack</source>
-        <target>Marco Andrés Silva — Full Stack Developer</target>
+        <source>Marco Andrés Silva — Desarrollador Fullstack</source>
+        <target>Marco Andrés Silva — Fullstack Developer</target>
+      </segment>
+    </unit>
+    <unit id="seo.description">
+      <segment state="translated">
+        <source>Portafolio de Marco Andrés Silva, ingeniero fullstack (Angular · NestJS). Enfocado en Fintech y OpenBanking bajo la Ley Fintech chilena.</source>
+        <target>Portfolio of Marco Andrés Silva, fullstack engineer (Angular · NestJS). Focused on Fintech and OpenBanking under Chile's Fintech Law.</target>
+      </segment>
+    </unit>
+    <unit id="seo.jobTitle">
+      <segment state="translated">
+        <source>Ingeniero de Software Fullstack</source>
+        <target>Fullstack Software Engineer</target>
       </segment>
     </unit>
     <unit id="footer.copy">
@@ -275,6 +287,12 @@
       <segment state="translated">
         <source> ¿Tenés un proyecto o una oportunidad en mente? Escribime y te respondo a la brevedad. También podés hacerlo directo a <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a [href]=&quot;&apos;mailto:&apos; + email&quot;&gt;" dispEnd="&lt;/a&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ email }}"/></pc>. </source>
         <target> Got a project or an opportunity in mind? Send me a message and I'll get back to you shortly. You can also reach me directly at <pc id="0" equivStart="START_LINK" equivEnd="CLOSE_LINK" type="link" dispStart="&lt;a [href]=&quot;&apos;mailto:&apos; + email&quot;&gt;" dispEnd="&lt;/a&gt;"><ph id="1" equiv="INTERPOLATION" disp="{{ email }}"/></pc>. </target>
+      </segment>
+    </unit>
+    <unit id="contact.hp">
+      <segment state="translated">
+        <source>No completes este campo</source>
+        <target>Leave this field empty</target>
       </segment>
     </unit>
     <unit id="contact.field.name">
