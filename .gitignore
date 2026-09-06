@@ -21,6 +21,9 @@ out-tsc/
 .angular/
 .nx/
 
+# Netlify (caché/config local, la genera el build)
+.netlify/
+
 # NestJS
 apps/api/dist/
 

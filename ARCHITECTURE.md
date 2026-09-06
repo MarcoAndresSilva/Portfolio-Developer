@@ -12,12 +12,17 @@ verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
   puede tardar ~30-50s en responder, no es un error.
 - ✅ `apiUrl` en `apps/web/src/environments/environment.ts` ya apuntaba a esta misma URL (se había
   puesto de anticipo en el commit `0737275`, antes del deploy real) — coincide, no requirió cambio.
-- ⏳ **Siguiente acción concreta:** crear el sitio en Netlify (`netlify.toml` ya está listo, mismo
-  mecanismo de Blueprint que Render: Add new site → importar el repo, Netlify lo lee solo).
-- ⬜ Después: cruzar las URLs — `siteUrl` en `environment.ts` (hoy `https://marco-silva.dev`,
-  placeholder), `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render (hoy tiene el placeholder
-  `http://localhost:4200`, puesto a propósito para no bloquear el Blueprint) — los tres deben
-  coincidir con el dominio real que asigne Netlify. Commit + push.
+- ✅ **Sitio en Netlify desplegado:** `gentle-ganache-580791` → `https://gentle-ganache-580791.netlify.app`
+  (200 OK). El primer build falló dos veces por el plugin `@netlify/angular-runtime` (no encontraba
+  `angular.json` en la raíz del monorepo); Marco lo mandó a arreglar con el agente de Netlify
+  (PR #1, mergeado) — la solución final: `base = "apps/web"` en `netlify.toml` (así el plugin busca
+  `angular.json` donde corresponde) + `command = "npm run build"` (corre ya adentro de `apps/web`,
+  sin `--workspace`) + `publish = "dist/web/browser"` (relativo a ese `base`).
+- ⏳ **Siguiente acción concreta:** cruzar las URLs — `siteUrl` en `environment.ts` (hoy
+  `https://marco-silva.dev`, placeholder), `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render
+  (hoy tiene el placeholder `http://localhost:4200`) — los tres deben coincidir con
+  `https://gentle-ganache-580791.netlify.app` (o el dominio propio, si Marco configura uno).
+  Commit + push.
 - ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
 - **SMTP quedó sin configurar a propósito** (Marco lo dejó vacío en el Blueprint) — el form de
   contacto ya funciona igual, solo que por ahora registra el mensaje en el log de Render en vez de
@@ -82,12 +87,14 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
    no tuvo tráfico se duerme, el primer request en frío tarda ~30-50s — normal, no es que se cayó.)
 3. ✅ `apiUrl` ya apuntaba a esa URL en `apps/web/src/environments/environment.ts` (puesto de
    anticipo antes del deploy). Nada que tocar acá.
-4. ⏳ **← acá estamos:** **Sitio en Netlify:** netlify.com → Add new site → importar el repo →
-   Netlify lee `netlify.toml` solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura).
-5. ⬜ Cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts` (hoy
-   `https://marco-silva.dev`, placeholder), `SITE_URL` de `netlify.toml`, y `CORS_ORIGIN` en las
-   env vars de Render (editable desde su dashboard, no hace falta recrear el Blueprint) — los tres
-   tienen que coincidir con el dominio real que dé Netlify.
+4. ✅ **Sitio en Netlify:** `https://gentle-ganache-580791.netlify.app` — Live. `netlify.toml` final:
+   `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"` (ver §2 arriba
+   por qué). Se limpiaron del repo los `apps/web/.netlify/` y `apps/web/apps/web/.netlify/` que el
+   agente de Netlify había commiteado por error (caché de build, ahora en `.gitignore`).
+5. ⏳ **← acá estamos:** cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts`
+   (hoy `https://marco-silva.dev`, placeholder) → `https://gentle-ganache-580791.netlify.app`;
+   `SITE_URL` de `netlify.toml` → ídem; `CORS_ORIGIN` en las env vars de Render (editable desde su
+   dashboard, no hace falta recrear el Blueprint) → ídem. Los tres tienen que coincidir.
 6. ⬜ Commit + push → build + deploy automático en ambos lados. Verificar: sitio carga, form de
    contacto real, `sitemap.xml`/`robots.txt`/`llms.txt` accesibles en el dominio real.
 7. ⬜ (Cuando quiera el email real) sacar un "app password" en myaccount.google.com/apppasswords
@@ -402,3 +409,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | OG image generada con `@resvg/resvg-js` (SVG con la paleta del sitio → PNG, sin foto ni stock), copiada a la raíz del `dist` por `seo-files.mjs`. |
 | 2026-09-05 | Fase 12 arrancada: Blueprint de la API desplegado en Render (`portfoliodev-api`), `SMTP_*`/`CORS_ORIGIN` con placeholders a propósito. Falta: URL de Render, sitio en Netlify, cruzar URLs. |
 | 2026-09-05 | Confirmado "Live" en Render: `https://portfoliodev-api.onrender.com` (200, `Hello World!`). `apiUrl` en `environment.ts` ya coincidía. Falta: sitio en Netlify, cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN`. |
+| 2026-09-05 | Sitio creado en Netlify (`gentle-ganache-580791`); primer build falló 2 veces por el plugin `@netlify/angular-runtime` sin encontrar `angular.json` en el monorepo. Marco lo resolvió con el agente de Netlify (PR #1, mergeado): `netlify.toml` → `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"`. Deploy exitoso: `https://gentle-ganache-580791.netlify.app` (200). Se sacaron del repo `apps/web/.netlify/` y el duplicado `apps/web/apps/web/.netlify/` que el agente había commiteado por error (ahora en `.gitignore`). Falta: cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN` con este dominio. |
