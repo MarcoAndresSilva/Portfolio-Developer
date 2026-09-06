@@ -18,11 +18,15 @@ verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
   (PR #1, mergeado) — la solución final: `base = "apps/web"` en `netlify.toml` (así el plugin busca
   `angular.json` donde corresponde) + `command = "npm run build"` (corre ya adentro de `apps/web`,
   sin `--workspace`) + `publish = "dist/web/browser"` (relativo a ese `base`).
-- ⏳ **Siguiente acción concreta:** cruzar las URLs — `siteUrl` en `environment.ts` (hoy
-  `https://marco-silva.dev`, placeholder), `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render
-  (hoy tiene el placeholder `http://localhost:4200`) — los tres deben coincidir con
-  `https://gentle-ganache-580791.netlify.app` (o el dominio propio, si Marco configura uno).
-  Commit + push.
+- **Dominio elegido: el subdominio gratis de Netlify** (`gentle-ganache-580791.netlify.app`) — Marco
+  decidió no comprar dominio propio por ahora, se puede agregar después sin rehacer nada (solo
+  cambiar estas mismas 3 URLs).
+- ✅ `siteUrl` en `environment.ts` y `SITE_URL` en `netlify.toml` → actualizados a
+  `https://gentle-ganache-580791.netlify.app`.
+- ⏳ **Siguiente acción concreta:** falta cargar `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app`
+  en las env vars de Render (dashboard → `portfoliodev-api` → Environment; hoy tiene el placeholder
+  `http://localhost:4200`) — es manual, `sync: false` en `render.yaml` a propósito. Después, commit +
+  push de `environment.ts`/`netlify.toml` para que Netlify redespliegue con el `SITE_URL` correcto.
 - ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
 - **SMTP quedó sin configurar a propósito** (Marco lo dejó vacío en el Blueprint) — el form de
   contacto ya funciona igual, solo que por ahora registra el mensaje en el log de Render en vez de
@@ -91,12 +95,14 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
    `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"` (ver §2 arriba
    por qué). Se limpiaron del repo los `apps/web/.netlify/` y `apps/web/apps/web/.netlify/` que el
    agente de Netlify había commiteado por error (caché de build, ahora en `.gitignore`).
-5. ⏳ **← acá estamos:** cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts`
-   (hoy `https://marco-silva.dev`, placeholder) → `https://gentle-ganache-580791.netlify.app`;
-   `SITE_URL` de `netlify.toml` → ídem; `CORS_ORIGIN` en las env vars de Render (editable desde su
-   dashboard, no hace falta recrear el Blueprint) → ídem. Los tres tienen que coincidir.
-6. ⬜ Commit + push → build + deploy automático en ambos lados. Verificar: sitio carga, form de
-   contacto real, `sitemap.xml`/`robots.txt`/`llms.txt` accesibles en el dominio real.
+5. ✅ Cruzadas en el repo: `siteUrl` de `environment.ts` y `SITE_URL` de `netlify.toml` →
+   `https://gentle-ganache-580791.netlify.app` (subdominio gratis de Netlify — Marco decidió no
+   comprar dominio propio por ahora).
+6. ⏳ **← acá estamos:** falta cargar a mano `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app`
+   en Render → `portfoliodev-api` → Environment (editable desde el dashboard, no hace falta recrear
+   el Blueprint). Después, commit + push de `environment.ts`/`netlify.toml` → Netlify redespliega
+   solo. Verificar: sitio carga, form de contacto real, `sitemap.xml`/`robots.txt`/`llms.txt`
+   accesibles en el dominio real.
 7. ⬜ (Cuando quiera el email real) sacar un "app password" en myaccount.google.com/apppasswords
    (2FA activo primero) y cargar `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
    `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<ese app password>` en Render → Environment.
@@ -410,3 +416,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | Fase 12 arrancada: Blueprint de la API desplegado en Render (`portfoliodev-api`), `SMTP_*`/`CORS_ORIGIN` con placeholders a propósito. Falta: URL de Render, sitio en Netlify, cruzar URLs. |
 | 2026-09-05 | Confirmado "Live" en Render: `https://portfoliodev-api.onrender.com` (200, `Hello World!`). `apiUrl` en `environment.ts` ya coincidía. Falta: sitio en Netlify, cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN`. |
 | 2026-09-05 | Sitio creado en Netlify (`gentle-ganache-580791`); primer build falló 2 veces por el plugin `@netlify/angular-runtime` sin encontrar `angular.json` en el monorepo. Marco lo resolvió con el agente de Netlify (PR #1, mergeado): `netlify.toml` → `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"`. Deploy exitoso: `https://gentle-ganache-580791.netlify.app` (200). Se sacaron del repo `apps/web/.netlify/` y el duplicado `apps/web/apps/web/.netlify/` que el agente había commiteado por error (ahora en `.gitignore`). Falta: cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN` con este dominio. |
+| 2026-09-05 | Marco decidió quedarse con el subdominio gratis de Netlify (no comprar dominio propio por ahora). Cruzadas `siteUrl` (`environment.ts`) y `SITE_URL` (`netlify.toml`) → `https://gentle-ganache-580791.netlify.app`. Falta: cargar `CORS_ORIGIN` en Render (manual, dashboard) y hacer commit + push. |

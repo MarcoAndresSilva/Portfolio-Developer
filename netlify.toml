@@ -22,4 +22,4 @@
   # Tiene que coincidir con `siteUrl` de apps/web/src/environments/environment.ts
   # para que sitemap.xml / robots.txt / llms.txt usen el dominio correcto
   # (ver apps/web/scripts/seo-files.mjs).
-  SITE_URL = "https://marco-silva.dev"
+  SITE_URL = "https://gentle-ganache-580791.netlify.app"
