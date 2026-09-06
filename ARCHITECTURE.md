@@ -4,8 +4,8 @@
 > acá está en qué punto vamos, cuál es el próximo paso, qué falta que entregue Marco, y por qué
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
-**Última actualización:** 2026-09-05 — **Fase 10 cerrada** (SEO/GEO + Lighthouse CI + a11y, todo
-verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
+**Última actualización:** 2026-09-06 — **Fase 10 cerrada** (SEO/GEO + Lighthouse CI + a11y, todo
+verde). **Fase 12 (deploy) EN CURSO — casi cerrada:**
 - ✅ Blueprint desplegado en Render (`portfoliodev-api`, a partir de `render.yaml`).
 - ✅ **Render confirmado "Live":** `https://portfoliodev-api.onrender.com` responde 200 (`GET /` →
   "Hello World!"). Nota: el free tier duerme el servicio sin tráfico — el primer request en frío
@@ -23,16 +23,20 @@ verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
   cambiar estas mismas 3 URLs).
 - ✅ `siteUrl` en `environment.ts` y `SITE_URL` en `netlify.toml` → actualizados a
   `https://gentle-ganache-580791.netlify.app`.
-- ⏳ **Siguiente acción concreta:** falta cargar `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app`
-  en las env vars de Render (dashboard → `portfoliodev-api` → Environment; hoy tiene el placeholder
-  `http://localhost:4200`) — es manual, `sync: false` en `render.yaml` a propósito. Después, commit +
-  push de `environment.ts`/`netlify.toml` para que Netlify redespliegue con el `SITE_URL` correcto.
-- ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
-- **SMTP quedó sin configurar a propósito** (Marco lo dejó vacío en el Blueprint) — el form de
-  contacto ya funciona igual, solo que por ahora registra el mensaje en el log de Render en vez de
-  mandar el email. Se completa después sacando un "app password" en
-  myaccount.google.com/apppasswords y cargando `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` en
-  las env vars del servicio de Render (no hace falta redesplegar desde cero, Render reinicia solo).
+- ✅ `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app` cargado a mano en Render → `portfoliodev-api`
+  → Environment. `siteUrl`/`SITE_URL` ya commiteados y pusheados (`df7a114`).
+- **Email: se cambió SMTP/nodemailer → API HTTP de Resend.** El plan free de Render **bloquea los
+  puertos SMTP salientes (25/465/587) desde 2025-09** — con nodemailer el envío quedaba colgado
+  hasta dar timeout y el endpoint devolvía 500. `ContactService` ahora postea a `api.resend.com`
+  (HTTP, no bloqueado). Además el endpoint se endureció: si la entrega falla, loguea el mensaje
+  completo (no se pierde nunca) y devuelve **502** en vez de 500 → el form muestra su texto de
+  fallback ("…escribime por email"). Ver §6.
+- ⏳ **Siguiente acción concreta (Marco):** crear cuenta en resend.com, verificar el email, generar
+  una API key, y cargar en Render → `portfoliodev-api` → Environment: `RESEND_API_KEY=re_...`
+  (opcional `CONTACT_TO`, `CONTACT_FROM`). Borrar las viejas `SMTP_*`. Save → Render reinicia solo.
+  Antes: commit + push de este cambio de código para que Render lo tome.
+- ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real llega al
+  mail, sitemap/robots/llms accesibles) + alta en Google Search Console.
 
 Guía completa del deploy paso a paso: ver "Operativo pendiente" más abajo en esta sección.
 
@@ -98,14 +102,19 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
 5. ✅ Cruzadas en el repo: `siteUrl` de `environment.ts` y `SITE_URL` de `netlify.toml` →
    `https://gentle-ganache-580791.netlify.app` (subdominio gratis de Netlify — Marco decidió no
    comprar dominio propio por ahora).
-6. ⏳ **← acá estamos:** falta cargar a mano `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app`
-   en Render → `portfoliodev-api` → Environment (editable desde el dashboard, no hace falta recrear
-   el Blueprint). Después, commit + push de `environment.ts`/`netlify.toml` → Netlify redespliega
-   solo. Verificar: sitio carga, form de contacto real, `sitemap.xml`/`robots.txt`/`llms.txt`
-   accesibles en el dominio real.
-7. ⬜ (Cuando quiera el email real) sacar un "app password" en myaccount.google.com/apppasswords
-   (2FA activo primero) y cargar `SMTP_HOST=smtp.gmail.com`, `SMTP_PORT=587`,
-   `SMTP_USER=marco.silvaponce10@gmail.com`, `SMTP_PASS=<ese app password>` en Render → Environment.
+6. ✅ `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app` cargado a mano en Render → `portfoliodev-api`
+   → Environment. `environment.ts`/`netlify.toml` commiteados y pusheados (`df7a114`) → Netlify redesplegó.
+7. ⏳ **← acá estamos: email real por Resend.** El plan free de Render bloquea SMTP saliente, así que
+   se cambió el transporte a la API HTTP de Resend (ver §6). Falta (Marco):
+   - Crear cuenta en resend.com (gratis, sin tarjeta). Verificar `marco.silvaponce10@gmail.com`.
+   - API Keys → Create → copiar la key `re_...`.
+   - Render → `portfoliodev-api` → Environment: agregar `RESEND_API_KEY=re_...`. Borrar las
+     `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` viejas. (Opcionales: `CONTACT_TO` para cambiar
+     el destino, `CONTACT_FROM` — sin dominio propio dejar el default `onboarding@resend.dev`.)
+   - Save → Render reinicia. Requiere haber pusheado antes el cambio de código de este commit.
+   - Probar el form en el dominio real → el mail tiene que llegar (revisar Spam / Todos / Enviados,
+     es self-to-self). En los logs de Render: `Contacto enviado a marco.silvaponce10@gmail.com`.
+8. ⬜ Alta del sitio en Google Search Console.
 
 **Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
 Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
@@ -117,7 +126,8 @@ y traducir en `messages.en.xlf`.
 
 ## 3. Pendiente de Marco
 
-- [ ] **Desplegar la API + creds SMTP + `apiUrl`/`siteUrl` de prod** — ver "próximo paso concreto" §2.
+- [ ] **Email real por Resend** — crear cuenta, API key, cargar `RESEND_API_KEY` en Render, borrar
+      las `SMTP_*` viejas. Ver §2 "Operativo pendiente" paso 7.
 - [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
       - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
         `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
@@ -237,10 +247,12 @@ SCSS) · `apps/api` NestJS 12 (ESM, oxlint, Vitest) · `libs/shared` paquete TS 
   `contact.dto.ts` valida a mano (nombre 2-80, email regex ≤160, mensaje 10-2000) — sin
   `class-validator` (NestJS 12 + TS 6 recientes, y son 3 campos). Honeypot `company`: si trae algo
   responde 202 igual pero descarta. `RateLimitGuard` — ventana deslizante en memoria, 5 req/min por
-  IP (`@nestjs/throttler` aún no soporta NestJS 12). `ContactService.deliver` envía por SMTP con
-  **nodemailer** si hay `SMTP_HOST`/`SMTP_USER`/`SMTP_PASS` (destino `CONTACT_TO`, default el gmail
-  de Marco); si no, registra en log (así corre en local sin config). `main.ts`: CORS desde
-  `CORS_ORIGIN` (coma-separado, default `localhost:4200`). `GET /` sigue siendo el placeholder.
+  IP (`@nestjs/throttler` aún no soporta NestJS 12). `ContactService.deliver` postea a la **API HTTP
+  de Resend** (`fetch`, sin deps) si hay `RESEND_API_KEY` (destino `CONTACT_TO` / remitente
+  `CONTACT_FROM`, con defaults); si no, registra en log (así corre en local sin config). Si el envío
+  falla, loguea el mensaje entero y relanza → el controller responde **502** (no 500) y el form
+  muestra su fallback. `main.ts`: CORS desde `CORS_ORIGIN` (coma-separado, default `localhost:4200`).
+  `GET /` sigue siendo el placeholder.
 - **`libs/shared`** (`@portfolio/shared`): interfaces `Project`, `Experience`, `Skill`, `SocialLink`
   + `Locale` / `Localized<T>`. **Solo tipos, sin build** — `exports` apunta a `src/index.ts` y los
   `import type` se borran al compilar. Si se necesita un valor en runtime, hay que agregar build a
@@ -269,9 +281,18 @@ Aporta valor de portafolio (full-stack Angular + NestJS). Scope chico: 1 endpoin
 rate limiting + honeypot. Descartado Formspree/Web3Forms (no muestran skill de backend).
 **Implementado en Fase 9.** Validación **a mano** en vez de `class-validator`, y rate-limit con un
 **guard propio** en vez de `@nestjs/throttler` (no soporta NestJS 12 todavía): son 3 campos y 1
-endpoint, no justifica arrastrar deps + decoradores nuevos con TS 6 recién salido. Email por
-**nodemailer/SMTP** detrás de `ContactService.deliver` (Gmail con app password); se prefirió SMTP a
-Resend porque no hay dominio propio y el envío es self-to-self.
+endpoint, no justifica arrastrar deps + decoradores nuevos con TS 6 recién salido.
+
+**Email: API HTTP de Resend** (Fase 12, era nodemailer/SMTP). El primer intento fue SMTP con Gmail
+(app password) — pero el **plan free de Render bloquea el tráfico saliente a los puertos SMTP
+(25/465/587) desde 2025-09**, así que `nodemailer` quedaba colgado hasta el timeout y el endpoint
+devolvía 500. Se cambió `ContactService.deliver` a un `POST https://api.resend.com/emails` con
+`fetch` (HTTP no está bloqueado) — **cero deps nuevas** (se sacó `nodemailer`), coherente con el
+resto del módulo. Sin dominio propio verificado: `from` = `onboarding@resend.dev` y `to` = el gmail
+de Marco (la casilla de la cuenta Resend) — que es exactamente el flujo de este form (todo le llega
+a Marco, con `reply_to` al visitante). Config: `RESEND_API_KEY` (sin ella → solo loguea, corre en
+local), `CONTACT_TO`, `CONTACT_FROM`. Además el controller **atrapa el fallo de envío**: loguea el
+mensaje completo (no se pierde) y responde **502** en vez de 500 → el form muestra su fallback.
 
 ### Sección Experiencia: un timeline con toggle de enfoque
 Marco mantiene 3 CVs (Fullstack / Frontend / Backend) con el mismo historial y distinta énfasis.
@@ -417,3 +438,5 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | Confirmado "Live" en Render: `https://portfoliodev-api.onrender.com` (200, `Hello World!`). `apiUrl` en `environment.ts` ya coincidía. Falta: sitio en Netlify, cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN`. |
 | 2026-09-05 | Sitio creado en Netlify (`gentle-ganache-580791`); primer build falló 2 veces por el plugin `@netlify/angular-runtime` sin encontrar `angular.json` en el monorepo. Marco lo resolvió con el agente de Netlify (PR #1, mergeado): `netlify.toml` → `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"`. Deploy exitoso: `https://gentle-ganache-580791.netlify.app` (200). Se sacaron del repo `apps/web/.netlify/` y el duplicado `apps/web/apps/web/.netlify/` que el agente había commiteado por error (ahora en `.gitignore`). Falta: cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN` con este dominio. |
 | 2026-09-05 | Marco decidió quedarse con el subdominio gratis de Netlify (no comprar dominio propio por ahora). Cruzadas `siteUrl` (`environment.ts`) y `SITE_URL` (`netlify.toml`) → `https://gentle-ganache-580791.netlify.app`. Falta: cargar `CORS_ORIGIN` en Render (manual, dashboard) y hacer commit + push. |
+| 2026-09-05 | `CORS_ORIGIN` cargado en Render + `df7a114` pusheado. Marco cargó las `SMTP_*` de Gmail y el form empezó a dar **500**: el plan free de Render bloquea los puertos SMTP salientes (25/465/587) desde 2025-09. |
+| 2026-09-06 | Email: `ContactService` migrado de nodemailer/SMTP → **API HTTP de Resend** (`fetch`, se sacó `nodemailer`). Endpoint endurecido: atrapa el fallo de envío, loguea el mensaje completo y responde **502** en vez de 500 (el form ya tenía el texto de fallback). `render.yaml`: `SMTP_*` → `RESEND_API_KEY`/`CONTACT_FROM`. Tests nuevos (`contact.service.spec.ts` + caso 502 en el controller). typecheck/lint/test/build verdes. Falta (Marco): cuenta Resend + `RESEND_API_KEY` en Render. |

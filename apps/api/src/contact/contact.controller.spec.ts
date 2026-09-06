@@ -1,4 +1,4 @@
-import { BadRequestException } from '@nestjs/common';
+import { BadRequestException, HttpException } from '@nestjs/common';
 import { Test } from '@nestjs/testing';
 import { ContactController } from './contact.controller.js';
 import { ContactService } from './contact.service.js';
@@ -37,5 +37,12 @@ describe('ContactController', () => {
   it('ignora en silencio un envío con honeypot (responde ok, no entrega)', async () => {
     await expect(controller.submit({ ...valid, company: 'bot' })).resolves.toEqual({ ok: true });
     expect(deliver).not.toHaveBeenCalled();
+  });
+
+  it('si la entrega falla responde 502 (no 500)', async () => {
+    deliver.mockRejectedValue(new Error('contact-delivery-failed'));
+    const err = await controller.submit(valid).catch((e: unknown) => e);
+    expect(err).toBeInstanceOf(HttpException);
+    expect((err as HttpException).getStatus()).toBe(502);
   });
 });

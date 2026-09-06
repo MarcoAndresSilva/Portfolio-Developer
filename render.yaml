@@ -18,17 +18,18 @@ services:
       # bloquea las peticiones del formulario de contacto.
       - key: CORS_ORIGIN
         sync: false
-      # SMTP para el envío de email real (ver ContactService). Sin estas 3, el
-      # endpoint sigue funcionando pero solo registra el mensaje en el log.
-      - key: SMTP_HOST
+      # API key de Resend para el envío de email real (ver ContactService). Se
+      # usa la API HTTP y no SMTP porque el plan free de Render bloquea los
+      # puertos SMTP salientes. Sin esta key el endpoint sigue funcionando pero
+      # solo registra el mensaje en el log.
+      - key: RESEND_API_KEY
         sync: false
-      - key: SMTP_PORT
-        sync: false
-      - key: SMTP_USER
-        sync: false
-      - key: SMTP_PASS
-        sync: false
-      # Opcional: a dónde llegan los mensajes. Por defecto es el gmail de Marco
-      # (ver ContactService), no hace falta setearla salvo que se quiera cambiar.
+      # Opcional: a dónde llegan los mensajes. Por defecto, el gmail de Marco
+      # (ver ContactService). Ojo: sin dominio verificado en Resend, el destino
+      # solo puede ser la casilla con la que se creó la cuenta.
       - key: CONTACT_TO
+        sync: false
+      # Opcional: remitente. Default `onboarding@resend.dev` (único válido sin
+      # dominio propio verificado en Resend).
+      - key: CONTACT_FROM
         sync: false

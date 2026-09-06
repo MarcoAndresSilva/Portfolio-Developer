@@ -3,6 +3,7 @@ import {
   Body,
   Controller,
   HttpCode,
+  HttpException,
   HttpStatus,
   Post,
   UseGuards,
@@ -30,7 +31,17 @@ export class ContactController {
       throw new BadRequestException({ message: 'Datos inválidos', errors });
     }
 
-    await this.contact.deliver(toContactDto(body));
+    try {
+      await this.contact.deliver(toContactDto(body));
+    } catch {
+      // El detalle real (y el mensaje completo) ya quedó en el log de la API.
+      // Al cliente le respondemos 502: el formulario muestra su texto de
+      // fallback ("…escribime por email") en vez de un 500 crudo.
+      throw new HttpException(
+        'No se pudo entregar el mensaje. Probá de nuevo en un momento.',
+        HttpStatus.BAD_GATEWAY,
+      );
+    }
     return { ok: true };
   }
 }
