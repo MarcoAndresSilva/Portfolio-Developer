@@ -3,13 +3,17 @@
 # En netlify.com: Add new site → importar este repo. Netlify lee este archivo
 # solo (no hace falta tocar nada en la UI de "Build settings").
 #
-# `npm install` corre en la raíz del repo (monorepo con npm workspaces) y el build
-# apunta al workspace correcto. El plugin @netlify/angular-runtime detecta el
-# monorepo (`packagePath: apps/web`) y ya resuelve `publish` relativo a ese paquete
-# — por eso NO lleva el prefijo `apps/web/` (si se lo agregás, el path queda duplicado
-# y el build falla con "Publish directory is configured incorrectly").
+# `base` apunta a apps/web porque ahí vive angular.json: el plugin
+# @netlify/angular-runtime busca ese archivo en el directorio de trabajo del
+# build (cwd) y, al no encontrarlo en la raíz del monorepo, el build fallaba
+# con "Could not locate your angular.json...". Con `base` seteado, Netlify
+# instala dependencias en la raíz del repo (detecta los npm workspaces) pero
+# corre el comando de build y resuelve `publish` desde apps/web — por eso
+# `publish` sigue siendo "dist/web/browser" (coincide con el outputPath por
+# defecto de Angular, relativo a apps/web) y no lleva el prefijo `apps/web/`.
 [build]
-  command = "npm run build --workspace apps/web"
+  base = "apps/web"
+  command = "npm run build"
   publish = "dist/web/browser"
 
 [build.environment]
