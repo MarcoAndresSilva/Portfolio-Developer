@@ -7,15 +7,18 @@
 **Última actualización:** 2026-09-05 — **Fase 10 cerrada** (SEO/GEO + Lighthouse CI + a11y, todo
 verde). **Fase 12 (deploy) EN CURSO — a mitad de camino:**
 - ✅ Blueprint desplegado en Render (`portfoliodev-api`, a partir de `render.yaml`).
-- ⏳ **Siguiente acción concreta:** confirmar que el servicio de Render quedó "Live" y conseguir su
-  URL (`https://portfoliodev-api.onrender.com` o la que haya asignado). Sin esa URL no se puede
-  seguir.
-- ⬜ Después: paso 2 — crear el sitio en Netlify (`netlify.toml` ya está listo, mismo mecanismo de
-  Blueprint que Render: Add new site → importar el repo, Netlify lo lee solo).
-- ⬜ Paso 3 — cruzar las URLs: `apiUrl` y `siteUrl` en `apps/web/src/environments/environment.ts`,
-  `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render (hoy tiene el placeholder
-  `http://localhost:4200`, puesto a propósito para no bloquear el Blueprint). Commit + push.
-- ⬜ Paso 4 — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
+- ✅ **Render confirmado "Live":** `https://portfoliodev-api.onrender.com` responde 200 (`GET /` →
+  "Hello World!"). Nota: el free tier duerme el servicio sin tráfico — el primer request en frío
+  puede tardar ~30-50s en responder, no es un error.
+- ✅ `apiUrl` en `apps/web/src/environments/environment.ts` ya apuntaba a esta misma URL (se había
+  puesto de anticipo en el commit `0737275`, antes del deploy real) — coincide, no requirió cambio.
+- ⏳ **Siguiente acción concreta:** crear el sitio en Netlify (`netlify.toml` ya está listo, mismo
+  mecanismo de Blueprint que Render: Add new site → importar el repo, Netlify lo lee solo).
+- ⬜ Después: cruzar las URLs — `siteUrl` en `environment.ts` (hoy `https://marco-silva.dev`,
+  placeholder), `SITE_URL` en `netlify.toml`, `CORS_ORIGIN` en Render (hoy tiene el placeholder
+  `http://localhost:4200`, puesto a propósito para no bloquear el Blueprint) — los tres deben
+  coincidir con el dominio real que asigne Netlify. Commit + push.
+- ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real, sitemap/robots).
 - **SMTP quedó sin configurar a propósito** (Marco lo dejó vacío en el Blueprint) — el form de
   contacto ya funciona igual, solo que por ahora registra el mensaje en el log de Render en vez de
   mandar el email. Se completa después sacando un "app password" en
@@ -73,15 +76,18 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
 **Operativo pendiente — deploy paso a paso (no es código, Marco conecta las cuentas):**
 1. ✅ **API en Render:** render.com → New → **Blueprint** → repo → Render leyó `render.yaml` solo.
    Env vars cargadas: `CORS_ORIGIN=http://localhost:4200` (placeholder a propósito, se corrige en
-   el paso 3), `SMTP_*` **vacías** (a propósito — el form funciona igual, solo loguea en vez de
+   el paso 5), `SMTP_*` **vacías** (a propósito — el form funciona igual, solo loguea en vez de
    mandar mail hasta que se completen), `CONTACT_TO` vacío (usa el default del código).
-2. ⏳ **← acá estamos:** confirmar "Live" en el dashboard de Render y conseguir la URL del servicio.
-3. ⬜ Con esa URL: pegarla en `apps/web/src/environments/environment.ts` → `apiUrl`.
-4. ⬜ **Sitio en Netlify:** netlify.com → Add new site → importar el repo → Netlify lee
-   `netlify.toml` solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura).
-5. ⬜ Cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts`, `SITE_URL` de
-   `netlify.toml`, y `CORS_ORIGIN` en las env vars de Render (editable desde su dashboard, no hace
-   falta recrear el Blueprint) — los tres tienen que coincidir.
+2. ✅ **Confirmado "Live":** `https://portfoliodev-api.onrender.com` responde 200. (Free tier: si
+   no tuvo tráfico se duerme, el primer request en frío tarda ~30-50s — normal, no es que se cayó.)
+3. ✅ `apiUrl` ya apuntaba a esa URL en `apps/web/src/environments/environment.ts` (puesto de
+   anticipo antes del deploy). Nada que tocar acá.
+4. ⏳ **← acá estamos:** **Sitio en Netlify:** netlify.com → Add new site → importar el repo →
+   Netlify lee `netlify.toml` solo. Da un dominio (`algo.netlify.app`, o uno propio si se configura).
+5. ⬜ Cruzar el dominio de Netlify en 3 lugares: `siteUrl` de `environment.ts` (hoy
+   `https://marco-silva.dev`, placeholder), `SITE_URL` de `netlify.toml`, y `CORS_ORIGIN` en las
+   env vars de Render (editable desde su dashboard, no hace falta recrear el Blueprint) — los tres
+   tienen que coincidir con el dominio real que dé Netlify.
 6. ⬜ Commit + push → build + deploy automático en ambos lados. Verificar: sitio carga, form de
    contacto real, `sitemap.xml`/`robots.txt`/`llms.txt` accesibles en el dominio real.
 7. ⬜ (Cuando quiera el email real) sacar un "app password" en myaccount.google.com/apppasswords
@@ -395,3 +401,4 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | Ordenamos el estado del proyecto (Fases 1-10 cerradas) y preparamos la Fase 12: `render.yaml` (Blueprint API) + `netlify.toml` (config del sitio) — el deploy queda en 2 clics de conectar cuenta, sin adivinar comandos. |
 | 2026-09-05 | OG image generada con `@resvg/resvg-js` (SVG con la paleta del sitio → PNG, sin foto ni stock), copiada a la raíz del `dist` por `seo-files.mjs`. |
 | 2026-09-05 | Fase 12 arrancada: Blueprint de la API desplegado en Render (`portfoliodev-api`), `SMTP_*`/`CORS_ORIGIN` con placeholders a propósito. Falta: URL de Render, sitio en Netlify, cruzar URLs. |
+| 2026-09-05 | Confirmado "Live" en Render: `https://portfoliodev-api.onrender.com` (200, `Hello World!`). `apiUrl` en `environment.ts` ya coincidía. Falta: sitio en Netlify, cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN`. |
