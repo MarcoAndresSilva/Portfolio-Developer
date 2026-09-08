@@ -39,6 +39,13 @@
   object-fit: cover;
 }
 
+.project__img {
+  // og-image.png es 1200x630 (16:8.4) contra el 16:10 de la card: el recorte centrado
+  // le comía el texto pegado al borde izquierdo (nombre, links). Ancla a la izquierda,
+  // que es donde está todo el contenido, y recorta del lado derecho (fondo/glow vacío).
+  object-position: left center;
+}
+
 .project__head {
   display: flex;
   align-items: baseline;

@@ -101,7 +101,10 @@ const PROJECTS: HomeProject[] = [
       es: 'Tarjeta de presentación de Marco Silva, del propio portafolio.',
       en: "Marco Silva's presentation card, from the portfolio itself.",
     },
-    links: { repo: 'https://github.com/MarcoAndresSilva/Portfolio-Developer' },
+    links: {
+      demo: 'https://gentle-ganache-580791.netlify.app',
+      repo: 'https://github.com/MarcoAndresSilva/Portfolio-Developer',
+    },
   },
   {
     slug: 'imperio-barber',
