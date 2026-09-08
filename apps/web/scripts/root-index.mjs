@@ -14,6 +14,7 @@ const html = `<!doctype html>
 <head>
 <meta charset="utf-8">
 <title>Marco Andrés Silva — Desarrollador Full Stack</title>
+<meta name="google-site-verification" content="CTJKM5X9BI_yQDWw_6SPW-CXKhxUlJRU1HCoFhdS85Q" />
 <link rel="canonical" href="/es/">
 <meta name="robots" content="noindex">
 <script>
