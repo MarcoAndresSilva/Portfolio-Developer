@@ -44,7 +44,7 @@ alta en Google Search Console.**
 2. Google Search Console: Marco arranca el alta (URL prefix `https://gentle-ganache-580791.netlify.app`,
    método "Etiqueta HTML"), pasa el `content="..."` del `<meta google-site-verification>` → se agrega
    en `scripts/root-index.mjs` (una línea) → commit + push → Verify → subir `sitemap.xml`.
-3. Agregar "Este portafolio" como 3er proyecto — ver §3.
+3. ~~Agregar "Este portafolio" como 3er proyecto~~ — hecho (2026-09-07), ver §3.
 
 Guía completa del deploy paso a paso: ver "Operativo pendiente" más abajo en esta sección.
 
@@ -127,7 +127,8 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
      y quedan en la raíz del sitio.
 
 **Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
-Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
+Imperio Barber (Marco decidió dejarlos como están por ahora). ¿Página de detalle por proyecto? —
+sin decidir. ~~Comprimir los `.mp4` de `apps/web/public/media/`~~ — hecho (2026-09-07), ver §3.
 
 Marcar cada texto nuevo con `i18n` / `$localize`, correr `npm run extract-i18n --workspace apps/web`
 y traducir en `messages.en.xlf`.
@@ -139,20 +140,22 @@ y traducir en `messages.en.xlf`.
 - [x] ~~**Email real por Resend**~~ — hecho (2026-09-06), probado en producción.
 - [ ] **Google Search Console** — alta del sitio + verificación + subir `sitemap.xml`. Ver §2 paso 8.
 - [ ] **Netlify** — Retry del deploy cancelado de `7b92fdd` para dejar el último en verde.
-- [ ] **Agregar "Este portafolio" como 3er proyecto** (decidido 2026-09-06, se hace mañana). Card
-      de craft técnico (no la principal): Angular 22 SSG contra el hallazgo de §1 (SPA ilegible para
-      crawlers/IA), monorepo + API NestJS de contacto, i18n es/en, SEO/GEO + Lighthouse CI.
-      `links.repo` = `github.com/MarcoAndresSilva/Portfolio-Developer` (Marco lo pone público).
-      Pendiente resolver la `media`: hoy el tipo `HomeProject.media` es **obligatorio** (video|image)
-      y la plantilla lo asume — o se hace opcional (guardar `.project__media` en `projects.html` +
-      ajustar el grid de `projects.scss`), o se usa un screenshot / la `og-image.png` existente.
-      Borrador de textos: en el hilo del chat del 2026-09-06.
-- [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
+- [x] ~~**Agregar "Este portafolio" como 3er proyecto**~~ — hecho (2026-09-07). Card de craft
+      técnico (no la principal, pero al ser el más nuevo sale primero en el orden por año): Angular
+      22 SSG contra el hallazgo de §1 (SPA ilegible para crawlers/IA), monorepo + API NestJS de
+      contacto, i18n es/en, SEO/GEO + Lighthouse CI. `slug: 'portfolio-developer'`, media tipo
+      `image` con el `og-image.png` existente (no hizo falta hacer `media` opcional).
+      `links.repo` = `https://github.com/MarcoAndresSilva/Portfolio-Developer`. Falta que Marco
+      ponga el repo en público en GitHub.
+- [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`) — Marco decidió dejar
+      esto como está por ahora, no bloquea:
       - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
         `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
         "En uso a diario", Prisma agregado.
       - **Imperio Barber:** confirmar `stack` real, `links.demo` cuando termine el despliegue.
-      - Los videos están en `apps/web/public/media/` — conviene comprimirlos.
+      - ~~Los videos están en `apps/web/public/media/` — conviene comprimirlos~~ — hecho
+        (2026-09-07): re-encodeados con `ffmpeg` (H.264 CRF 28, `+faststart`), sin pérdida visible.
+        `fintrack-reel-16x9.mp4` 7.2MB→3.8MB, `demo-imperio-barber.mp4` 2.6MB→1.0MB.
 - [ ] **Paleta de color / vibe visual.** Hoy hay una paleta **provisional** (tema oscuro, acento
       periwinkle `#7c8cff`). Cambiarla = editar solo `apps/web/src/styles/_theme.scss`.
 - ~~Foto / avatar~~ — **descartado por Marco** (2026-09-04): el hero va sin foto.

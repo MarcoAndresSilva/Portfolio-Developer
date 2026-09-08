@@ -73,6 +73,37 @@ const PROJECTS: HomeProject[] = [
     links: { demo: 'https://financialtrackapp.netlify.app' },
   },
   {
+    slug: 'portfolio-developer',
+    title: 'Portfolio-Developer',
+    year: 2026,
+    status: { es: 'Este sitio', en: 'This site' },
+    summary: {
+      es: 'Este mismo portafolio: Angular 22 con SSG para que el contenido sea legible por crawlers y buscadores de IA, no solo por humanos.',
+      en: 'This very portfolio: Angular 22 with SSG so the content is readable by crawlers and AI search engines, not just humans.',
+    },
+    highlights: {
+      es: [
+        'Nace de un hallazgo: un portafolio SPA 100% client-side no le entrega contenido a un crawler — esto lo corrige con Angular SSG real.',
+        'Monorepo con API propia en NestJS para el formulario de contacto, con envío real de email por Resend.',
+        'i18n español/inglés con builds localizados independientes.',
+        'SEO/GEO completo (JSON-LD, hreflang, sitemap) y Lighthouse CI en verde en cada push.',
+      ],
+      en: [
+        'Born from a finding: a 100% client-side SPA portfolio serves no content to a crawler — this fixes it with real Angular SSG.',
+        'Monorepo with its own NestJS API for the contact form, with real email delivery via Resend.',
+        'Spanish/English i18n with independent localized builds.',
+        'Full SEO/GEO (JSON-LD, hreflang, sitemap) and green Lighthouse CI on every push.',
+      ],
+    },
+    stack: ['Angular', 'TypeScript', 'NestJS', 'SCSS', 'GitHub Actions'],
+    media: { type: 'image', src: 'og-image.png' },
+    mediaAlt: {
+      es: 'Tarjeta de presentación de Marco Silva, del propio portafolio.',
+      en: "Marco Silva's presentation card, from the portfolio itself.",
+    },
+    links: { repo: 'https://github.com/MarcoAndresSilva/Portfolio-Developer' },
+  },
+  {
     slug: 'imperio-barber',
     title: 'Imperio Barber',
     year: 2025,
