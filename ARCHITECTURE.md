@@ -5,7 +5,8 @@
 > se tomó cada decisión. Se actualiza en el mismo commit que introduce cada cambio.
 
 **Última actualización:** 2026-09-06 — **Fase 10 cerrada** (SEO/GEO + Lighthouse CI + a11y, todo
-verde). **Fase 12 (deploy) EN CURSO — casi cerrada:**
+verde). **Fase 12 (deploy) — sitio + API + email real funcionando en producción. Solo falta el
+alta en Google Search Console.**
 - ✅ Blueprint desplegado en Render (`portfoliodev-api`, a partir de `render.yaml`).
 - ✅ **Render confirmado "Live":** `https://portfoliodev-api.onrender.com` responde 200 (`GET /` →
   "Hello World!"). Nota: el free tier duerme el servicio sin tráfico — el primer request en frío
@@ -25,18 +26,25 @@ verde). **Fase 12 (deploy) EN CURSO — casi cerrada:**
   `https://gentle-ganache-580791.netlify.app`.
 - ✅ `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app` cargado a mano en Render → `portfoliodev-api`
   → Environment. `siteUrl`/`SITE_URL` ya commiteados y pusheados (`df7a114`).
-- **Email: se cambió SMTP/nodemailer → API HTTP de Resend.** El plan free de Render **bloquea los
-  puertos SMTP salientes (25/465/587) desde 2025-09** — con nodemailer el envío quedaba colgado
-  hasta dar timeout y el endpoint devolvía 500. `ContactService` ahora postea a `api.resend.com`
-  (HTTP, no bloqueado). Además el endpoint se endureció: si la entrega falla, loguea el mensaje
-  completo (no se pierde nunca) y devuelve **502** en vez de 500 → el form muestra su texto de
-  fallback ("…escribime por email"). Ver §6.
-- ⏳ **Siguiente acción concreta (Marco):** crear cuenta en resend.com, verificar el email, generar
-  una API key, y cargar en Render → `portfoliodev-api` → Environment: `RESEND_API_KEY=re_...`
-  (opcional `CONTACT_TO`, `CONTACT_FROM`). Borrar las viejas `SMTP_*`. Save → Render reinicia solo.
-  Antes: commit + push de este cambio de código para que Render lo tome.
-- ⬜ Paso final — verificar todo desplegado de verdad (sitio carga, form de contacto real llega al
-  mail, sitemap/robots/llms accesibles) + alta en Google Search Console.
+- ✅ **Email real funcionando (2026-09-06).** Se cambió SMTP/nodemailer → **API HTTP de Resend**: el
+  plan free de Render **bloquea los puertos SMTP salientes (25/465/587) desde 2025-09** — con
+  nodemailer el envío quedaba colgado hasta el timeout y el endpoint devolvía 500. `ContactService`
+  postea a `api.resend.com` (HTTP, no bloqueado); `RESEND_API_KEY` cargada en Render, `SMTP_*`
+  borradas. Además el endpoint se endureció: si la entrega falla, loguea el mensaje completo (no se
+  pierde) y devuelve **502** en vez de 500 → el form muestra su fallback. **Probado en producción:
+  el mensaje del form llega al Gmail de Marco.** Ver §6.
+- ✅ Commit `7b92fdd` (`fix(api)`) pusheado y desplegado en Render. Netlify: el deploy de ese commit
+  se canceló solo (concurrencia/hiccup) — no crítico, el commit no tocó `apps/web`; conviene un
+  Retry para dejar el último deploy en verde.
+- ⬜ **Único pendiente de la Fase 12: alta del sitio en Google Search Console** (verificar propiedad
+  + subir `sitemap.xml`).
+
+**Próxima sesión (2026-09-07):**
+1. Commit de docs pendiente (esta actualización de `ARCHITECTURE.md`): `docs: Fase 12 casi cerrada — email real por Resend en prod`.
+2. Google Search Console: Marco arranca el alta (URL prefix `https://gentle-ganache-580791.netlify.app`,
+   método "Etiqueta HTML"), pasa el `content="..."` del `<meta google-site-verification>` → se agrega
+   en `scripts/root-index.mjs` (una línea) → commit + push → Verify → subir `sitemap.xml`.
+3. Agregar "Este portafolio" como 3er proyecto — ver §3.
 
 Guía completa del deploy paso a paso: ver "Operativo pendiente" más abajo en esta sección.
 
@@ -70,7 +78,7 @@ contenido real viaja dentro del HTML.
 | 9 | Contacto (form → API + anti-spam + email) · Experiencia (timeline + toggle) | ✅ |
 | 10 | SEO/GEO + Lighthouse CI (pasando en GitHub Actions) + fixes de a11y | ✅ |
 | 11 | Pulido: micro-interacciones, performance, responsive, analytics | ⬜ |
-| 12 | Despliegue web + api + Google Search Console — **en curso** (ver §2 arriba) | ⏳ **← acá estamos** |
+| 12 | Despliegue web + api + email real ✅ · falta Google Search Console (ver §2 arriba) | ⏳ **← acá estamos** |
 
 **Paso 7 — sub-progreso (cerrado):**
 
@@ -104,17 +112,19 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
    comprar dominio propio por ahora).
 6. ✅ `CORS_ORIGIN=https://gentle-ganache-580791.netlify.app` cargado a mano en Render → `portfoliodev-api`
    → Environment. `environment.ts`/`netlify.toml` commiteados y pusheados (`df7a114`) → Netlify redesplegó.
-7. ⏳ **← acá estamos: email real por Resend.** El plan free de Render bloquea SMTP saliente, así que
-   se cambió el transporte a la API HTTP de Resend (ver §6). Falta (Marco):
-   - Crear cuenta en resend.com (gratis, sin tarjeta). Verificar `marco.silvaponce10@gmail.com`.
-   - API Keys → Create → copiar la key `re_...`.
-   - Render → `portfoliodev-api` → Environment: agregar `RESEND_API_KEY=re_...`. Borrar las
-     `SMTP_HOST`/`SMTP_PORT`/`SMTP_USER`/`SMTP_PASS` viejas. (Opcionales: `CONTACT_TO` para cambiar
-     el destino, `CONTACT_FROM` — sin dominio propio dejar el default `onboarding@resend.dev`.)
-   - Save → Render reinicia. Requiere haber pusheado antes el cambio de código de este commit.
-   - Probar el form en el dominio real → el mail tiene que llegar (revisar Spam / Todos / Enviados,
-     es self-to-self). En los logs de Render: `Contacto enviado a marco.silvaponce10@gmail.com`.
-8. ⬜ Alta del sitio en Google Search Console.
+7. ✅ **Email real por Resend.** El plan free de Render bloquea SMTP saliente → se cambió el
+   transporte a la API HTTP de Resend (ver §6). Cuenta creada, `RESEND_API_KEY` en Render, `SMTP_*`
+   borradas, `from = onboarding@resend.dev` (default). **Probado en producción: el mensaje del form
+   llega al Gmail de Marco.** Commit `7b92fdd`.
+8. ⏳ **← acá estamos: alta del sitio en Google Search Console.**
+   - `search.google.com/search-console` → Add property → **URL prefix** → `https://gentle-ganache-580791.netlify.app`
+   - Verificación: método **HTML tag** (un `<meta name="google-site-verification">`) — se agrega en
+     `SeoService` o directo en `index.html` de `apps/web`, commit + push, y después "Verify".
+     Alternativa sin tocar código: DNS TXT (no aplica, no hay dominio propio) o subir un archivo
+     HTML a `apps/web/public/` (se copia tal cual a la raíz del `dist`).
+   - Ya verificado: **Sitemaps → Add** → `sitemap.xml`.
+   - `robots.txt` / `sitemap.xml` / `llms.txt` ya se generan en el postbuild (`scripts/seo-files.mjs`)
+     y quedan en la raíz del sitio.
 
 **Pendiente menor de Proyectos** (no bloquea): `stack`/`repo` de FinTrack, `stack`/`demo` de
 Imperio Barber, comprimir los `.mp4` de `apps/web/public/media/`. ¿Página de detalle por proyecto? — sin decidir.
@@ -126,8 +136,17 @@ y traducir en `messages.en.xlf`.
 
 ## 3. Pendiente de Marco
 
-- [ ] **Email real por Resend** — crear cuenta, API key, cargar `RESEND_API_KEY` en Render, borrar
-      las `SMTP_*` viejas. Ver §2 "Operativo pendiente" paso 7.
+- [x] ~~**Email real por Resend**~~ — hecho (2026-09-06), probado en producción.
+- [ ] **Google Search Console** — alta del sitio + verificación + subir `sitemap.xml`. Ver §2 paso 8.
+- [ ] **Netlify** — Retry del deploy cancelado de `7b92fdd` para dejar el último en verde.
+- [ ] **Agregar "Este portafolio" como 3er proyecto** (decidido 2026-09-06, se hace mañana). Card
+      de craft técnico (no la principal): Angular 22 SSG contra el hallazgo de §1 (SPA ilegible para
+      crawlers/IA), monorepo + API NestJS de contacto, i18n es/en, SEO/GEO + Lighthouse CI.
+      `links.repo` = `github.com/MarcoAndresSilva/Portfolio-Developer` (Marco lo pone público).
+      Pendiente resolver la `media`: hoy el tipo `HomeProject.media` es **obligatorio** (video|image)
+      y la plantilla lo asume — o se hace opcional (guardar `.project__media` en `projects.html` +
+      ajustar el grid de `projects.scss`), o se usa un screenshot / la `og-image.png` existente.
+      Borrador de textos: en el hilo del chat del 2026-09-06.
 - [ ] **Contenido real de proyectos** (`app/sections/projects/projects.ts`):
       - **FinTrack:** confirmar `stack`, afinar `highlights` (sobre todo qué problema resolvía),
         `links.repo` si es público. Demo ya puesto (`financialtrackapp.netlify.app`), badge
@@ -439,4 +458,5 @@ importante: imagen, badges de tech, links demo/repo, problema→solución→impa
 | 2026-09-05 | Sitio creado en Netlify (`gentle-ganache-580791`); primer build falló 2 veces por el plugin `@netlify/angular-runtime` sin encontrar `angular.json` en el monorepo. Marco lo resolvió con el agente de Netlify (PR #1, mergeado): `netlify.toml` → `base = "apps/web"` + `command = "npm run build"` + `publish = "dist/web/browser"`. Deploy exitoso: `https://gentle-ganache-580791.netlify.app` (200). Se sacaron del repo `apps/web/.netlify/` y el duplicado `apps/web/apps/web/.netlify/` que el agente había commiteado por error (ahora en `.gitignore`). Falta: cruzar `siteUrl`/`SITE_URL`/`CORS_ORIGIN` con este dominio. |
 | 2026-09-05 | Marco decidió quedarse con el subdominio gratis de Netlify (no comprar dominio propio por ahora). Cruzadas `siteUrl` (`environment.ts`) y `SITE_URL` (`netlify.toml`) → `https://gentle-ganache-580791.netlify.app`. Falta: cargar `CORS_ORIGIN` en Render (manual, dashboard) y hacer commit + push. |
 | 2026-09-05 | `CORS_ORIGIN` cargado en Render + `df7a114` pusheado. Marco cargó las `SMTP_*` de Gmail y el form empezó a dar **500**: el plan free de Render bloquea los puertos SMTP salientes (25/465/587) desde 2025-09. |
-| 2026-09-06 | Email: `ContactService` migrado de nodemailer/SMTP → **API HTTP de Resend** (`fetch`, se sacó `nodemailer`). Endpoint endurecido: atrapa el fallo de envío, loguea el mensaje completo y responde **502** en vez de 500 (el form ya tenía el texto de fallback). `render.yaml`: `SMTP_*` → `RESEND_API_KEY`/`CONTACT_FROM`. Tests nuevos (`contact.service.spec.ts` + caso 502 en el controller). typecheck/lint/test/build verdes. Falta (Marco): cuenta Resend + `RESEND_API_KEY` en Render. |
+| 2026-09-06 | Email: `ContactService` migrado de nodemailer/SMTP → **API HTTP de Resend** (`fetch`, se sacó `nodemailer`). Endpoint endurecido: atrapa el fallo de envío, loguea el mensaje completo y responde **502** en vez de 500 (el form ya tenía el texto de fallback). `render.yaml`: `SMTP_*` → `RESEND_API_KEY`/`CONTACT_FROM`. Tests nuevos (`contact.service.spec.ts` + caso 502 en el controller). Commit `7b92fdd`. |
+| 2026-09-06 | Marco creó la cuenta de Resend, cargó `RESEND_API_KEY` en Render y borró las `SMTP_*`. **Email real confirmado en producción: el mensaje del formulario llega al Gmail.** Fase 12 casi cerrada — solo falta Google Search Console. |
