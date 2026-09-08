@@ -2,6 +2,8 @@
 
 [![CI](https://github.com/MarcoAndresSilva/Portfolio-Developer/actions/workflows/ci.yml/badge.svg)](https://github.com/MarcoAndresSilva/Portfolio-Developer/actions/workflows/ci.yml)
 
+### 🌐 [Ver sitio en vivo](https://gentle-ganache-580791.netlify.app) &nbsp;·&nbsp; 💻 [Código en GitHub](https://github.com/MarcoAndresSilva/Portfolio-Developer)
+
 Portafolio web de **Marco Andrés Silva** — desarrollador Full Stack (Angular / NestJS).
 
 Pensado como carta de presentación para reclutadores humanos **y** para buscadores / crawlers de IA:
