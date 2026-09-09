@@ -36,15 +36,24 @@ alta en Google Search Console.**
 - ✅ Commit `7b92fdd` (`fix(api)`) pusheado y desplegado en Render. Netlify: el deploy de ese commit
   se canceló solo (concurrencia/hiccup) — no crítico, el commit no tocó `apps/web`; conviene un
   Retry para dejar el último deploy en verde.
-- ⬜ **Único pendiente de la Fase 12: alta del sitio en Google Search Console** (verificar propiedad
-  + subir `sitemap.xml`).
+- ⏳ **Google Search Console — en curso (2026-09-07).** Meta tag `google-site-verification` agregado
+  en `apps/web/scripts/root-index.mjs` (commit `ad5b64b`), confirmado en vivo por `curl` en la raíz
+  exacta (`https://gentle-ganache-580791.netlify.app/`, incluso simulando el user-agent de
+  Googlebot). Primer intento de verificación falló porque Marco había dado de alta la propiedad
+  con `/es` al final de la URL (esa página no lleva el tag — es el build completo de Angular, un
+  archivo totalmente distinto al `index.html` de la raíz). Se rehizo la propiedad apuntando a la
+  raíz sin subpath y coincide con la etiqueta que pide Google. **Falta confirmar que el botón
+  Verificar haya pasado** — Marco lo clickeó al cierre de la sesión, sin confirmar resultado
+  todavía.
 
-**Próxima sesión (2026-09-07):**
-1. Commit de docs pendiente (esta actualización de `ARCHITECTURE.md`): `docs: Fase 12 casi cerrada — email real por Resend en prod`.
-2. Google Search Console: Marco arranca el alta (URL prefix `https://gentle-ganache-580791.netlify.app`,
-   método "Etiqueta HTML"), pasa el `content="..."` del `<meta google-site-verification>` → se agrega
-   en `scripts/root-index.mjs` (una línea) → commit + push → Verify → subir `sitemap.xml`.
-3. ~~Agregar "Este portafolio" como 3er proyecto~~ — hecho (2026-09-07), ver §3.
+**Próxima sesión:**
+1. **Confirmar que Google Search Console verificó la propiedad** (Marco clickeó Verificar al
+   cierre de la sesión anterior, sin ver el resultado). Si falló de nuevo, revisar el motivo exacto
+   del error (Search Console lo muestra) — la etiqueta en sí ya está confirmada en producción.
+2. Con la propiedad verificada: **Sitemaps → Add → `sitemap.xml`** (se genera solo en el postbuild,
+   `apps/web/scripts/seo-files.mjs`) → cierra la Fase 12 por completo.
+3. Si querés, Netlify → Retry del deploy cancelado de `7b92fdd` para dejar el último en verde
+   (no bloqueante).
 
 Guía completa del deploy paso a paso: ver "Operativo pendiente" más abajo en esta sección.
 
@@ -118,11 +127,12 @@ quedan 2 cosas chicas de la Fase 10 abiertas:
    llega al Gmail de Marco.** Commit `7b92fdd`.
 8. ⏳ **← acá estamos: alta del sitio en Google Search Console.**
    - `search.google.com/search-console` → Add property → **URL prefix** → `https://gentle-ganache-580791.netlify.app`
-   - Verificación: método **HTML tag** (un `<meta name="google-site-verification">`) — se agrega en
-     `SeoService` o directo en `index.html` de `apps/web`, commit + push, y después "Verify".
-     Alternativa sin tocar código: DNS TXT (no aplica, no hay dominio propio) o subir un archivo
-     HTML a `apps/web/public/` (se copia tal cual a la raíz del `dist`).
-   - Ya verificado: **Sitemaps → Add** → `sitemap.xml`.
+     (**sin subpath** — un primer intento con `/es` al final falló porque esa página no lleva el
+     meta tag, es el build completo de Angular, un archivo distinto al `index.html` de la raíz).
+   - Verificación: método **HTML tag** — el `<meta name="google-site-verification" content="CTJKM5X9BI_yQDWw_6SPW-CXKhxUlJRU1HCoFhdS85Q" />`
+     ya está agregado en `apps/web/scripts/root-index.mjs` (commit `ad5b64b`, pusheado y confirmado
+     en vivo en la raíz del sitio). Falta confirmar que "Verificar" haya pasado.
+   - Una vez verificado: **Sitemaps → Add** → `sitemap.xml`.
    - `robots.txt` / `sitemap.xml` / `llms.txt` ya se generan en el postbuild (`scripts/seo-files.mjs`)
      y quedan en la raíz del sitio.
 
