@@ -36,8 +36,6 @@ interface HomeProject {
 //   FinTrack      → confirmá el `stack` completo, ajustá los `highlights` (sobre
 //                   todo el problema que resolvía) y agregá `links.repo` si es
 //                   público. El demo apunta a financialtrackapp.netlify.app.
-//   Imperio Barber→ confirmá el `stack` real ("hartas tecnologías") y agregá
-//                   `links.demo` cuando termines de desplegarlo.
 // Videos en apps/web/public/media/ (preload="metadata" → solo cargan al play).
 // =============================================================================
 const PROJECTS: HomeProject[] = [
@@ -111,26 +109,30 @@ const PROJECTS: HomeProject[] = [
     title: 'Imperio Barber',
     year: 2025,
     summary: {
-      es: 'Landing y sistema de reservas para una barbería: agenda online para los clientes y administración de horarios para el dueño y los barberos.',
-      en: 'Landing page and booking system for a barbershop: online scheduling for clients and shift management for the owner and barbers.',
+      es: 'Sistema de reservas online para una barbería: reemplaza un enlace de WhatsApp sin disponibilidad real por un flujo completo por barbero, sin necesidad de crear cuenta.',
+      en: 'Online booking system for a barbershop: replaces a WhatsApp link with no real availability with a full per-barber flow, no account needed.',
     },
     highlights: {
       es: [
-        'Reserva de horas online — resuelve el ida y vuelta con los clientes.',
-        'Administración de horarios y disponibilidad para el dueño y cada barbero.',
+        'Disponibilidad real por barbero: calculada en base a su horario semanal y sus reservas activas, no simulada.',
+        'Anti-doble-reserva real: transacción PostgreSQL Serializable evita que dos personas se queden con el mismo horario.',
+        'Confirmación por token: el barbero acepta o rechaza desde un link de WhatsApp, sin login ni panel de administración.',
+        'Reservas pendientes que nadie confirma expiran solas y liberan el horario automáticamente.',
       ],
       en: [
-        'Online appointment booking — removes the back-and-forth with clients.',
-        'Schedule and availability management for the owner and each barber.',
+        'Real per-barber availability: computed from their weekly schedule and active bookings, not simulated.',
+        'Real double-booking prevention: a Postgres Serializable transaction stops two people from taking the same slot.',
+        'Token-based confirmation: the barber accepts or rejects via a WhatsApp link, no login or admin panel.',
+        'Unconfirmed pending bookings expire on their own and free up the slot automatically.',
       ],
     },
-    stack: ['Angular', 'TypeScript', 'SCSS'],
+    stack: ['Angular', 'TypeScript', 'NestJS', 'Prisma', 'PostgreSQL', 'Docker'],
     media: { type: 'video', src: 'media/demo-imperio-barber.mp4' },
     mediaAlt: {
       es: 'Recorrido por el sitio de Imperio Barber y el proceso de reserva.',
       en: 'Walkthrough of the Imperio Barber site and the booking process.',
     },
-    links: {},
+    links: { demo: 'https://imperio-barber.netlify.app' },
   },
 ];
 
